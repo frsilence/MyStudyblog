@@ -19,7 +19,7 @@ class Appbasic extends Controller
     /**
      * 当前登录用户
      */
-    protected $member = []
+    protected $member = [];
     /**
      * 构造函数
      */
@@ -52,7 +52,7 @@ class Appbasic extends Controller
         }
         if(isset($member['login_time']) && !empty($LoginDuartion)){
             //用户退出并记录日志
-            $this->LoginLog(2)
+            $this->LoginLog(2);
             //清空session数据
             $this->member = [];
             session(null);
@@ -63,7 +63,7 @@ class Appbasic extends Controller
      * 用户登录和退出记录
      * @param $type [0:登录账号，1:主动退出，2:登录过期退出]
      */
-    public LoginLog($type)
+    public function LoginLog($type)
     {
         switch ($type) {
             case 0:
@@ -76,7 +76,7 @@ class Appbasic extends Controller
                 $log = '[登录过期]正在退出应用';
                 break;
             default:
-                $log = '[未知信息]'
+                $log = '[未知信息]';
                 break;
         }
         $login_info = getLoginInfo();
