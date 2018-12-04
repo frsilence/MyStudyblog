@@ -74,7 +74,7 @@ class Blogs extends Migrator
 
 
         //文章标签
-        $table = $this->table('articletag')
+        $table = $this->table('blog_tag')
         ->addColumn('name','string',['limit'=>10,'comment'=>'标签名称'])
         ->addColumn('status','integer',['default'=>0,'comment'=>'状态'])
         ->addTimestamps()
