@@ -13,6 +13,22 @@ class Article extends Model
     protected $table = 'article';
 
     /**
+     * 关联用户表单（一对一关联）
+     */
+    public function member()
+    {
+        return $this->belongsTo('AppMember','member_id','id')->field('id','username');
+    }
+
+    /**
+     * 关联文章分类数据表
+     */
+    public function tags()
+    {
+        return $this->belongsToMany('Article','article_tag','member_id','article_id');                                                         
+    }
+
+    /**
      * 增加文章
      * @param  array $article_info 文章信息
      * @return  int article_id
@@ -23,6 +39,10 @@ class Article extends Model
     	try{
     		$article=$this->save($article_info);
     		$article_id = $this->article_id;
+            //保存标签
+            foreach ($article_info['tag'] as $key => $value) {
+                $article->tags()->save(['name'=>$value,'status'=>0]);
+            }
     		$this->commit();
     	} catch(/Exception $e){
     		$this->rollback;
@@ -30,5 +50,22 @@ class Article extends Model
     	}
     	$article_id = $this->article_id;
 
+    }
+
+    /**
+     * 删除文章
+     * @param int $article_id 文章id
+     * @param boolean
+     */
+    public function deleteArticle($article_id)
+    {
+        $article=$this->where(['id'=>$article_id,'status'=>0,'is_delete'=>0])->find();
+        if(empty($article)){
+            return false;
+        }else{
+            $article->is_delete = 1;
+            $article->save();
+            return true;
+        }
     }
 }

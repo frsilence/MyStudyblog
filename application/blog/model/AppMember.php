@@ -29,6 +29,14 @@ class AppMember extends Model
     }
 
     /**
+     * 关联文章数据模型(一对一关联)
+     */
+    public function articles()
+    {
+    	return $this->hasOne('Article','member_id','id');
+    }
+
+    /**
      * 获取指定用户信息
      * @param [string] $id [用户ID]
      * @return   [array]
