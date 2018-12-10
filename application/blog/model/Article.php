@@ -41,7 +41,7 @@ class Article extends Model
      */
     public function comments()
     {
-        return $this->hasOne('ArticleComment','article_id','id');
+        return $this->hasOne('ArticleComment','article_id','id')->where('is_delete'=>0);
     }
 
     /**
@@ -142,6 +142,49 @@ class Article extends Model
     {
         $search_list = ['status'=>0,'is_delete'=>0];
         if($category_id!=0) $search_list['category_id'] = $category_id;
+        $articles = $this->where(['category_id'=>$category_id,'status'=>0,'is_delete'=>0])->paginator($page)->each(function($item,$key){
+                $item->member();
+                $item->categorys();
+                $item->tags();
+                $item['comment_num'] = $item->comments()->count();
+
+        });
+        return $articles;
+    }
+
+    /**
+     * 获取当前文章的下一篇文章
+     * @param  int $article_id 当前文章ID
+     * @return /think/model
+     */
+    public function getNextArticle($article_id)
+    {
+        $next_article = $this->where(['status'=>0,'is_delete'=>0,'id'>$article_id])->order('id','asc')->find();
+        return $next_article; 
+    }
+
+    /**
+     * 获取当前文章的上一篇文章
+     * @param  int $article_id 当前文章ID
+     * @return /think/model
+     */
+    public function getNextArticle($article_id)
+    {
+        $next_article = $this->where(['status'=>0,'is_delete'=>0,'id'<$article_id])->order('id','desc')->find();
+        return $next_article; 
+    }
+
+    /**
+     * 搜索文章标题
+     * @param string $search_word
+     * @return  /think/Paginator
+     */
+    public function searchArticle($search_word)
+    {
+        $search_list = [
+            ['status','=',0],
+            ['is_delete','=',0],
+            ['title','LIKE',"{$search_word}"]];
         $articles = $this->where(['category_id'=>$category_id,'status'=>0,'is_delete'=>0])->paginator($page)->each(function($item,$key){
                 $item->member();
                 $item->categorys();
