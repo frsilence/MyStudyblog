@@ -38,6 +38,7 @@ class Blogs extends Migrator
         ->addColumn('praise_num','integer',['default'=>0,'comment'=>'点赞数量'])
         ->addColumn('click_num','integer',['default'=>0,'comment'=>'点击量'])
         ->addColumn('collect_num','integer',['default'=>0,'comment'=>'收藏量'])
+        ->addColumn('status','integer',['default'=>0,'comment'=>'状态'])
         ->addColumn('is_delete','integer',['default'=>0,'comment'=>'是否删除'])
         ->addColumn('is_open','integer',['default'=>1,'comment'=>'是否公开'])
         ->addColumn('update_userid','integer',['comment'=>'更新用户'])
