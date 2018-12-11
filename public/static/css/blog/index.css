@@ -5,4 +5,10 @@
 .header-nav-mid{
 	font-size: medium;
 }
+/*顶部右侧导航栏*/
+.top_right_menu{
+	position: absolute;
+	right: 0;
+	top: 0;
+}
 

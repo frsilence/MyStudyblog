@@ -26,8 +26,8 @@ class Appbasic extends Controller
     public function __construct()
     {
         parent::__construct();
-        $config = new Config();
-        $this->app_config = $config->get_config();
+        $config = new BlogConfig();
+        $this->app_config = $config->getBlogConfig();
         $this->member = session('member');
         //检查登录是否过期
         if(!empty($this->member))

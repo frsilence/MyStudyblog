@@ -1,8 +1,7 @@
-<header>
-	<div class="layui-header">
-		<div>
-			<div class>
-				<ul class="layui-nav" lay-filter="demo">
+<div class="layui-layout-admin">
+	<div class="layui-header header">
+		<div class="layui-main mag0">
+				<ul class="layui-nav" lay-filter="demo" style="float: left;">
 					<li class="layui-nav-item">
 						<a href="#" class="header-nav-big">XXblog</a>
 					</li>
@@ -10,19 +9,13 @@
 						<a href="javascript:;" class="header-nav-mid">Index</a>
 					</li>
 					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid layui-hide-xs">大数据</a>
+						<a href="javascript:;" class="header-nav-mid layui-hide-xs">title1</a>
 					</li>
 					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid layui-hide-xs">大数据</a>
-					</li>
-					<li class="layui-nav-item layui-hide-xs">
-						<a href="javascript:;" class="header-nav-mid">大数据</a>
-					</li>
-					<li class="layui-nav-item layui-hide-xs">
-						<a href="javascript:;" class="header-nav-mid">大数据</a>
+						<a href="javascript:;" class="header-nav-mid layui-hide-xs">title2</a>
 					</li>
 					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid">解决方案</a>
+						<a href="javascript:;" class="header-nav-mid">Blogs</a>
 						<dl class="layui-nav-child">
 							<!-- 二级菜单 -->
 							<dd>
@@ -44,13 +37,26 @@
 						</dl>
 					</li>
 					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid">社区</a>
+						<a href="javascript:;" class="header-nav-mid">tool</a>
+					</li>
+				
+				</ul>
+				{if session('?member')}
+				<ul class="layui-nav top_right_menu">
+					<li class="layui-nav-item">
+						<a>已登录</a>
 					</li>
 				</ul>
-			</div>
+				{else /}
+				<ul class="layui-nav top_right_menu">
+					<li class="layui-nav-item">
+						<a href="/user/login">用户登录</a>
+					</li>
+				</ul>
+				{/if}
 		</div>
 		
 	</div>
+</div>
 	
 	
-</header>

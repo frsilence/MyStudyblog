@@ -78,8 +78,9 @@ class ArticleMember extends Model
     public function getArticleFollowerByMemberId($member_id,$page=10)
     {
     	$articles = $this->where(['member_id'=>$member_id,'is_delete'=>0])->paginate($page)->each(function($item,$key){
-    		$item['article_info'] = model('Article')->where(['id'=>$item['article_id'],'status'=>0,'is_delete'=>0]);
-    	})
+    		$item['article_info'] = model('Article')->where(['id'=>$item['article_id'],'status'=>0,'is_delete'=>0])->find();
+    	});
+        return $articles;
     }
     
 }
