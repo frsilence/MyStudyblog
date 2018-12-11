@@ -146,7 +146,7 @@ class Article extends Model
     public function getArticleByArticleId($article_id)
     {
         $article_info = $this->where(['id'=>$article_id,'status'=>0,'is_delete'=>0])->find();
-        $article_info['member'] = $article_info->member();
+        if(empty($article_info)) $article_info['member'] = $article_info->member();
         return $article_info;
     }
 
