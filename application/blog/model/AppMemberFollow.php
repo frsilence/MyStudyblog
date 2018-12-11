@@ -91,7 +91,7 @@ class AppMemberFollow extends Model
     {
     	$follower_list = $this->where(['member_id',$member_id,'is_delete'=>0])->order('create_at','desc')->column('follower_id')->paginate($page,false)
     	->each(function($item,$key){
-    		model('AppMember')->get($item['follower_id']);
+    		$item['article_info'] = model('AppMember')->getArticleByArticleId($item['article_id']);
     	});
     	return $follower_list;
 

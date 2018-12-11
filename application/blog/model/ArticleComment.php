@@ -38,4 +38,34 @@ class ArticleComment extends Model
     	});
     	return $comments;
     }
+
+    /**
+     * 根据用户id获取评论
+     * @param int $member_id 用户ID
+     * @return \think\Collection 
+     */
+    public function getCommentByMemberId($member_id,$page=15)
+    {
+        $comment_list = $this->where(['member_id'=>$member_id,'is_delete'=>0])->order('create_at','desc')->paginate($page)->each(function($item,$key){
+            $item['article_info'] = $this->articlee()->field('title','id');
+        })
+    }
+
+    /**
+     * 增加评论
+     * @param  arary $comment_info
+     * @return  boolean [description]
+     */
+    public function addComment($comment_info)
+    {
+        $this->startTrans();
+        try{
+            $this->save($comment_info);
+            $this->commit();
+            return true;
+        }catch{
+            $this->rollback();
+            return false;
+        }
+    }
 }

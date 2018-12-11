@@ -25,7 +25,7 @@ class Article extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany('Article','article_tag','member_id','article_id');                                                         
+        return $this->belongsToMany('Article','article_tag','tag_id','article_id');                                                         
     }
 
     /**
@@ -45,6 +45,29 @@ class Article extends Model
     }
 
     /**
+     * 保存文章标签
+     * @param  int $article_id 文章ID
+     * @param  array $article_info 含有文章标签的信息 
+     */
+    public function saveBlogTag($article_id,$article_info)
+    {
+        if(isset($article_info['tag_list']) && !empty($article_info['tag_list'])){
+            $tag_list = explode(',',$article_info['tag_list']);
+            $article_tag = [];
+            foreach ($tag_list as $key => $value) {
+                $tag_id = model('BlogTag')->where('name',$value)->value('id');
+                if(empty($tag_id)){
+                    $tag = model('BlogTag')->save(['name'=>$value]);
+                    $tag_id = $tag->id;
+                }
+                $article_tag[] = ['article_id'=>$article_id,'tag_id'=>$tag_id];
+            }
+            model('ArticleTag')->saveAll($article_tag);
+
+        }
+    }
+
+    /**
      * 增加文章
      * @param  array $article_info 文章信息
      * @return  int article_id
@@ -56,9 +79,7 @@ class Article extends Model
     		$article=$this->save($article_info);
     		$article_id = $this->article_id;
             //保存标签
-            foreach ($article_info['tag'] as $key => $value) {
-                $article->tags()->save(['name'=>$value,'status'=>0]);
-            }
+            $this->saveBlogTag($article_id,$article_info);
     		$this->commit();
     	} catch(/Exception $e){
     		$this->rollback;
@@ -79,9 +100,9 @@ class Article extends Model
         if(empty($article)){
             return false;
         }else{
-            $article->is_delete = 1;
             $this->startTrans();
             try{
+                $article->is_delete = 1;
                 $article->save();
                 $this->commit();
                 return true;
@@ -107,6 +128,7 @@ class Article extends Model
             $this->startTrans();
             try{
                 $article->update($update);
+                $this->saveBlogTag($article_id,$update);
                 $this->commit();
                 return true;
             }catch(/Exception $e){
@@ -114,6 +136,18 @@ class Article extends Model
                 return false;
             }           
         }
+    }
+
+    /**
+     * 查询：根据文章ID查询文章内容
+     * @param  int $article_id [文章ID]
+     * @return  array
+     */
+    public function getArticleByArticleId($article_id)
+    {
+        $article_info = $this->where(['id'=>$article_id,'status'=>0,'is_delete'=>0])->find();
+        $article_info['member'] = $article_info->member();
+        return $article_info;
     }
 
     /**

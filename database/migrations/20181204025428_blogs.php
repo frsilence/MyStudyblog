@@ -105,6 +105,7 @@ class Blogs extends Migrator
         ->addColumn('content','string',['limit'=>300,'comment'=>'公告内容'])
         ->addColumn('url','string',['limit'=>65,'comment'=>'公告url'])
         ->addColumn('status','integer',['default'=>0,'comment'=>'状态'])
+        ->addColumn('sort','integer',['default'=>1,'comment'=>'排序'])
         ->addTimestamps()
         ->create();
 
@@ -122,6 +123,7 @@ class Blogs extends Migrator
         ->addColumn('image','string',['limit'=>65,'comment'=>'图片地址'])
         ->addColumn('url','string',['limit'=>65,'comment'=>'链接url'])
         ->addColumn('status','integer',['default'=>0,'comment'=>'状态'])
+        ->addColumn('sort','integer',['default'=>1,'comment'=>'排序'])
         ->addTimestamps()
         ->create();
 
@@ -132,6 +134,7 @@ class Blogs extends Migrator
         ->addColumn('url','string',['limit'=>65,'comment'=>'链接url'])
         ->addColumn('remark','string',['limit'=>100,'comment'=>'备注信息'])
         ->addColumn('status','integer',['default'=>0,'comment'=>'状态'])
+        ->addColumn('sort','integer',['default'=>1,'comment'=>'排序'])
         ->addTimestamps()
         ->create();
         
