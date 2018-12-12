@@ -50,9 +50,13 @@
 				{else /}
 				<ul class="layui-nav top_right_menu">
 					<li class="layui-nav-item">
-						<a href="/user/login">用户登录</a>
+						<a href="{:url('blog/auth/login')}">用户登录</a>
+					</li>
+					<li class="layui-nav-item">
+						<a href="{:url('blog/auth/create')}">用户注册</a>
 					</li>
 				</ul>
+				
 				{/if}
 		</div>
 		
