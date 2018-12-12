@@ -9,16 +9,24 @@
 <div class="layadmin-user-login layadmin-user-display-show" id="LAY-user-login" style="display: ;">
     <div class="layadmin-user-login-main">
         <div class="layadmin-user-login-box layadmin-user-login-header">
-            <h2>会员登录</h2>
+            <h2>会员注册</h2>
         </div>
         <div class="layadmin-user-login-box layadmin-user-login-body layui-form">
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="LAY-user-login-username"></label>
-                <input type="text" id="username" name="username" id="LAY-user-login-username" lay-verify="required" placeholder="用户名" class="layui-input">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-username" for="username"></label>
+                <input type="text" id="username" name="username" lay-verify="required" placeholder="用户名" class="layui-input">
             </div>
             <div class="layui-form-item">
-                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="LAY-user-login-password"></label>
-                <input type="password" id="password" name="password" id="LAY-user-login-password" lay-verify="required" placeholder="密码" class="layui-input">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-website" for="email"></label>
+                <input type="text" id="username" name="email" lay-verify="required" placeholder="邮箱" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="password"></label>
+                <input type="password" id="password" name="password"  lay-verify="required" placeholder="密码" class="layui-input">
+            </div>
+            <div class="layui-form-item">
+                <label class="layadmin-user-login-icon layui-icon layui-icon-password" for="password_confirm"></label>
+                <input type="password" id="password_confirm" name="password" lay-verify="required" placeholder="确认密码" class="layui-input">
             </div>
 
             <div class="layui-form-item">
@@ -40,14 +48,14 @@
                 <!--<a href="#" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>-->
             </div>
             <div class="layui-form-item">
-                <button id="loginButton" class="layui-btn layui-btn-fluid">登 入</button>
+                <button id="loginButton" class="layui-btn layui-btn-fluid">注 册</button>
             </div>
             <div class="layui-trans layui-form-item layadmin-user-login-other">
                 <label>社交账号登入</label>
                 <a id="qq_login"><i class="layui-icon layui-icon-login-qq"></i></a>
                 <!--<a href="javascript:;"><i class="layui-icon layui-icon-login-wechat"></i></a>-->
                 <!--<a href="javascript:;"><i class="layui-icon layui-icon-login-weibo"></i></a>-->
-                <a id="register" href="{:url('blog/auth/register')}" class="layadmin-user-jump-change layadmin-link">没有账号？注册帐号</a>
+                <a id="register" href="{:url('blog/auth/login')}" class="layadmin-user-jump-change layadmin-link">已有账号？直接登录</a>
             </div>
         </div>
     </div>

@@ -71,18 +71,19 @@ class AppMember extends Model
 
     /**
      * 用户登录检测
-     * @param  $email 登录邮箱
+     * @param  $username 登录用户名
      * @param  $password 密码
      * @return array [用户信息]
      */
-    public function login($email,$password)
+    public function login($username,$password)
     {
-    	$member = $this->where('email',$email)->find();
-            if($member !== null && password_verify($password,$member->password)){
-                return $member;
-            }else{
-                return $member=[];
-            }
+    	$member = $this->where(['username'=>$username,'status'=>0,'is_delete'=>0])->find();
+            if(empty($member)){
+                return ['code'=>1,'msg'=>'用户不存在！'];
+            } 
+            if(password_verify($password,$member->password)){
+                return ['code'=>0,'msg'=>'登录成功，正在进入...','member'=>$member];
+            }       
     }
 
     /**
@@ -90,7 +91,7 @@ class AppMember extends Model
      * @param arary $update 更新信息
      * @return  boolean
      */
-    public function update($update)
+    public function updateMember($update)
     {
     	$member = $this->where('id',$update['id'])->find();
     	if(empty($member)) return false;

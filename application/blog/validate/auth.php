@@ -17,7 +17,7 @@ class auth extends Validate
         'password|密码' => 'require|min:6|max:20',
         'password_confirm|确认密码' => 'require|confirm:password|min:6',
         'email|邮箱' => 'require|email|max:35',
-        'vercode' => 'require|captcha',
+        'vercode|验证码' => 'require|captcha',
     ];
     
     /**

@@ -42,20 +42,30 @@ class Auth extends Controller
         //验证传入参数
         $result = $this->validate($request->post(),'app\blog\validate\auth.login');
         if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
+        //验证用户信息
+        $member_login = model('AppMember')->login($request->post('username'),$request->post('password'));
+        $member_login['token'] = $request->token();
+        if($member_login['code'] == 1) return $member_login;
+        //登录成功记录时间
+        $member_login['member']['login_at'] = time();
+        //用户信息载入session
+        session('member',$member_login['member']);
+        //记录登录日志
+        $this->LoginLog(0);
         
     }
 
     
 
     /**
-     * 保存新建的资源
+     * 用户注册界面
      *
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function register()
     {
-        //
+        return $this->fetch('register',['title'=>'用户注册']);
     }
 
     /**
