@@ -4,22 +4,26 @@ namespace app\blog\controller;
 
 use think\Controller;
 use think\Request;
+use app\common\controller\Appbasic;
+use Log;
 
 /**
  * 应用用户管理控制器
  */
-class Auth extends Controller
+class Auth extends Appbasic
 {
-    //请求方式
-    protected $method = null;
-
     /**
      *控制器初始化 
      */
     public function __construct()
     {
         parent::__construct();
-        $this->method = $this->request->method();
+        $action = $this->request->action();
+        //已登录的会话访问注册和登录相关方法，强制跳转至首页
+        if(!empty(session('member')) && $action != 'logout'){
+            return $this->redirect(url('blog/index/index'));
+        }
+
     }
 
     /**
@@ -45,20 +49,21 @@ class Auth extends Controller
         //验证用户信息
         $member_login = model('AppMember')->login($request->post('username'),$request->post('password'));
         $member_login['token'] = $request->token();
-        if($member_login['code'] == 1) return $member_login;
+        if($member_login['code'] == 1) return json($member_login);
         //登录成功记录时间
-        $member_login['member']['login_at'] = time();
+        $member_login['member']['login_time'] = time();
         //用户信息载入session
         session('member',$member_login['member']);
         //记录登录日志
         $this->LoginLog(0);
+        return json($member_login);
         
     }
 
     
 
     /**
-     * 用户注册界面
+     * 显示用户注册界面
      *
      * @param  \think\Request  $request
      * @return \think\Response
@@ -67,6 +72,51 @@ class Auth extends Controller
     {
         return $this->fetch('register',['title'=>'用户注册']);
     }
+
+    /**
+     * 用户注册
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function post_register(Request $request)
+    {
+        //验证传入参数
+        $result = $this->validate($request->post(),'app\blog\validate\auth.register');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
+        //注册用户
+        $member_register = model('AppMember')->register($request->post());
+        $member_register['token'] = $request->token();
+        if($member_register['code'] == 1) return json($member_register);
+        //注册成功，登录并记录
+        if($member_register['code'] == 0) 
+            {
+                //登录成功记录时间
+                $member_register['member']['login_time'] = time();
+                //用户信息载入session
+                session('member',$member_register['member']);
+                //记录登录日志
+                $this->LoginLog(0);
+                return json($member_register);
+            }
+
+    }
+
+    /**
+     * 用户退出
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function logout()
+    {
+        //记录退出日志
+        $this->LoginLog(1);
+        //清空session
+        session(null);
+        return redirect(url('blog/index/index'));
+    }
+
 
     /**
      * 显示指定的资源

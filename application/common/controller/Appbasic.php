@@ -9,6 +9,7 @@ use think\Controller;
 use think\Request;
 use app\blog\model\BlogConfig;
 use app\blog\model\AppMemberLoginRecord;
+use Log;
 
 class Appbasic extends Controller
 {
@@ -51,11 +52,15 @@ class Appbasic extends Controller
             $LoginDuartion = '';
         }
         if(isset($member['login_time']) && !empty($LoginDuartion)){
-            //用户退出并记录日志
-            $this->LoginLog(2);
-            //清空session数据
-            $this->member = [];
-            session(null);
+            Log::record(time()-$member['login_time']);
+            if(time()-$member['login_time'] >= $LoginDuartion){
+                //用户退出并记录日志
+                $this->LoginLog(2);
+                //清空session数据
+                $this->member = [];
+                session(null);
+            }
+            
         }
     }
 

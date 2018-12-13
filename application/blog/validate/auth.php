@@ -14,9 +14,9 @@ class auth extends Validate
      */	
 	protected $rule = [
         'username|用户名' => 'require|max:20|token',
+        'email|邮箱' => 'require|email|max:35',
         'password|密码' => 'require|min:6|max:20',
         'password_confirm|确认密码' => 'require|confirm:password|min:6',
-        'email|邮箱' => 'require|email|max:35',
         'vercode|验证码' => 'require|captcha',
     ];
     
@@ -26,7 +26,10 @@ class auth extends Validate
      *
      * @var array
      */	
-    protected $message = [];
+    protected $message = [
+        'username.token' => '令牌过期，请刷新页面',
+        'vercode.captcha' => '验证码错误，点击刷新验证码。'
+    ];
 
     /**
      * 应用场景：

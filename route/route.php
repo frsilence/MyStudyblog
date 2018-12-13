@@ -16,6 +16,8 @@ Route::group('auth/',function(){
 	Route::get('login', 'blog/auth/login');
 	Route::post('post_login','blog/auth/post_login');
 	Route::get('register','blog/auth/register');
+	Route::post('post_register','blog/auth/post_register');
+	Route::get('logout','blog/auth/logout');
 });
 
 return [

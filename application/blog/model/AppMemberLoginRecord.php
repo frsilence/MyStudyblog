@@ -3,6 +3,7 @@
 namespace app\blog\model;
 
 use think\Model;
+use Log;
 
 /**
  * 登录记录
@@ -31,6 +32,10 @@ class AppMemberLoginRecord extends Model
     public function getLastLoginTime($member_id)
     {
     	$login_record = $this->where(['member_id'=>$member_id,'type'=>0])->order(['create_at'=>'desc'])->limit(1)->select();
-    	(isset($login_record[0])) ? return $login_record[0]['create_at'] : return '';
+        Log::record($login_record);
+        if(isset($login_record[0])){
+            return $login_record[0]['create_at'];
+        }
+        return '';
     }
 }

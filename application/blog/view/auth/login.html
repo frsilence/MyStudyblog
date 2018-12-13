@@ -84,10 +84,8 @@
                 token = data.token;
     			layer.close(loading);
                 if (data.code == 0) {
-                    layer.msg(result.msg, {icon: 1, time: 1000}, function () {
-                        index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
-                        window.parent.location.reload();
+                    layer.msg(data.msg, {icon: 1, time: 3000}, function () {
+                        window.location.href = "{:url('blog/index/index')}";
                     });
                 }
                 else {
@@ -99,7 +97,7 @@
                 token = "{$Request.token}";
                 layer.close(loading);
     			layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000},function(){
-                    window.parent.location.reload();
+                    window.location.reload();
                 });
     		}
     	});
@@ -144,7 +142,7 @@
     /**
      * 注册页面
      */
-    /*
+  
     $("#register").click(function () {
         index = parent.layer.getFrameIndex(window.name);
         parent.layer.close(index);

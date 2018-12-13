@@ -3,6 +3,7 @@
 namespace app\blog\model;
 
 use think\Model;
+use Log;
 
 /**
  * 应用用户模型
@@ -55,16 +56,19 @@ class AppMember extends Model
     {
     	//开启数据模型事务
     	$this->startTrans();
-    	//$member_pid = $this->cloumn('member_pid')->select();
-    	//empty($member_pid) ? $member_pid = 10000 : $member_pid = $member_pid + 1;
+    	$member = $this->order('member_pid','desc')->select()->toArray();
+    	empty($member) ? $member_pid = 10000 : $member_pid = $member[0]['member_pid'] + 1;
+        $member_info['member_pid'] = $member_pid;
     	try{
     		$member = $this->save($member_info);
-    		$this->commit();
-    		return $member;
+            $member_id = $this->id;
+            $member = $this->where('id',$member_id)->field('id,username,email,member_pid')->find();
+            $this->commit();
+    		return ['code'=>0,'msg'=>'用户注册成功，正在进入系统...','member'=>$member];
     	} catch (\Exception $e){
     		//保存失败，数据库操作回滚
     		$this->rollback();
-    		return $member=[];
+    		return ['code'=>1,'msg'=>'用户注册失败，请重试!'];
     	}
     	
     }
@@ -82,7 +86,11 @@ class AppMember extends Model
                 return ['code'=>1,'msg'=>'用户不存在！'];
             } 
             if(password_verify($password,$member->password)){
-                return ['code'=>0,'msg'=>'登录成功，正在进入...','member'=>$member];
+                $member = $member->toArray();
+                unset($member['password']);
+                return ['code'=>0,'msg'=>'登录成功，正在进入系统...','member'=>$member];
+            }else{
+                return ['code'=>1,'msg'=>'用户名密码错误！'];
             }       
     }
 

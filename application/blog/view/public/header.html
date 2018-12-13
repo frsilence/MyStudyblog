@@ -44,7 +44,10 @@
 				{if session('?member')}
 				<ul class="layui-nav top_right_menu">
 					<li class="layui-nav-item">
-						<a>已登录</a>
+						<a>{$Think.session.member['username']}</a>
+					</li>
+					<li class="layui-nav-item">
+						<a href="{:url('blog/auth/logout')}">退出</a>
 					</li>
 				</ul>
 				{else /}
@@ -53,7 +56,7 @@
 						<a href="{:url('blog/auth/login')}">用户登录</a>
 					</li>
 					<li class="layui-nav-item">
-						<a href="{:url('blog/auth/create')}">用户注册</a>
+						<a href="{:url('blog/auth/register')}">用户注册</a>
 					</li>
 				</ul>
 				

@@ -33,7 +33,7 @@ class Users extends Migrator
         $table = $this->table('app_member');
         $table->addColumn('member_pid','string',['limit'=>20,'comment'=>'用户唯一ID'])
         ->addColumn('username','string',['limit'=>30,'comment'=>'用户名'])
-        ->addColumn('password','string',['limit'=>20,'comment'=>'密码'])
+        ->addColumn('password','string',['limit'=>65,'comment'=>'密码'])
         ->addColumn('userimage','string',['limit'=>65,'default'=>'/static/image/app/user_image.jpg','comment'=>'用户头像'])
         ->addColumn('phone','string',['limit'=>15,'default'=>'','comment'=>'手机号'])
         ->addColumn('email','string',['limit'=>30,'comment'=>'用户邮箱'])
@@ -46,7 +46,6 @@ class Users extends Migrator
         ->addIndex('member_pid',['unique'=>true])
         ->addIndex('username',['unique'=>true])
         ->addIndex('email',['unique'=>true])
-        ->addIndex('phone',['unique'=>true])
         ->create();
         //会员fans
         $table = $this->table('app_member_follow')
