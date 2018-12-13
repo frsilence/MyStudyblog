@@ -11,4 +11,31 @@
 	right: 0;
 	top: 0;
 }
+/*footer样式*/
+.footer {
+    border-top: 1px solid #e8e8e8;
+    padding: 15px 0;
+    font-family: tahoma,Arial;
+    font-size: 12px;
+    color: #999;
+    line-height: 22px;
+    text-align: center;
+}
+.mt-20 {
+    margin-top: 20px;
+}
+header, footer, section, aside, details, menu, article, section, nav, address, hgroup, figure, figcaption, legend {
+    display: block;
+    margin: 0;
+    padding: 0;
+}
+.container-fluid {
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+}
+* {
+    word-wrap: break-word;
+}
 
