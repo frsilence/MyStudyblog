@@ -13,31 +13,35 @@
 	    <LINK rel="Shortcut Icon" href="blog.jpg"/>
 	    <link rel="stylesheet" type="text/css" href="__STATIC__/wangEditor-3.1.1/release/wangEditor.min.css"/>
     	<link rel="stylesheet" href="__STATIC__/layui/css/layui.css" media="all"/>
+    	<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui/css/H-ui.min.css"/>
+    	<link rel="stylesheet" type="text/css" href="__STATIC__/h-ui/Hui-iconfont/1.0.8/iconfont.min.css"/>
     	<link rel="stylesheet" href="__STATIC__/css/blog/index.css">
     	<link rel="stylesheet" href="__STATIC__/css/common/bootstrap1.min.css">
+    	<script type="text/javascript" src="__STATIC__/js/common/jquery.min.js"></script>
+    	
     	
 	</head>
-	<body>
+	<body style="overflow: auto;">
 		{include file="blog@public/header" /} 
 		{block name="content"}{/block} 
 		{include file="blog@public/footer" /}
 		
-		<script type="text/javascript" src="__STATIC__/js/common/jquery.min.js"></script>
-		<script type="text/javascript" src="__STATIC__/js/common/bootstraps.min.js"></script>
+		<script type="text/javascript" src="__STATIC__/h-ui/js/H-ui.min.js"></script>
+		<script type="text/javascript" src="__STATIC__/js/common/bootstrap1.min.js"></script>
 		<script type="text/javascript" src="__STATIC__/layui/layui.js"></script>
 		<script type="text/javascript" src="__STATIC__/wangEditor-3.1.1/release/wangEditor.min.js"></script>
+		
 		<script type="text/javascript" src="__STATIC__/blog.js"></script>
 		<script>
-			layui.use(['element','layer'], function() {
-				var element = layui.element; //导航的hover效果、二级菜单等功能，需要依赖element模块
-				var layer = layui.layer;
-		
-				//监听导航点击
-				element.on('nav(demo)', function(elem) {
-					//console.log(elem);
-					layer.msg(elem.text());
+			$(function(){
+				
+				$(".nav-toggle").click(function(){
+					$(".navbar-nav").slideToggle();
 				});
-			});
+			})
+
 		</script>
+		{block name="javascript_content"}{/block}
+
 	</body>
 </html>
