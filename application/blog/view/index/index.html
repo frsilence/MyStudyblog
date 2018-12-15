@@ -1,14 +1,16 @@
 {extend name="public/base" /}
 {block name="content"}
-<p>
+
+<div id="user_screen">
+	
+</div>
 	<script type="text/javascript">
 		$(function(){
-			document.write('屏幕宽度：' + screen.availWidth);
-        document.write('屏幕高度：' + screen.availHeight);
+			$('#user_screen').text('屏幕宽度：' + screen.availWidth+'屏幕高度：' + screen.availHeight);
+			
 		})
 
 </script>
 	
 	
-</p>
 {/block}
