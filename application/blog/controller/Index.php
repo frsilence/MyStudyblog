@@ -6,6 +6,6 @@ class Index extends Appbasic
 {
     public function index()
     {
-        return $this->fetch('',['title'=>'首页']);
+        return $this->fetch('',['title'=>'首页','article_category'=>$this->article_category]);
     }
 }

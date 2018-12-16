@@ -20,6 +20,22 @@ Route::group('auth/',function(){
 	Route::get('logout','blog/auth/logout');
 });
 
+//test
+Route::group('test/',function(){
+	Route::get('create_category','index/index/create_category');
+});
+
+//文章分类
+Route::get('category/:id','blog/article/get_category');
+
+//文章操作
+Route::group('article/',function(){
+	Route::get('addarticle','blog/article/addArticlePage');
+});
+
+
+
+
 return [
 
 ];

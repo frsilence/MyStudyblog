@@ -10,6 +10,7 @@ use think\Request;
 use app\blog\model\BlogConfig;
 use app\blog\model\AppMemberLoginRecord;
 use Log;
+use app\blog\model\ArticleCategory;
 
 class Appbasic extends Controller
 {
@@ -17,6 +18,11 @@ class Appbasic extends Controller
      * 应用配置信息
      */
     protected $app_config = [];
+
+    /**
+     * 应用博客分类
+     */
+    protected $article_category = [];
     /**
      * 当前登录用户
      */
@@ -29,6 +35,7 @@ class Appbasic extends Controller
         parent::__construct();
         $config = new BlogConfig();
         $this->app_config = $config->getBlogConfig();
+        $this->article_category = model('ArticleCategory')->where('status',0)->select();
         $this->member = session('member');
         //检查登录是否过期
         if(!empty($this->member))

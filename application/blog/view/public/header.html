@@ -22,29 +22,29 @@
 			<nav id="Hui-nav" class="nav navbar-nav">
 				<ul class="cl">
 					<li id="Huinav_1"> <a href="/">首页</a> </li>
-					<li id="Huinav_2"> <a href="/Hui-overview.shtml">核心</a> </li>
-					<li id="Huinav_3"> <a href="/lib/jQuery.cookie.js.shtml">脚本</a> </li>
-					<li id="Huinav_4"> <a href="/ext/list.shtml">扩展</a> </li>
-					<li id="Huinav_5"> <a href="/cases/index.shtml">案例</a> </li>
-					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">一级导航 <i class="Hui-iconfont">&#xe6d5;</i></a>
+					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">MyBlog <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							<li><a href="#">二级导航</a></li>
-							<li><a href="#">二级导航<i class="arrow Hui-iconfont">&#xe6d7;</i></a>
-								<ul class="menu">
-									<li><a href="javascript:;">三级菜单<i class="arrow Hui-iconfont">&#xe6d7;</i></a>
-										<ul class="menu">
-											<li><a href="javascript:;">四级菜单</a></li>
-											<li><a href="javascript:;">四级菜单</a></li>
-											<li><a href="javascript:;">四级菜单</a></li>
-										</ul>
-									</li>
-									<li><a href="#">三级导航</a></li>
-								</ul>
-							</li>
-							<li><a href="#">二级导航</a></li>
-							<li class="disabled"><a href="javascript:;">二级菜单</a></li>
+							{volist name="article_category" id="category"}
+							<li><a href="{:url('blog/article/get_category',['id'=>$category.id])}">{$category.category_title}</a></li>
+							{/volist}
 						</ul>
 					</li>
+					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">MyDocument<i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="#">分类一</a></li>
+							<li><a href="#">分类二</a></li>
+							<li><a href="#">分类三</a></li>
+						</ul>
+					</li>
+					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">MyTool<i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="{:url('index/index/create_category')}">create_category</a></li>
+							<li><a href="#">分类二</a></li>
+							<li><a href="#">分类三</a></li>
+						</ul>
+					</li>
+					<li id="Huinav_5"> <a href="/cases/index.shtml">Website</a> </li>
+					<li id="Huinav_6"> <a href="{:url('blog/article/addArticlePage')}" class="Hui-iconfont">Add Article &#xe717;</a> </li>
 					{if session('?member')}
 					<li class="dropDown dropDown_hover hidden-xs" style="float: right;"><a class="dropDown_A Hui-iconfont">&#xe705; {$Think.session.member['username']}&#xe6d5;</a>
 						<ul class="dropDown-menu menu radius box-shadow">
@@ -64,7 +64,7 @@
 					{/if}
 					
 				</ul>
-			</nav>
+			</nav> 
 		</div>
 	</div>
 </header>

@@ -33,7 +33,7 @@ class Auth extends Appbasic
      */
     public function login()
     {
-        return $this->fetch('login',['title'=>'用户登录']);
+        return $this->fetch('login',['title'=>'用户登录','article_category'=>$this->article_category]);
     }
     
     /**
@@ -70,7 +70,7 @@ class Auth extends Appbasic
      */
     public function register()
     {
-        return $this->fetch('register',['title'=>'用户注册']);
+        return $this->fetch('register',['title'=>'用户注册','article_category'=>$this->article_category]);
     }
 
     /**
