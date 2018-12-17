@@ -19,6 +19,16 @@ class Article extends Appbasic
     }
 
     /**
+     * 显示文章详情页
+     * @param   $id 文章id
+     * @return  \think\Response
+     */
+    public function readArticle($id)
+    {
+        return $id;
+    }
+
+    /**
      * 保存新建的文章
      *
      * @param  \think\Request  $request

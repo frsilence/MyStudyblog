@@ -156,7 +156,7 @@ class Article extends Model
             $article_info[] = $article_info->member();
             $article_info[] = $article_info->categorys();
             $article_info[] = $article_info->tags();
-            $article_info[] = $article_info->comments->count();
+            $article_info[] = $article_info->comments()->count();
         }
         return $article_info;
     }
@@ -188,7 +188,7 @@ class Article extends Model
                 $item->member;
                 $item->category;
                 $item->tags;
-                //$item['comment_num'] = $item->comments->count();
+                $item['comment_num'] = $item->comments()->count();
         });
         return $latest_article;
     }

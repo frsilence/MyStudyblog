@@ -26,11 +26,17 @@ Route::group('test/',function(){
 });
 
 //文章分类
-Route::get('category/:id','blog/article/get_category');
+Route::get('category/:id','blog/article/getCategory');
 
 //文章操作
 Route::group('article/',function(){
 	Route::get('addarticle','blog/article/addArticlePage');
+	Route::get('id/:id','blog/article/readArticle');
+});
+
+//用户操作
+Route::group('member/',function(){
+	Route::get('index/:id','blog/member/readMember');
 });
 
 //API

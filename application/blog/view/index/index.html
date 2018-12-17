@@ -7,16 +7,20 @@
 				<div>
 					<p class="Hui-iconfont f-20">&#xe616; 最新文章</p> 
 				</div>
-				<div id="latest_article" class="bk-gray">
+				<div id="latest_article" class="bk-gray pd-10">
 					<ul>
 						{volist name='latest_article' id='article'}
-							<li class="">
+							<li class="bk-gray pd-10 mt-10">
 								<h4 class="title">
-									<a href="{:url('blog/article/getArticleById')}">{$article.title}</a>
+									<a href="{:url('blog/article/readArticle',['id'=>$article.id])}">{$article.title}</a>
 								</h4>
 								<div>
-									<span>{$article.member.username}</span>
-									<span>{$article.category.category_title}</span>
+									<span><a href="{:url('blog/member/readMember',['id'=>$article.member.id])}"><i class="Hui-iconfont"> &#xe62c;</i> 作者：{$article.member.username}&nbsp;&nbsp; </a></span>
+									<span><a href="{:url('blog/article/getCategory',['id'=>$article.category.id])}"><i class="Hui-iconfont"> &#xe72d;</i> 分类：{$article.category.category_title}&nbsp;&nbsp; </a></span>
+									<span><a href="javascript:"><i class="Hui-iconfont">&#xe728;</i> 时间：{$article.update_time}&nbsp;&nbsp; </a></span>
+									<span><a href="{:url('blog/article/readArticle',['id'=>$article.id])}"><i class="Hui-iconfont">&#xe622;</i>评论：{$article.comment_num}&nbsp;&nbsp; </a></span>
+									<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：{$article.click_num}&nbsp;&nbsp; </a></span>
+									<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：{$article.praise_num}</a></span>
 								</div>
 								
 							</li>
