@@ -24,7 +24,7 @@ class BlogTag extends Model
      */
     public function getAllTag()
     {
-    	$tag_list = $this->where('status'=>0)->select();
+    	$tag_list = $this->where('status',0)->select();
     	return $tag_list;
     }
 

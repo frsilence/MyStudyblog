@@ -44,7 +44,7 @@ class Auth extends Appbasic
     public function post_login(Request $request)
     {
         //验证传入参数
-        $result = $this->validate($request->post(),'app\blog\validate\auth.login');
+        $result = $this->validate($request->post(),'app\blog\validate\Auth.login');
         if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
         //验证用户信息
         $member_login = model('AppMember')->login($request->post('username'),$request->post('password'));
@@ -82,7 +82,7 @@ class Auth extends Appbasic
     public function post_register(Request $request)
     {
         //验证传入参数
-        $result = $this->validate($request->post(),'app\blog\validate\auth.register');
+        $result = $this->validate($request->post(),'app\blog\validate\Auth.register');
         if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
         //注册用户
         $member_register = model('AppMember')->register($request->post());

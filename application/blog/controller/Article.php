@@ -19,24 +19,23 @@ class Article extends Appbasic
     }
 
     /**
-     * 显示创建资源表单页.
-     *
-     * @return \think\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * 保存新建的资源
+     * 保存新建的文章
      *
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function save(Request $request)
+    public function addarticle(Request $request)
     {
-        //
+        //验证请求字段
+        $article_info = $request->post();
+        $result = $this->validate($article_info,'app\blog\validate\Article.add');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
+        $save_article = model('Article')->addArticle($article_info);
+        if($save_article == 0){
+            return json(['code'=>1,'msg'=>'保存错误，请稍后尝试','token'=>$request->token()]);
+        }else{
+            return json(['code'=>0,'msg'=>'保存成功','article_id'=>$save_article,'token'=>$request->token()]);
+        }
     }
 
     /**

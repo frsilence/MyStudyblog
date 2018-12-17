@@ -31,7 +31,7 @@ class ArticleComment extends Model
      * 根据文章ID获取评论
      * @param  int $article_id 文章ID
      */
-    public getCommentByArticleId($article_id)
+    public function getCommentByArticleId($article_id)
     {
     	$comments = $this->where(['article_id'=>$article_id,'is_delete'=>0])->order('create_at','asc')->select()->each(function($item,$key){
     			$item->member();
@@ -48,7 +48,7 @@ class ArticleComment extends Model
     {
         $comment_list = $this->where(['member_id'=>$member_id,'is_delete'=>0])->order('create_at','desc')->paginate($page)->each(function($item,$key){
             $item['article_info'] = $this->articlee()->field('title','id');
-        })
+        });
     }
 
     /**
@@ -63,7 +63,7 @@ class ArticleComment extends Model
             $this->save($comment_info);
             $this->commit();
             return true;
-        }catch{
+        }catch(\Exception $e){
             $this->rollback();
             return false;
         }

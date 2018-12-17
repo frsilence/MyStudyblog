@@ -17,7 +17,7 @@ class Article extends Model
      */
     public function member()
     {
-        return $this->belongsTo('AppMember','member_id','id')->field('id','username');
+        return $this->belongsTo('AppMember','member_id','id')->field('id,username');
     }
 
     /**
@@ -31,7 +31,7 @@ class Article extends Model
     /**
      * 关联文章分类(一对多)
      */
-    public function categorys()
+    public function category()
     {
         return $this->belongsTo('ArticleCategory','category_id','id');
     }
@@ -41,7 +41,7 @@ class Article extends Model
      */
     public function comments()
     {
-        return $this->hasOne('ArticleComment','article_id','id')->where('is_delete'=>0);
+        return $this->hasOne('ArticleComment','article_id','id')->where('is_delete',0);
     }
 
     /**
@@ -49,20 +49,20 @@ class Article extends Model
      * @param  int $article_id 文章ID
      * @param  array $article_info 含有文章标签的信息 
      */
-    public function saveBlogTag($article_id,$article_info)
+    public function saveBlogTag($article_id,$article_tags)
     {
-        if(isset($article_info['tag_list']) && !empty($article_info['tag_list'])){
-            $tag_list = explode(',',$article_info['tag_list']);
-            $article_tag = [];
+        if(isset($article_tags) && !empty($article_tags)){
+            $tag_list = explode(';',$article_tags);
+            $blog_tag = [];
             foreach ($tag_list as $key => $value) {
                 $tag_id = model('BlogTag')->where('name',$value)->value('id');
                 if(empty($tag_id)){
-                    $tag = model('BlogTag')->save(['name'=>$value]);
+                    $tag = model('BlogTag')->create(['name'=>$value]);
                     $tag_id = $tag->id;
                 }
-                $article_tag[] = ['article_id'=>$article_id,'tag_id'=>$tag_id];
+                $blog_tag[] = ['article_id'=>$article_id,'tag_id'=>$tag_id];
             }
-            model('ArticleTag')->saveAll($article_tag);
+            model('ArticleTag')->saveAll($blog_tag);
 
         }
     }
@@ -76,16 +76,22 @@ class Article extends Model
     {
     	$this->startTrans();
     	try{
-    		$article=$this->save($article_info);
-    		$article_id = $this->article_id;
+    		$article=$this->save([
+                    'member_id' => session('member.id'),
+                    'category_id' => $article_info['article_category'],
+                    'update_userid' => session('member.id'),
+                    'title' => $article_info['article_title'],
+                    'content' => $article_info['article_content'],
+                ]);
+    		$article_id = $this->id;
             //保存标签
-            $this->saveBlogTag($article_id,$article_info);
+            $this->saveBlogTag($article_id,$article_info['article_tag']);
     		$this->commit();
-    	} catch(/Exception $e){
-    		$this->rollback;
-    		return false;
+    	} catch(\Exception $e){
+    		$this->rollback();
+    		return 0;
     	}
-    	$article_id = $this->article_id;
+    	return $article_id = $article_id;
 
     }
 
@@ -106,7 +112,7 @@ class Article extends Model
                 $article->save();
                 $this->commit();
                 return true;
-            } catch(/Exception $e){
+            } catch(\Exception $e){
                 $this->rollback();
                 return false;
             }
@@ -131,7 +137,7 @@ class Article extends Model
                 $this->saveBlogTag($article_id,$update);
                 $this->commit();
                 return true;
-            }catch(/Exception $e){
+            }catch(\Exception $e){
                 $this->rollback();
                 return false;
             }           
@@ -167,9 +173,26 @@ class Article extends Model
                 $item->categorys();
                 $item->tags();
                 $item['comment_num'] = $item->comments()->count();
-        })
+        });
         return $articles;
     }
+
+    /**
+     * 获取最新文章
+     * @param int $limit 获取数量
+     * @return think\Collection [description]
+     */
+    public function getLatestArticle($limit = 10)
+    {
+        $latest_article = $this->where(['status'=>0,'is_delete'=>0])->limit($limit)->order('update_time','desc')->select()->each(function($item,$key){
+                $item->member;
+                $item->category;
+                $item->tags;
+                //$item['comment_num'] = $item->comments->count();
+        });
+        return $latest_article;
+    }
+
 
     /**
      * 查询：根据文章分类进行 查询
@@ -207,10 +230,10 @@ class Article extends Model
      * @param  int $article_id 当前文章ID
      * @return /think/model
      */
-    public function getNextArticle($article_id)
+    public function getLastArticle($article_id)
     {
         $next_article = $this->where(['status'=>0,'is_delete'=>0,'id'<$article_id])->order('id','desc')->find();
-        return $next_article; 
+        return $last_article; 
     }
 
     /**

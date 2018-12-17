@@ -34,7 +34,7 @@ class Blogs extends Migrator
         ->addColumn('category_id','integer',['comment'=>'所属文章分类ID'])
         ->addColumn('title','string',['limit'=>100,'comment'=>'文章标题'])
         ->addColumn('content','text',['comment'=>'文章内容'])
-        ->addColumn('recommend','integer',['comment'=>'推荐级别'])
+        ->addColumn('recommend','integer',['default'=>0,'comment'=>'推荐级别'])
         ->addColumn('praise_num','integer',['default'=>0,'comment'=>'点赞数量'])
         ->addColumn('click_num','integer',['default'=>0,'comment'=>'点击量'])
         ->addColumn('collect_num','integer',['default'=>0,'comment'=>'收藏量'])

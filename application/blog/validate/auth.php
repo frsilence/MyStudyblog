@@ -4,7 +4,7 @@ namespace app\blog\validate;
 
 use think\Validate;
 
-class auth extends Validate
+class Auth extends Validate
 {
     /**
      * 定义验证规则

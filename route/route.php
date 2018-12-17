@@ -33,6 +33,16 @@ Route::group('article/',function(){
 	Route::get('addarticle','blog/article/addArticlePage');
 });
 
+//API
+Route::group('api/',function(){
+	//图片上传
+	Route::post('upload/upload_image','blog/Upload/upload_image');
+	//文章操作
+	Route::group('article/',function(){
+		Route::post('addarticle','blog/article/addarticle');
+	});
+});
+
 
 
 

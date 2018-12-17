@@ -1,9 +1,38 @@
 {extend name="public/base" /}
 {block name="content"}
-
-<div id="user_screen">
+<section>
+	<div class="container" style="margin-top: 20px;">
+		<div class="row">
+			<div class="col-lg-9 col-md-9 col-sm-8">
+				<div>
+					<p class="Hui-iconfont f-20">&#xe616; 最新文章</p> 
+				</div>
+				<div id="latest_article" class="bk-gray">
+					<ul>
+						{volist name='latest_article' id='article'}
+							<li class="">
+								<h4 class="title">
+									<a href="{:url('blog/article/getArticleById')}">{$article.title}</a>
+								</h4>
+								<div>
+									<span>{$article.member.username}</span>
+									<span>{$article.category.category_title}</span>
+								</div>
+								
+							</li>
+						{/volist}
+					</ul>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-4">
+				other
+			</div>
+		</div>
+	</div>
 	
-</div>
+</section>
+
+	
 	<script type="text/javascript">
 		$(function(){
 			$('#user_screen').text('屏幕宽度：' + screen.availWidth+'屏幕高度：' + screen.availHeight);
