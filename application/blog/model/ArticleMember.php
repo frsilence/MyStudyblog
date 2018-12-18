@@ -38,7 +38,7 @@ class ArticleMember extends Model
     		}
     		$this->commit();
     		return 2;
-    	}catch{
+    	}catch(\Exception $e){
     		$this->rollback();
     		return 3;
     	}
@@ -61,7 +61,7 @@ class ArticleMember extends Model
     			$articleMember->save();
     			$this->commit();
     			return 2;
-    		}catch{
+    		}catch(\Exception $e){
     			$this->rollback();
     			return 3;
     		}

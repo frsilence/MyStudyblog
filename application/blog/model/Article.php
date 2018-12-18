@@ -37,11 +37,11 @@ class Article extends Model
     }
 
     /**
-     * 关联评论（一对一）
+     * 关联评论（一对多）
      */
     public function comments()
     {
-        return $this->hasOne('ArticleComment','article_id','id')->where('is_delete',0);
+        return $this->hasMany('ArticleComment','article_id','id')->where('is_delete',0)->order('create_time','desc');
     }
 
     /**
@@ -89,7 +89,7 @@ class Article extends Model
     		$this->commit();
     	} catch(\Exception $e){
     		$this->rollback();
-    		return 0;
+    		return 1;
     	}
     	return $article_id = $article_id;
 
@@ -156,6 +156,7 @@ class Article extends Model
             $article_info->member;
             $article_info->category;
             $article_info->tags;
+            $article_info->comments->each(function($item,$key){$item->member;});
             $article_info['comment_num']=$article_info->comments()->count();
         }
         

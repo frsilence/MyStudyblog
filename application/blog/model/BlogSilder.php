@@ -17,7 +17,7 @@ class BlogSilder extends Model
      */
     public function getBlogSilder()
     {
-    	$blog_silder = $this->where('status'=>0)->order('sort','asc')->select();
+    	$blog_silder = $this->where('status',0)->order('sort','asc')->select();
     	return $blog_silder;
     }
 }

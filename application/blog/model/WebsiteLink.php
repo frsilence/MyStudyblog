@@ -16,7 +16,7 @@ class WebsiteLink extends Model
      */
     public function getAllLink()
     {
-    	$link_list = $this->field('id,name,logo,url')->wher('status'=>0)->order(['sort'=>'desc','create_at'=>'asc'])->select();
+    	$link_list = $this->field('id,name,logo,url')->wher('status',0)->order(['sort'=>'desc','create_at'=>'asc'])->select();
     	return $link_list;
     }
 }

@@ -45,7 +45,7 @@ Route::group('api/',function(){
 	Route::post('upload/upload_image','blog/Upload/upload_image');
 	//文章操作
 	Route::group('article/',function(){
-		Route::post('addarticle','blog/article/addarticle');
+		Route::post('addarticle','blog/article/addArticle');
 		Route::post('addcomment','blog/article/addComment');
 	});
 });

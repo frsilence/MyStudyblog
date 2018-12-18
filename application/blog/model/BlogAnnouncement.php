@@ -16,7 +16,7 @@ class BlogAnnouncement extends Model
      */
     public function getAnnouncement()
     {
-    	$list = $this->where('status'=>0)->order('sort','asc')select();
+    	$list = $this->where('status',0)->order('sort','asc')->select();
     	return $list;
     }
 }

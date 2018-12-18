@@ -20,13 +20,15 @@ class AppMemberFollow extends Model
     {
     	$member = model('AppMember');
     	//检查用户是否存在
-    	(empty($member->where(['id'=>$member_id,'status'=>0,'is_delete'=>0])->find()) || empty($member->where(['id'=>$follower_id,'status'=>0,'is_delete'=>0])->find())) ? return 0 : ;
+    	if(empty($member->where(['id'=>$member_id,'status'=>0,'is_delete'=>0])->find()) || empty($member->where(['id'=>$follower_id,'status'=>0,'is_delete'=>0])->find())){
+			return 0;
+		};
     	//检查是否已经关注
     	if(!empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find())) return 1;
     	//执行关注
     	$this->startTrans();
     	try{
-    		$follower = $this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>1])->find());
+    		$follower = $this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>1])->find();
     		if(!empty($follower)){
     			$follower->is_delete = 0;
     			$follower->save();
@@ -37,7 +39,7 @@ class AppMemberFollow extends Model
     			$this->commit();
     			return 3;
     		}
-    	} catch(/Exception $e){
+    	} catch(\Exception $e){
     		$this->rollback();
     		return 2;
     	}
@@ -53,13 +55,15 @@ class AppMemberFollow extends Model
     public function deleteMemberFollow($member_id,$follower_id)
     {
     	//检查是否关注
-    	empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find()) ? return 0 : ;
+    	if (empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find())){
+			return 0;
+		};
     	$this->startTrans();
     	try{
     		$this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>1])->update(['is_delete'=>0]);
     		$thsi->commit();
     		return 2;
-    	}catch(/Exception $e){
+    	}catch(\Exception $e){
     		$this->rollback();
     		return 1;
     	}

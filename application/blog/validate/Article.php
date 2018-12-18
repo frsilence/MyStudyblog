@@ -16,9 +16,9 @@ class Article extends Validate
         'article_title|文章标题'=>'require|max:100|token',
         'article_tag|文章标签'=>'require',
         'article_category|文章分类'=>'require|number',
-        'article_content|文章内容'=>'require|max:10000',
+        'article_content|文章内容'=>'require|max:30000',
         'article_id|文章id'=>'require|number',
-        'comment_content'=>'require',
+        'comment_content|评论内容'=>'require',
     ];
     
     /**

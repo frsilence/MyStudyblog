@@ -52,18 +52,39 @@ class Article extends Appbasic
      * @param  \think\Request  $request
      * @return \think\Response
      */
-    public function addarticle(Request $request)
+    public function addArticle(Request $request)
     {
         //验证请求字段
         $article_info = $request->post();
         $result = $this->validate($article_info,'app\blog\validate\Article.addarticle');
         if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
         $save_article = model('Article')->addArticle($article_info);
-        if($save_article == 0){
+        if($save_article == 1){
             return json(['code'=>1,'msg'=>'保存错误，请稍后尝试','token'=>$request->token()]);
         }else{
             return json(['code'=>0,'msg'=>'保存成功','article_id'=>$save_article,'token'=>$request->token()]);
         }
+    }
+
+    /**
+     * 添加评论
+     * @param think/Request
+     * @param return json
+     */
+    public function addComment(Request $request)
+    {
+        //验证输入参数
+        $comment_info = $request->post();
+        $result = $this->validate($comment_info,'app\blog\validate\Article.addcomment');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
+        $comment_info['member_id'] = session('member.id');
+        $save_comment = model('ArticleComment')->addComment($comment_info);
+        if($save_comment == 0){
+            return json(['code'=>0,'msg'=>'提交成功','token'=>$request->token()]);
+        }else{
+            return json(['code'=>1,'msg'=>'保存错误，请稍后尝试','token'=>$request->token()]);
+        }
+
     }
 
     /**

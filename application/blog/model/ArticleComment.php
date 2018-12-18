@@ -24,7 +24,7 @@ class ArticleComment extends Model
      */
     public function member()
     {
-    	return $this->belongsTo('Member','member_id','id')->field('id','username');
+    	return $this->belongsTo('AppMember','member_id','id')->field('id,username,userimage');
     }
 
     /**
@@ -54,18 +54,22 @@ class ArticleComment extends Model
     /**
      * 增加评论
      * @param  arary $comment_info
-     * @return  boolean [description]
+     * @return  int
      */
     public function addComment($comment_info)
     {
         $this->startTrans();
         try{
-            $this->save($comment_info);
+            $this->save([
+                'member_id'=>$comment_info['member_id'],
+                'article_id'=>$comment_info['article_id'],
+                'content'=>$comment_info['comment_content'],
+                ]);
             $this->commit();
-            return true;
+            return 0;
         }catch(\Exception $e){
             $this->rollback();
-            return false;
+            return 1;
         }
     }
 }

@@ -19,7 +19,7 @@ class BlogSearch extends Model
     public function saveSearchWord($search_word)
     {
     	$word = $this->where('word',$search_word)->find();
-    	is(!empty($word)){
+    	if(!empty($word)){
     		$this->where('word',$search_word)->update([
     			'search_num'=>$word['search_num']+1]);
     	}else{
