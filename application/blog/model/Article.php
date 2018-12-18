@@ -25,7 +25,7 @@ class Article extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany('Article','article_tag','tag_id','article_id');                                                         
+        return $this->belongsToMany('BlogTag','article_tag','tag_id','article_id');                                                         
     }
 
     /**
@@ -152,12 +152,14 @@ class Article extends Model
     public function getArticleByArticleId($article_id)
     {
         $article_info = $this->where(['id'=>$article_id,'status'=>0,'is_delete'=>0])->find();
-        if(empty($article_info)){
-            $article_info[] = $article_info->member();
-            $article_info[] = $article_info->categorys();
-            $article_info[] = $article_info->tags();
-            $article_info[] = $article_info->comments()->count();
+        if(!empty($article_info)){
+            $article_info->member;
+            $article_info->category;
+            $article_info->tags;
+            $article_info['comment_num']=$article_info->comments()->count();
         }
+        
+       
         return $article_info;
     }
 

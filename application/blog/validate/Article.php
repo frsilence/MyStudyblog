@@ -17,6 +17,8 @@ class Article extends Validate
         'article_tag|文章标签'=>'require',
         'article_category|文章分类'=>'require|number',
         'article_content|文章内容'=>'require|max:10000',
+        'article_id|文章id'=>'require|number',
+        'comment_content'=>'require',
     ];
     
     /**
@@ -29,6 +31,7 @@ class Article extends Validate
 
     //应用场景
     protected  $scene = [
-        'add' => ['article_title','article_tag','article_category','article_content'],
+        'addarticle' => ['article_title','article_tag','article_category','article_content'],
+        'addcomment' => ['article_id','comment_content'],
     ];
 }

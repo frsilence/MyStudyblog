@@ -1,8 +1,8 @@
 {extend name="public/base" /}
 {block name="content"}
 {include file="blog@public/nav" /}
-<section style="overflow: auto;">
-<div class="container" style="overflow: auto;margin-bottom: 100px;">
+<section>
+<div class="container">
 	<div class="row">
 		<div class="col-lg-9 col-md-9">
 			<form class="form form-horizontal">
@@ -155,7 +155,9 @@
         			}
         		},
         	error:function(){
-        		layer.msg('系统错误', {icon: 0, time: 2000});
+        		layer.msg('系统错误', {icon: 0, time: 2000},function(){
+        			window.parent.location.reload();
+        		});
         	},
         		
         });

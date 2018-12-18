@@ -15,7 +15,13 @@ class Article extends Appbasic
      */
     public function addArticlePage()
     {
-        return $this->fetch('addarticle',['title'=>"新建文章",'article_category'=>$this->article_category,'navMenu'=>[['name'=>'新建文章','url'=>'blog/article/addArticlePage']]]);
+        $data = [
+            'title'=>"新建文章",
+            'article_category'=>$this->article_category,
+            'navMenu'=>[
+                ['name'=>'新建文章','url'=>url('blog/article/addArticlePage')]]
+                ];
+        return $this->fetch('addarticle',$data);
     }
 
     /**
@@ -25,7 +31,19 @@ class Article extends Appbasic
      */
     public function readArticle($id)
     {
-        return $id;
+        $article = model('Article')->getArticleByArticleId($id);
+        if(empty($article)) return $this->fetch('public/404',['title'=>'404Page',
+            'article_category'=>$this->article_category]);
+        $data = [
+            'article'=>$article,
+            'title'=>$article->title,
+            'article_category'=>$this->article_category,
+            'navMenu'=>[
+                    ['name'=>$article->category->category_title,'url'=>url('blog/article/getCategory',['id'=>$article->category->id])],
+                    ['name'=>$article->title,'url'=>'#']]
+        ];
+        //return json($data);
+        return $this->fetch('article_detail',$data);
     }
 
     /**
@@ -38,7 +56,7 @@ class Article extends Appbasic
     {
         //验证请求字段
         $article_info = $request->post();
-        $result = $this->validate($article_info,'app\blog\validate\Article.add');
+        $result = $this->validate($article_info,'app\blog\validate\Article.addarticle');
         if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
         $save_article = model('Article')->addArticle($article_info);
         if($save_article == 0){
