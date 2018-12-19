@@ -8,13 +8,12 @@
 					<p class="Hui-iconfont f-20">&#xe616; {$category.category_title}</p> 
 				</div>
 				<div class="bk-gray pd-10">
-					<div id="this_article">
-						
+					<div class="class="bk-gray pd-10">
+						<ul id="this_article">
+							
+						</ul>		
 					</div>
 					<div>
-						<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
-							<legend>总页数大于页码总数</legend>
-						</fieldset>
 						<div id="demo1"></div>
 					</div>
 				</div>
@@ -30,31 +29,80 @@
 
 {block name='javascript_content'}	
 <script type="text/javascript">
-	layui.use(['form', 'layedit', 'laypage'], function () {
-            var form = layui.form
-                , layer = layui.layer
-                , layedit = layui.layedit
-                , laypage = layui.laypage;
-                //总页数大于页码总数
-				  laypage.render({
-				    elem: 'demo1'
-				    ,limits:[10,20,30]
-				    ,curr:'{:url('blog/article/getCategoryArticleList',['id'=>1])}'
-				    ,jump: function(obj){
-				      $.ajax({
-				      	type:"get",
-				      	url:"{:url('blog/article/getCategoryArticleList',['id'=>1])}",
-				      	async:true,
-				      	success:function(data){
-				      		
-				      	}
-				      });
-				    }
-				  });	
+	//分页变量容器
+	
+	var pageObj = {
+		current_page:1,
+		per_page:10 ,
+		dataLength:0,
+		
+	}
+	
+$(document).ready(function(){
+	pageQuery(1);
+	layui.use(['form', 'layedit', 'laypage','layer'], function () {
+	            var form = layui.form,
+	                layer = layui.layer,
+	                layedit = layui.layedit,
+	                laypage = layui.laypage;
 
-          
-        }
-    )
+						laypage.render({
+					    elem: 'demo1',
+					    limits:[10,20,30,40],
+							count:pageObj.dataLength,
+					    curr:pageObj.current_page,
+							layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj,first){
+								if(!first){
+									var curr = obj.curr;
+									pageObj.current_page = obj.curr;
+									pageObj.per_page = obj.limit;
+									pageQuery(curr);
+								}
+					      
+					    }
+					  });	
+	
+	          
+	        }
+	    )
+})
+	
+	
+	
+	
+	
+	
+	function pageQuery(pageno){
+		$.ajax({
+			type:"get",
+			url:"{:url('blog/article/getCategoryArticleList',['id'=>2])}",
+			dataType:'json',
+			async:false,
+			data:{
+				list_rows : pageObj.per_page,
+				page : pageObj.current_page,
+			},
+			success:function(data){
+				pageObj.dataLength = data.total;
+				articles = data.data;
+				$('#this_article').empty()
+				for(var i=0;i<=articles.length;i++)
+				{
+					my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['title']+'</a></h4><div>';
+					my_str2='<span><a href='+articles[i]['member_url']+'><i class="Hui-iconfont"> &#xe62c;</i> 作者：'+articles[i].member.username+'&nbsp;&nbsp; </a></span>';			
+					my_str3='<span><a href='+articles[i].category_url+'><i class="Hui-iconfont"> &#xe72d;</i> 分类：'+articles[i].category.category_title+'&nbsp;&nbsp; </a></span>';
+					my_str4='<span><a href="javascript:"><i class="Hui-iconfont">&#xe728;</i> 时间：'+articles[i].update_time+'&nbsp;&nbsp; </a></span>';
+					my_str5='<span><a href='+articles[i].article_url+'><i class="Hui-iconfont">&#xe622;</i>评论：'+articles[i].comment_num+'&nbsp;&nbsp; </a></span>';
+					my_str6='<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：'+articles[i].click_num+'&nbsp;&nbsp; </a></span>';
+					my_str7='<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：'+articles[i].praise_num+'</a></span></div></li>';
+					$('#this_article').append(my_str1+my_str2+my_str3+my_str4+my_str5+my_str6+my_str7);
+				}
+			}
+		});
+	}
+	
+	
 
 </script>
 {/block}

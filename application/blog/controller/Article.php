@@ -56,24 +56,25 @@ class Article extends Appbasic
     public function getCategory($id)
     {
         $category = model('ArticleCategory')->where(['id'=>$id,'status'=>0])->find();
-        $article_list = model('Article')->getArticleByCategoryId($id);
         $data = [
             'title' => 'ss',
             'category' => $category,
             'article_category'=>$this->article_category,
-            'article_list' => $article_list,
         ];
         //return json($data);
         return $this->fetch('article_category',$data);
     }
 
-    public function getCategoryArticleList(Request $request,$id,$list_row=1,$page=1)
+    public function getCategoryArticleList(Request $request,$id)
     {
-        $articles = model('Article')->where(['category_id'=>$id,'status'=>0,'is_delete'=>0])->paginate($list_row,$page)->each(function($item,$key){
+        $articles = model('Article')->where(['category_id'=>$id,'status'=>0,'is_delete'=>0])->paginate(request()->param('list_rows'))->each(function($item,$key){
                 $item->member;
                 $item->category;
                 $item->tags;
                 $item['comment_num'] = $item->comments()->count();
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+                $item['member_url'] = url('blog/member/readMember',['id'=>$item['member_id']]);
+                $item['category_url'] = url('blog/article/getCategory',['id'=>$item['category_id']]);
 
         });
         return json($articles);
