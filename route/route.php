@@ -25,13 +25,14 @@ Route::group('test/',function(){
 	Route::get('create_category','index/index/create_category');
 });
 
-//文章分类
-Route::get('category/:id','blog/article/getCategory');
+
 
 //文章操作
 Route::group('article/',function(){
 	Route::get('addarticle','blog/article/addArticlePage');
 	Route::get('id/:id','blog/article/readArticle');
+	Route::get('category/id/:id','blog/article/getCategory');
+	Route::get('category/all','blog/article/getAllCategory');
 });
 
 //用户操作
@@ -47,6 +48,7 @@ Route::group('api/',function(){
 	Route::group('article/',function(){
 		Route::post('addarticle','blog/article/addArticle');
 		Route::post('addcomment','blog/article/addComment');
+		Route::get('category/:id/articlelist','blog/article/getCategoryArticleList');
 	});
 });
 

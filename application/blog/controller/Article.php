@@ -42,8 +42,53 @@ class Article extends Appbasic
                     ['name'=>$article->category->category_title,'url'=>url('blog/article/getCategory',['id'=>$article->category->id])],
                     ['name'=>$article->title,'url'=>'#']]
         ];
+        $data['last_article'] = (!empty(model('Article')->getLatestArticle($id))) ? model('Article')->getLastArticle($id) : NULL;
+        $data['next_article'] = (!empty(model('Article')->getNextArticle($id))) ? model('Article')->getNextArticle($id) : NULL;
         //return json($data);
         return $this->fetch('article_detail',$data);
+    }
+
+    /**
+     * 显示文章分类
+     * @param  $id 分类id
+     * @return think\Response
+     */
+    public function getCategory($id)
+    {
+        $category = model('ArticleCategory')->where(['id'=>$id,'status'=>0])->find();
+        $article_list = model('Article')->getArticleByCategoryId($id);
+        $data = [
+            'title' => 'ss',
+            'category' => $category,
+            'article_category'=>$this->article_category,
+            'article_list' => $article_list,
+        ];
+        //return json($data);
+        return $this->fetch('article_category',$data);
+    }
+
+    public function getCategoryArticleList(Request $request,$id,$list_row=1,$page=1)
+    {
+        $articles = model('Article')->where(['category_id'=>$id,'status'=>0,'is_delete'=>0])->paginate($list_row,$page)->each(function($item,$key){
+                $item->member;
+                $item->category;
+                $item->tags;
+                $item['comment_num'] = $item->comments()->count();
+
+        });
+        return json($articles);
+    }
+
+    /**
+     * 显示所有文章分类
+     */
+    public function getAllCategory()
+    {
+        $data = [
+            'title'=>'所有分类',
+            'article_category'=>$this->article_category,
+        ];
+        return $this->fetch('article_allcategory',$data);
     }
 
     /**

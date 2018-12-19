@@ -159,8 +159,6 @@ class Article extends Model
             $article_info->comments->each(function($item,$key){$item->member;});
             $article_info['comment_num']=$article_info->comments()->count();
         }
-        
-       
         return $article_info;
     }
 
@@ -200,17 +198,15 @@ class Article extends Model
     /**
      * 查询：根据文章分类进行 查询
      * @param int $category_id 分类ID
-     * @param int $age
+     * @param int $page
      * @return /think/Paginator
      */
-    public function getArticleByCategoryId($category_id,$page=10)
+    public function getArticleByCategoryId($category_id,$list_row=1,$page=1)
     {
-        $search_list = ['status'=>0,'is_delete'=>0];
-        if($category_id!=0) $search_list['category_id'] = $category_id;
-        $articles = $this->where(['category_id'=>$category_id,'status'=>0,'is_delete'=>0])->paginator($page)->each(function($item,$key){
-                $item->member();
-                $item->categorys();
-                $item->tags();
+        $articles = $this->where(['category_id'=>$category_id,'status'=>0,'is_delete'=>0])->paginate($list_row,$page)->each(function($item,$key){
+                $item->member;
+                $item->category;
+                $item->tags;
                 $item['comment_num'] = $item->comments()->count();
 
         });
@@ -224,7 +220,11 @@ class Article extends Model
      */
     public function getNextArticle($article_id)
     {
-        $next_article = $this->where(['status'=>0,'is_delete'=>0,'id'>$article_id])->order('id','asc')->find();
+        $next_article = $this->where([
+            ['status','=',0],
+            ['is_delete','=',0],
+            ['id','>',$article_id]
+            ])->order('id','asc')->field('id,title')->find();
         return $next_article; 
     }
 
@@ -235,7 +235,11 @@ class Article extends Model
      */
     public function getLastArticle($article_id)
     {
-        $next_article = $this->where(['status'=>0,'is_delete'=>0,'id'<$article_id])->order('id','desc')->find();
+        $last_article = $this->where([
+            ['status','=',0],
+            ['is_delete','=',0],
+            ['id','<',$article_id]
+            ])->order('id','desc')->field('id,title')->find();
         return $last_article; 
     }
 

@@ -27,6 +27,18 @@
 					</div>
 					<div class="bk-gray mt-15 pd-15">
 						{$article.content|default="暂无内容"|raw}
+						<div class="f-20 pt-25 pd-15">
+							{if !empty($last_article)}
+							<span class="f-l"><a href="{:url('blog/article/readArticle',['id'=>$last_article.id])}"><i class="Hui-iconfont">&#xe69b; </i>上一篇</a></span>
+							{else}
+							
+							{/if}
+							{if !empty($next_article)}
+							<span class="f-r"><a href="{:url('blog/article/readArticle',['id'=>$next_article.id])}">下一篇 <i class="Hui-iconfont">&#xe69a;</i></a></span>
+							{else}
+							
+							{/if}
+						</div>
 					</div>
 					<div class="bk-gray mt-15 pd-15">
 						<h4 class="text-l"><strong><i class="Hui-iconfont">&#xe686; </i>文章评论</strong> </h4>

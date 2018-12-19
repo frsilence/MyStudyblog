@@ -1,0 +1,63 @@
+{extend name="public/base" /}
+{block name="content"}
+<section>
+	<div class="container mt-20">
+		<div class="row">
+			<div class="col-lg-9 col-md-9 col-sm-8">
+				<div>
+					<p class="Hui-iconfont f-20">&#xe616; {$category.category_title}</p> 
+				</div>
+				<div class="bk-gray pd-10">
+					<div id="this_article">
+						
+					</div>
+					<div>
+						<fieldset class="layui-elem-field layui-field-title" style="margin-top: 30px;">
+							<legend>总页数大于页码总数</legend>
+						</fieldset>
+						<div id="demo1"></div>
+					</div>
+				</div>
+			</div>
+			<div class="col-lg-3 col-md-3 col-sm-4">
+				other
+			</div>
+		</div>
+	</div>
+	
+</section>
+{/block}
+
+{block name='javascript_content'}	
+<script type="text/javascript">
+	layui.use(['form', 'layedit', 'laypage'], function () {
+            var form = layui.form
+                , layer = layui.layer
+                , layedit = layui.layedit
+                , laypage = layui.laypage;
+                //总页数大于页码总数
+				  laypage.render({
+				    elem: 'demo1'
+				    ,limits:[10,20,30]
+				    ,curr:'{:url('blog/article/getCategoryArticleList',['id'=>1])}'
+				    ,jump: function(obj){
+				      $.ajax({
+				      	type:"get",
+				      	url:"{:url('blog/article/getCategoryArticleList',['id'=>1])}",
+				      	async:true,
+				      	success:function(data){
+				      		
+				      	}
+				      });
+				    }
+				  });	
+
+          
+        }
+    )
+
+</script>
+{/block}
+
+	
+

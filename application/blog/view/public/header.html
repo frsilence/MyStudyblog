@@ -22,14 +22,14 @@
 			<nav id="Hui-nav" class="nav navbar-nav">
 				<ul class="cl">
 					<li id="Huinav_1"> <a href="/">首页</a> </li>
-					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">MyBlog <i class="Hui-iconfont">&#xe6d5;</i></a>
+					<li class="dropDown dropDown_hover"><a href="{:url('blog/article/getAllCategory')}" class="dropDown_A">MyBlog <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							{volist name="article_category" id="category"}
-							<li><a href="{:url('blog/article/get_category',['id'=>$category.id])}">{$category.category_title}</a></li>
+							<li><a href="{:url('blog/article/getCategory',['id'=>$category.id])}">{$category.category_title}</a></li>
 							{/volist}
 						</ul>
 					</li>
-					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">MyDocument<i class="Hui-iconfont">&#xe6d5;</i></a>
+					<li class="dropDown dropDown_hover"><a href="" class="dropDown_A">MyDocument<i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li><a href="#">分类一</a></li>
 							<li><a href="#">分类二</a></li>
