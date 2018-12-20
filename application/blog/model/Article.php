@@ -167,15 +167,17 @@ class Article extends Model
      * @param  int $member_id [用户ID]
      * @return  /think/Paginator
      */
-    public function getArticleByMemberId($member_id,$page=10)
+    public function getMemberArticleList($member_id)
     {
-        $articles = $this->where(['member_id'=>$member_id,'status'=>0,'is_delete'=>0])->paginator($page)->each(function($item,$key){
-                $item->member();
-                $item->categorys();
-                $item->tags();
+        $article_list = $this->where(['member_id'=>$member_id,'status'=>0,'is_delete'=>0])->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->paginate(request()->param('list_rows'),true,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
+                $item->member;
+                $item->category;
                 $item['comment_num'] = $item->comments()->count();
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+                $item['member_url'] = url('blog/member/readMember',['id'=>$item['member_id']]);
+                $item['category_url'] = url('blog/article/getCategory',['id'=>$item['category_id']]);
         });
-        return $articles;
+        return $article_list;
     }
 
     /**
@@ -206,7 +208,6 @@ class Article extends Model
         $articles = model('Article')->where(['category_id'=>$id,'status'=>0,'is_delete'=>0])->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->paginate(request()->param('list_rows'))->each(function($item,$key){
                 $item->member;
                 $item->category;
-                $item->tags;
                 $item['comment_num'] = $item->comments()->count();
                 $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
                 $item['member_url'] = url('blog/member/readMember',['id'=>$item['member_id']]);

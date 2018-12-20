@@ -52,6 +52,7 @@ Route::group('api/',function(){
 		Route::post('addarticle','blog/article/addArticle');
 		Route::post('addcomment','blog/article/addComment');
 		Route::get('category/:id/articlelist','blog/article/getCategoryArticleList');
+		Route::get('member/:id/articlelist','blog/member/getMemberArticleList');
 	});
 });
 

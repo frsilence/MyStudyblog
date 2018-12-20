@@ -31,6 +31,17 @@ class Member extends Appbasic
     }
 
     /**
+     * 获取会员所有文章
+     * @param  init  $id [description]
+     * @return [type]     [description]
+     */
+    public function getMemberArticleList($id)
+    {
+        $MemberArticleList = model('Article')->getMemberArticleList($id);
+        return json($MemberArticleList);
+    }
+
+    /**
      * 显示创建资源表单页.
      *
      * @return \think\Response
