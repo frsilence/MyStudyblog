@@ -32,7 +32,7 @@ class Article extends Appbasic
     public function readArticle($id)
     {
         $article = model('Article')->getArticleByArticleId($id);
-        if(empty($article)) return $this->fetch('public/404',['title'=>'404Page',
+        if(empty($article)) return $this->fetch('public\404',['title'=>'404Page',
             'article_category'=>$this->article_category]);
         $data = [
             'article'=>$article,
@@ -56,10 +56,14 @@ class Article extends Appbasic
     public function getCategory($id)
     {
         $category = model('ArticleCategory')->where(['id'=>$id,'status'=>0])->find();
+        if(empty($category)) return $this->fetch('public\404',['title'=>'404','article_category'=>$this->article_category,]);
         $data = [
-            'title' => 'ss',
+            'title' => $category->category_title,
             'category' => $category,
             'article_category'=>$this->article_category,
+            'navMenu'=>[
+                    ['name'=>$category->category_title,'url'=>url('blog/article/getCategory',['id'=>$category->id])],
+                    ]
         ];
         //return json($data);
         return $this->fetch('article_category',$data);
@@ -67,17 +71,7 @@ class Article extends Appbasic
 
     public function getCategoryArticleList(Request $request,$id)
     {
-        $articles = model('Article')->where(['category_id'=>$id,'status'=>0,'is_delete'=>0])->paginate(request()->param('list_rows'))->each(function($item,$key){
-                $item->member;
-                $item->category;
-                $item->tags;
-                $item['comment_num'] = $item->comments()->count();
-                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
-                $item['member_url'] = url('blog/member/readMember',['id'=>$item['member_id']]);
-                $item['category_url'] = url('blog/article/getCategory',['id'=>$item['category_id']]);
-
-        });
-        return json($articles);
+        return model('Article')->getArticleByCategoryId($id);
     }
 
     /**

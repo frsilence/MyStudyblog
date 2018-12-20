@@ -13,7 +13,7 @@ class Article extends Model
     protected $table = 'article';
 
     /**
-     * 关联用户表单（一对一关联）
+     * 关联用户表单（一对多关联）
      */
     public function member()
     {
@@ -25,7 +25,7 @@ class Article extends Model
      */
     public function tags()
     {
-        return $this->belongsToMany('BlogTag','article_tag','tag_id','article_id');                                                         
+        return $this->belongsToMany('BlogTag','article_tag','tag_id','article_id')->where(['status'=>0]);                                                         
     }
 
     /**
@@ -201,16 +201,19 @@ class Article extends Model
      * @param int $page
      * @return /think/Paginator
      */
-    public function getArticleByCategoryId($category_id,$list_row=1,$page=1)
+    public function getArticleByCategoryId($id)
     {
-        $articles = $this->where(['category_id'=>$category_id,'status'=>0,'is_delete'=>0])->paginate($list_row,$page)->each(function($item,$key){
+        $articles = model('Article')->where(['category_id'=>$id,'status'=>0,'is_delete'=>0])->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->paginate(request()->param('list_rows'))->each(function($item,$key){
                 $item->member;
                 $item->category;
                 $item->tags;
                 $item['comment_num'] = $item->comments()->count();
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+                $item['member_url'] = url('blog/member/readMember',['id'=>$item['member_id']]);
+                $item['category_url'] = url('blog/article/getCategory',['id'=>$item['category_id']]);
 
         });
-        return $articles;
+        return json($articles);
     }
 
     /**

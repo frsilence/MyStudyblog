@@ -9,7 +9,7 @@
 				<li class="logo navbar-logo-m dropDown dropDown_hover visible-xs" style="margin-left: 5%;"><a class="logo navbar-logo-m dropDown_A Hui-iconfont">&#xe705; {$Think.session.member['username']}&#xe6d5;</a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li>
-								<a>个人中心</a>
+								<a href="{:url('blog/member/readMember',['id'=>$Think.session.member.id])}">个人中心</a>
 								<a href="{:url('blog/auth/logout')}">退出登录</a>
 							</li>
 						</ul>
@@ -24,8 +24,8 @@
 					<li id="Huinav_1"> <a href="/">首页</a> </li>
 					<li class="dropDown dropDown_hover"><a href="{:url('blog/article/getAllCategory')}" class="dropDown_A">MyBlog <i class="Hui-iconfont">&#xe6d5;</i></a>
 						<ul class="dropDown-menu menu radius box-shadow">
-							{volist name="article_category" id="category"}
-							<li><a href="{:url('blog/article/getCategory',['id'=>$category.id])}">{$category.category_title}</a></li>
+							{volist name="article_category" id="category_list"}
+							<li><a href="{:url('blog/article/getCategory',['id'=>$category_list.id])}">{$category_list.category_title}</a></li>
 							{/volist}
 						</ul>
 					</li>
@@ -49,7 +49,7 @@
 					<li class="dropDown dropDown_hover hidden-xs" style="float: right;"><a class="dropDown_A Hui-iconfont">&#xe705; {$Think.session.member['username']}&#xe6d5;</a>
 						<ul class="dropDown-menu menu radius box-shadow">
 							<li>
-								<a>个人中心</a>
+								<a href="{:url('blog/member/readMember',['id'=>$Think.session.member.id])}">个人中心</a>
 								<a href="{:url('blog/auth/logout')}">退出登录</a>
 							</li>
 						</ul>
@@ -70,80 +70,5 @@
 </header>
 
 
-
-
-
-
-
-
-<!--
-<div class="layui-layout-admin">
-	<div class="layui-header header">
-		<div class="layui-main mag0">
-				<ul class="layui-nav" lay-filter="demo" style="float: left;">
-					<li class="layui-nav-item">
-						<a href="#" class="header-nav-big">XXblog</a>
-					</li>
-					<li class="layui-nav-item layui-this">
-						<a href="javascript:;" class="header-nav-mid">Index</a>
-					</li>
-					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid layui-hide-xs">title1</a>
-					</li>
-					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid layui-hide-xs">title2</a>
-					</li>
-					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid">Blogs</a>
-						<dl class="layui-nav-child">
-							
-							<dd>
-								<a href="javascript:;" class="header-nav-mid">移动模块</a>
-							</dd>
-							<dd>
-								<a href="javascript:;" class="header-nav-mid">后台模版</a>
-							</dd>
-							<dd>
-								<a href="javascript:;" class="header-nav-mid">电商平台</a>
-							</dd>
-							<dd>
-								<a href="javascript:;" class="header-nav-mid layui-hide-sm layui-show-xs">电商平台</a>
-							</dd>
-							<dd>
-								<a href="javascript:;" class="header-nav-mid layui-hide-sm layui-show-xs">电商平台</a>
-							</dd>
-							
-						</dl>
-					</li>
-					<li class="layui-nav-item">
-						<a href="javascript:;" class="header-nav-mid">tool</a>
-					</li>
-				
-				</ul>
-				{if session('?member')}
-				<ul class="layui-nav top_right_menu">
-					<li class="layui-nav-item">
-						<a>{$Think.session.member['username']}</a>
-					</li>
-					<li class="layui-nav-item">
-						<a href="{:url('blog/auth/logout')}">退出</a>
-					</li>
-				</ul>
-				{else /}
-				<ul class="layui-nav top_right_menu">
-					<li class="layui-nav-item">
-						<a href="{:url('blog/auth/login')}">用户登录</a>
-					</li>
-					<li class="layui-nav-item">
-						<a href="{:url('blog/auth/register')}">用户注册</a>
-					</li>
-				</ul>
-				
-				{/if}
-		</div>
-		
-	</div>
-</div>
--->
 	
 	

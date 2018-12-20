@@ -23,6 +23,9 @@ Route::group('auth/',function(){
 //test
 Route::group('test/',function(){
 	Route::get('create_category','index/index/create_category');
+	Route::get('code_line',function(){
+		return 's';
+	});
 });
 
 

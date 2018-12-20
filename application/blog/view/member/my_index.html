@@ -1,0 +1,33 @@
+{extend name="public/base" /}
+{block name="content"}
+<section>
+	<div class="container mt-20">
+		<div class="bk-gray">
+			<h3>
+				{$member_info.username}
+			</h3>
+		</div>
+		<div id="tab_demo" class="HuiTab">
+			<div class="tabBar clearfix"><span>个人资料</span> <span role="tab">我的文章</span><span role='tab'>我的评论</span><span role='tab'>登录记录</span></div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel' id="tab_material">个人资料</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel' id="tab_article">我的文章</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel'>我的评论</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel'>登录记录</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel'>登录记录</div>
+		</div>
+	</div>
+</section>
+<script>
+	$(function(){
+		$("#tab_demo").Huitab({
+			tabEvent:"click",
+			index:0
+		});
+		$('#tab_material').text('sdsdsadasdasssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssssddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeecccccccccccccccccccccccccccccccccccccccccgfggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggggghhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuuu66666666666666666666666666666666666666666666666666666666666666yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiiii888888888888888888888888888888888888888888888888888888888888');
+		$('#tab_article').text('资料');
+	});
+	
+	
+		
+</script>
+{/block}

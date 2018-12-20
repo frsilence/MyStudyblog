@@ -30,11 +30,27 @@ class AppMember extends Model
     }
 
     /**
-     * 关联文章数据模型(一对一关联)
+     * 关联文章数据模型(一对多关联)
      */
     public function articles()
     {
-    	return $this->hasOne('Article','member_id','id');
+    	return $this->hasMany('Article','member_id','id')->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->where(['status'=>0,'is_delete'=>0])->order('update_time','desc');
+    }
+
+    /**
+     * 关联评论数据模型(一对多关联)
+     */
+    public function comments()
+    {
+        return $this->hasMany('ArticleComment','member_id','id')->field('id,member_id,article_id,content')->where('is_delete',0)->order('update_time','desc');
+    }
+
+    /**
+     * 关联用户登录记录数据模型(一对多)
+     */
+    public function memberloginrecords()
+    {
+        return $this->hasMany('AppMemberLoginRecord','member_id','id');
     }
 
     /**
@@ -45,6 +61,29 @@ class AppMember extends Model
     public function getAppMemberInfoById($id)
     {
     	$member = $this->where(['id'=>$id,'is_delete'=>0,'status'=>0])->find();
+    }
+
+    /**
+     * 获取本人用户信息
+     * @return   array
+     */
+    public function getMyMemberInfo()
+    {
+        if(!session('?member')) return '未登录';
+        $member_info = $this->where(['id'=>session('member.id'),'status'=>0,'is_delete'=>0])->field('id,member_pid,username,userimage,phone,email,province,city,sex')->find();
+        if(!empty($member_info)) {
+            $member_info->articles;
+            $member_info->comments;
+            $member_info->memberloginrecords;
+            $member_info['comment_num'] = $member_info->comments()->count();
+            $member_info['article_num'] = $member_info->articles()->count();
+            $member_info['follow_num'] = 10;
+            $member_info['fans_num'] = 20;
+            return $member_info;
+        }else{
+            return '其他用户';
+        }
+
     }
 
     /**
