@@ -70,7 +70,7 @@ class AppMember extends Model
     public function getMyMemberInfo()
     {
         if(!session('?member')) return '未登录';
-        $member_info = $this->where(['id'=>session('member.id'),'status'=>0,'is_delete'=>0])->field('id,member_pid,username,userimage,phone,email,province,city,sex')->find();
+        $member_info = $this->where(['id'=>session('member.id'),'status'=>0,'is_delete'=>0])->field('id,member_pid,username,userimage,phone,email,province,city,sex,create_time')->find();
         if(!empty($member_info)) {
             $member_info->articles;
             $member_info->comments;
