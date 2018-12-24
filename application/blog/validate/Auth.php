@@ -18,6 +18,10 @@ class Auth extends Validate
         'password|密码' => 'require|min:6|max:20',
         'password_confirm|确认密码' => 'require|confirm:password|min:6',
         'vercode|验证码' => 'require|captcha',
+        'phone|电话' => 'number|max:13',
+        'sex|性别' => 'require|max:8',
+        'province|省份' => 'require|max:8',
+        'city|城市' => 'require|max:8',
     ];
     
     /**
@@ -43,10 +47,15 @@ class Auth extends Validate
      */
     public function sceneRegister()
     {
-        return $this->append([
+        return $this->only(['username','email','password','password_confirm','vercode'])->append([
                 'username'=>'uniqueUsername',
                 'email'=>'uniqueEmail',
             ]);
+    }
+
+    public function sceneUpdateform()
+    {
+        return $this->only(['phone','sex','province','city']);
     }
 
     /**

@@ -32,6 +32,16 @@ class AppMember extends Model
     }
 
     /**
+     * 性别修改器
+     * '男'=>0 ,'女'=>1,'未知'=>''
+     */
+    public function setSexAttr($value)
+    {
+        $sex = ['男'=>0,'女'=>1,'未知'=>''];
+        return $sex[$value];
+    }
+
+    /**
      * 所有用户基本信息获取
      */
     public function getAppMemberInfo()
@@ -148,19 +158,24 @@ class AppMember extends Model
      * @param arary $update 更新信息
      * @return  boolean
      */
-    public function updateMember($update)
+    public function updateInfoForm($id,$update)
     {
-    	$member = $this->where('id',$update['id'])->find();
-    	if(empty($member)) return false;
+    	$member = $this->where('id',$id)->find();
+    	if(empty($member)) return ['code'=>1];
     	//开启数据库操作事务
-    	$this->startTrans;
+    	$this->startTrans();
     	try{
-    		$member->update($update);
+    		$member->save([
+                'phone' => $update['phone'],
+                'province' => $update['province'],
+                'city' => $update['city'],
+                'sex' => $update['sex'],
+                ]);
     		$this->commit();
-    		return true;
+    		return ['code'=>0];
     	} catch(\Exception $e){
     		$this->rollback();
-    		return false;
+    		return ['code'=>1];
     	}
     }
     

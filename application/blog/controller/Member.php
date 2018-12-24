@@ -39,13 +39,16 @@ class Member extends Appbasic
         if(empty(model('AppMember')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->find())) return $this->fetch('public\404',['title'=>'404Page',
             'article_category'=>$this->article_category]);
         if(session('?member') && session('member.id') == $id){
-            $member = model('AppMember')->getMyMemberInfo();
+            $result = $this->validate(request()->post(),'app\blog\validate\Auth.updateform');
+            if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>request()->token()]);
             //return json($member);
-            $data =[
-            'title'=>'首页',
-            'article_category'=>$this->article_category,
-            'member_info'=>$member,
-            ];
+            $updateForm = model('AppMember')->updateInfoForm($id,request()->post());
+            if($updateForm['code']==0){
+                return json(['code'=>0,'msg'=>'更新成功','token'=>request()->token()]);
+            }else{
+                return json(['code'=>1,'msg'=>'更新失败','token'=>request()->token()]);
+            }
+
             return $this->fetch('update_memberinfo',$data);
         }
         return 'you';

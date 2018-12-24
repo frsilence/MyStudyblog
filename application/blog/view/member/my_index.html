@@ -73,21 +73,17 @@
 											<th>值</th>
 										</tr>
 									</thead>
-									<tbody>
-										<tr>
-											<th>用户名称</th>
-											<td><input type="text" class="input-text radius size-M" value="{$member_info.username}" /> </td>
-										</tr>									
+									<tbody>									
 										<tr>
 											<th>电话</th>
-											<td><input type="text" class="input-text radius size-M" value="{$member_info.phone}" /></td>
+											<td><input id="userphone" type="text" class="input-text radius size-M" value="{$member_info.phone}" /></td>
 										</tr>
 										<tr>
 											<th>省份-城市</th>
 											<td>
 												<div id="area">
 													<span class="select-box">
-														<select class="select" id="province" runat="server" onchange="selectprovince(this);" style=" width:95px;display: inline;">
+														<select  class="select" id="province" runat="server" onchange="selectprovince(this);" style=" width:95px;display: inline;">
 															<option value="{$member_info.province}" selected>{$member_info.province}</option>
 														</select>
 														<select class="select" class="form-control" id="city" runat="server" style=" width:95px;display: inline;">
@@ -102,7 +98,7 @@
 											<th>性别</th>
 											<td>
 												<span class="select-box">
-														<select class="select" class="form-control" id="city" runat="server" style=" width:95px;display: inline;">
+														<select id="usersex" class="select" class="form-control" id="city" runat="server" style=" width:95px;display: inline;">
 															{if $member_info.sex=="男"}
 															<option value="男" selected>男</option>
 															<option value="女">女</option>
@@ -139,18 +135,18 @@
 								</div>
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
 									<h4>上传头像</h4>
-									<span class="btn-upload">
+									<span class="btn-upload mt-15">
 									  <a href="javascript:void();" class="btn btn-primary radius btn-upload"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
 									  <input type="file" name="file_0" class="input-file">
 									</span>
-									<div class="mb-2">
-										<button class="btn btn-default">上传所选图片</button>
-										<button class="btn btn-default">更换为新头像</button>
+									<div class="mt-25">
+										<button class="btn btn-default f-l">上传所选图片</button>
+										<button class="btn btn-default f-r">更换为新头像</button>
 									</div>
 								</div>
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
 									<h4>新头像预览</h4>
-									<img class="radius userimage"/>
+									<img class="radius userimage" id="userimage"/>
 								</div>
 							</div>
 						</div>
@@ -226,7 +222,7 @@
 	}
 	
 $(document).ready(function(){
-	
+	var token = "{$Request.token}";
 	pageQuery(1);
 	layui.use(['form', 'layedit', 'laypage','layer'], function () {
 	            var form = layui.form,
@@ -254,6 +250,37 @@ $(document).ready(function(){
 	          
 	        }
 	    );
+	
+	$('#update_info').on('click',function(){
+		$.ajax({
+			type:'post',
+			url:'{:url('blog/member/updateInfoForm',['id'=>$member_info.id])}',
+			dataType:'json',
+			async:false,
+			data:{
+				phone:$('#userphone').val(),
+				sex:$('#usersex').val(),
+				province:$('#province').val(),
+				city:$('#city').val(),
+				__token__:token,
+
+			},
+			success:function(data){
+				token = data.token;
+				if(data.code==0){
+					parent.location.reload();
+				}else{
+					layer.msg(data.msg, {icon: 0, time: 2000});
+					}
+			},
+			error:function(){
+				layer.msg('系统错误，请刷新',{icon:1,time:2000},function(){
+					parent.location.reload();
+				})
+				
+			},
+		});
+	})
 	
 })	
 	
