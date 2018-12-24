@@ -40,7 +40,8 @@ Route::group('article/',function(){
 
 //用户操作
 Route::group('member/',function(){
-	Route::get('index/:id','blog/member/readMember');
+	Route::get('index/id/:id','blog/member/readMember');
+	Route::get('index/update_info/:id','blog/member/updateInfoForm');
 });
 
 //API

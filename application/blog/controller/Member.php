@@ -31,6 +31,28 @@ class Member extends Appbasic
     }
 
     /**
+     * 会员信息更新表单
+     * @param int $id 用户id
+     */
+    public function updateInfoForm($id)
+    {
+        if(empty(model('AppMember')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->find())) return $this->fetch('public\404',['title'=>'404Page',
+            'article_category'=>$this->article_category]);
+        if(session('?member') && session('member.id') == $id){
+            $member = model('AppMember')->getMyMemberInfo();
+            //return json($member);
+            $data =[
+            'title'=>'首页',
+            'article_category'=>$this->article_category,
+            'member_info'=>$member,
+            ];
+            return $this->fetch('update_memberinfo',$data);
+        }
+        return 'you';
+        
+    }
+
+    /**
      * 获取会员所有文章
      * @param  init  $id [description]
      * @return [type]     [description]

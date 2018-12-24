@@ -22,6 +22,16 @@ class AppMember extends Model
     }
 
     /**
+     * 性别获取器，按取出的数字代号转换为实际字符串
+     * '0' -> '男', '1'-> '女'
+     */
+    public function getSexAttr($value)
+    {
+        $sex = [0=>'男',1=>'女',''=>'未知'];
+        return $sex[$value];
+    }
+
+    /**
      * 所有用户基本信息获取
      */
     public function getAppMemberInfo()
