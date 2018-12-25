@@ -130,23 +130,20 @@
 						<div class="info">
 							<div class="row">
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
-									<h4>当前头像</h4>
+									<h5>当前头像</h5>
 									<img class="radius userimage" src="{$member_info.userimage}" />
 								</div>
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
-									<h4>上传头像</h4>
-									<span class="btn-upload mt-15">
-									  <a href="javascript:void();" class="btn btn-primary radius btn-upload"><i class="Hui-iconfont">&#xe642;</i> 浏览文件</a>
-									  <input type="file" name="file_0" class="input-file">
-									</span>
+									<h5>上传头像</h5>
+									<input id="user_image" type="file" onchange="upload_file()"  accept="image/x-png,image/gif,image/jpeg,image/bmp"/>
 									<div class="mt-25">
 										<button class="btn btn-default f-l">上传所选图片</button>
 										<button class="btn btn-default f-r">更换为新头像</button>
 									</div>
 								</div>
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
-									<h4>新头像预览</h4>
-									<img class="radius userimage" id="userimage"/>
+									<h5>新头像预览</h5>
+									<img class="radius userimage" id="newuserimage"/>
 								</div>
 							</div>
 						</div>
@@ -268,19 +265,23 @@ $(document).ready(function(){
 			success:function(data){
 				token = data.token;
 				if(data.code==0){
-					parent.location.reload();
+					layer.msg(data.msg, {icon: 1, time: 2000},function(){
+						parent.location.reload();
+					});
+					
 				}else{
-					layer.msg(data.msg, {icon: 0, time: 2000});
+					layer.msg(data.msg, {icon: 2, time: 2000});
 					}
 			},
 			error:function(){
-				layer.msg('系统错误，请刷新',{icon:1,time:2000},function(){
+				layer.msg('系统错误，请刷新',{icon:2,time:2000},function(){
 					parent.location.reload();
 				})
 				
 			},
 		});
 	})
+	
 	
 })	
 	
@@ -311,6 +312,35 @@ $(document).ready(function(){
 				}
 			}
 		});
+	};
+	
+	function upload_file(){
+		var formData = new FormData();
+		formData.append('user_image',$("#user_image")[0].files[0]);
+		$.ajax({
+			type:"post",
+			url:"/api/upload/upload_image",
+			async:true,
+			cache: false,
+			contentType: false, //禁止设置请求类型
+			processData: false, //禁止jquery对DAta数据的处理,默认会处理
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
+			},
+			data:formData,		
+			success:function(data){
+				if(data.code==0){
+					alert('用户头像更新成功');
+					$('#newuserimage').attr('src',data.url[0]);
+				}
+				else{
+					alert(data.msg);
+				}
+			},
+			error:function(data){
+				alert('用户头像更新失败');
+			}
+		})
 	}
 	
 	

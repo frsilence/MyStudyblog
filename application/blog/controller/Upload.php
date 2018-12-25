@@ -41,7 +41,7 @@ class Upload extends Appbasic
                 }
             }
         }else{
-                if($value->validate(['ext'=>'jpg,png,gif'])){
+                if($files->validate(['ext'=>'jpg,png,gif'])){
                     $info = $value->move('../public/static/uploads/image');
                     if($info){
                         $url[] = '/static/uploads/image/'.date('Ymd').'/'.$info->getFilename();
