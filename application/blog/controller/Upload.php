@@ -42,7 +42,7 @@ class Upload extends Appbasic
             }
         }else{
                 if($files->validate(['ext'=>'jpg,png,gif'])){
-                    $info = $value->move('../public/static/uploads/image');
+                    $info = $files->move('../public/static/uploads/image');
                     if($info){
                         $url[] = '/static/uploads/image/'.date('Ymd').'/'.$info->getFilename();
                     }else{
@@ -61,14 +61,22 @@ class Upload extends Appbasic
     public function upload_userimage(Request $request)
     {
         $files = $request->file('user_image');
-        return dump($files);
         if($files->validate(['ext'=>'jpg,png,gif'])){
-                    $info = $value->move('../public/static/uploads/image');
-                    if($info){
-                        $url = '/static/uploads/image/'.date('Ymd').'/'.$info->getFilename();
+                    $image = \think\Image::open($files);
+                    $type = $image->type();
+                    $width = $image->width();
+                    $height = $image->height();
+                    if($width>=300 || $height>=300){
+                        $url = '/static/uploads/image'.'/'.date('Ymd').'/'.time().rand(1000,9999).'.'.$type;
+                        $save_url = '../public'.$url;
+                        $image->crop(300,300)->save($save_url);
                     }else{
-                        return json(['code'=>1,'msg'=>$value->getError()]);
+                        $url = '/static/uploads/image'.'/'.date('Ymd').'/'.time().rand(1000,9999).'.'.$type;
+                        $save_url = '../public'.$url;
+                        $image->save($save_url);
                     }
+  
+        
         }else{
                 return json(['code'=>1,'msg'=>'文件格式不是图片']);
              }

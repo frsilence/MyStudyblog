@@ -330,8 +330,7 @@ $(document).ready(function(){
 			data:formData,		
 			success:function(data){
 				if(data.code==0){
-					alert('用户头像更新成功');
-					$('#newuserimage').attr('src',data.url[0]);
+					$('#newuserimage').attr('src',data.url);
 				}
 				else{
 					alert(data.msg);
