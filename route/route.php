@@ -45,8 +45,10 @@ Route::group('member/',function(){
 
 //API
 Route::group('api/',function(){
-	//图片上传
+	//文章编辑图片上传
 	Route::post('upload/upload_image','blog/Upload/upload_image');
+	//用户头像上传
+	Route::post('upload/upload_userimage','blog/Upload/upload_userimage');
 	//文章操作
 	Route::group('article/',function(){
 		Route::post('addarticle','blog/article/addArticle');

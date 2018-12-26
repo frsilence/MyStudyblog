@@ -319,7 +319,7 @@ $(document).ready(function(){
 		formData.append('user_image',$("#user_image")[0].files[0]);
 		$.ajax({
 			type:"post",
-			url:"/api/upload/upload_image",
+			url:"/api/upload/upload_userimage",
 			async:true,
 			cache: false,
 			contentType: false, //禁止设置请求类型

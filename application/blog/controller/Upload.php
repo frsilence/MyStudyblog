@@ -56,6 +56,26 @@ class Upload extends Appbasic
     }
 
     /**
+     * 用户头像图片上传
+     */
+    public function upload_userimage(Request $request)
+    {
+        $files = $request->file('user_image');
+        return dump($files);
+        if($files->validate(['ext'=>'jpg,png,gif'])){
+                    $info = $value->move('../public/static/uploads/image');
+                    if($info){
+                        $url = '/static/uploads/image/'.date('Ymd').'/'.$info->getFilename();
+                    }else{
+                        return json(['code'=>1,'msg'=>$value->getError()]);
+                    }
+        }else{
+                return json(['code'=>1,'msg'=>'文件格式不是图片']);
+             }
+        return json(['code' => 0, 'msg' => '上传成功！', 'url' => $url]);
+    }
+
+    /**
      * 显示创建资源表单页.
      *
      * @return \think\Response
