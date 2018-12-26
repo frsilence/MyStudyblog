@@ -59,6 +59,7 @@ Route::group('api/',function(){
 	//用户操作
 	Route::group('member/',function(){
 		Route::post('index/update_info/:id','blog/member/updateInfoForm');
+		Route::post('index/update_userimage/:id','blog/member/updateUserimage');
 });
 });
 

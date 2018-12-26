@@ -27,7 +27,7 @@ class AppMember extends Model
      */
     public function getSexAttr($value)
     {
-        $sex = [0=>'男',1=>'女',''=>'未知'];
+        $sex = [0=>'男',1=>'女'];
         return $sex[$value];
     }
 
@@ -37,7 +37,7 @@ class AppMember extends Model
      */
     public function setSexAttr($value)
     {
-        $sex = ['男'=>0,'女'=>1,'未知'=>''];
+        $sex = ['男'=>0,'女'=>1];
         return $sex[$value];
     }
 
@@ -161,7 +161,7 @@ class AppMember extends Model
     public function updateInfoForm($id,$update)
     {
     	$member = $this->where('id',$id)->find();
-    	if(empty($member)) return ['code'=>1];
+    	if(empty($member)) return ['code'=>1,'用户不存在'];
     	//开启数据库操作事务
     	$this->startTrans();
     	try{
@@ -177,6 +177,26 @@ class AppMember extends Model
     		$this->rollback();
     		return ['code'=>1];
     	}
+    }
+
+    /**
+     * 设置用户头像
+     */
+    public function updateUserimage($id,$user_imageurl)
+    {
+        $member = $this->where('id',$id)->find();
+        if(empty($member)) return ['code'=>1,'用户不存在'];
+        $this->startTrans();
+        try{
+            $member->userimage=$user_imageurl;
+            $member->save();
+            $this->commit();
+            return ['code'=>0,'msg'=>'头像更新成功'];
+        } catch(\Exception $e){
+            $this->rollback();
+            return ['code'=>1,'msg'=>'头像更新失败，请稍后尝试'];
+        }
+
     }
     
     

@@ -36,8 +36,7 @@ class Member extends Appbasic
      */
     public function updateInfoForm($id)
     {
-        if(empty(model('AppMember')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->find())) return $this->fetch('public\404',['title'=>'404Page',
-            'article_category'=>$this->article_category]);
+        if(empty(model('AppMember')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->find())) return json(['code'=>1,'msg'=>'暂无此人','token'=>request()->token()]);
         if(session('?member') && session('member.id') == $id){
             $result = $this->validate(request()->post(),'app\blog\validate\Auth.updateform');
             if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>request()->token()]);
@@ -51,8 +50,28 @@ class Member extends Appbasic
 
             return $this->fetch('update_memberinfo',$data);
         }
-        return 'you';
+        return json(['code'=>1,'msg'=>'非本人操作']);
         
+    }
+
+    /**
+     * 更新会员头像
+     * @param int $id 被更新用户id
+     * @return json 执行提示
+     */
+    public function updateUserimage(Request $request,$id)
+    {
+        if(empty(model('AppMember')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->find())) return json(['code'=>1,'msg'=>'暂无此人','token'=>request()->token()]);
+        if(session('?member') && session('member.id') == $id){
+            if($request->has('user_imageurl')){
+                $filename = '../public'.$request->post('user_imageurl');
+                if(file_exists($filename)){
+                    return json(model('AppMember')->updateUserimage($id,$request->post('user_imageurl')));
+                }
+            }
+            return json(['code'=>1,'msg'=>'头像图片不存在，无法设置']);
+        }
+        return json(['code'=>1,'msg'=>'非本人操作']);
     }
 
     /**

@@ -110,7 +110,6 @@
 															{else /}
 															<option value="男">男</option>
 															<option value="女">女</option>
-															<option value="未知" selected>未知</option>
 															{/if}
 														</select>
 												</span>
@@ -137,8 +136,7 @@
 									<h5>上传头像</h5>
 									<input id="user_image" type="file" onchange="upload_file()"  accept="image/x-png,image/gif,image/jpeg,image/bmp"/>
 									<div class="mt-25">
-										<button class="btn btn-default f-l">上传所选图片</button>
-										<button class="btn btn-default f-r">更换为新头像</button>
+										<button id="update_userimage" class="btn btn-default f-l">更换为新头像</button>
 									</div>
 								</div>
 								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
@@ -282,6 +280,10 @@ $(document).ready(function(){
 		});
 	})
 	
+	$('#update_userimage').on('click',function(){
+		update_userimage();
+	})
+	
 	
 })	
 	
@@ -333,11 +335,39 @@ $(document).ready(function(){
 					$('#newuserimage').attr('src',data.url);
 				}
 				else{
-					alert(data.msg);
+					layer.msg(data.msg, {icon: 2, time: 2000});
 				}
 			},
 			error:function(data){
 				alert('用户头像更新失败');
+			}
+		})
+	}
+	
+	function update_userimage(){
+		$.ajax({
+			type:'post',
+			url:"{:url('blog/member/updateUserimage',['id'=>$member_info.id])}",
+			dataType:'json',
+			data:{
+				'user_imageurl':$('#newuserimage').attr('src'),
+			},
+			success:function(data){
+				if(data.code==0){
+					layer.msg(data.msg, {icon: 1, time: 2000},function(){
+						window.location.reload();
+					});
+				}
+				else{
+					layer.msg(data.msg, {icon: 2, time: 2000},function(){
+						window.location.reload();
+					});
+				}
+			},
+			error:function(){
+				layer.msg('字体错误，请稍后重试', {icon: 2, time: 2000},function(){
+					window.location.reload();
+				});
 			}
 		})
 	}
