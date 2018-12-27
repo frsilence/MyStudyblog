@@ -55,11 +55,13 @@ Route::group('api/',function(){
 		Route::post('addcomment','blog/article/addComment');
 		Route::get('category/:id/articlelist','blog/article/getCategoryArticleList');
 		Route::get('member/:id/articlelist','blog/member/getMemberArticleList');
+		Route::get('member/:id/commentlist','blog/member/getMemberCommentList');
 	});
 	//用户操作
 	Route::group('member/',function(){
 		Route::post('index/update_info/:id','blog/member/updateInfoForm');
 		Route::post('index/update_userimage/:id','blog/member/updateUserimage');
+		Route::get('selfloginrecord','blog/member/getMemberSelfLoginRecord');
 });
 });
 

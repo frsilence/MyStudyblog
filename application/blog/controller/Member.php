@@ -86,6 +86,26 @@ class Member extends Appbasic
     }
 
     /**
+     * 获取会员所有评论
+     * @param   $id 用户id
+     */
+    public function getMemberCommentList(Request $request,$id)
+    {
+        $MemberCommentList = model('ArticleComment')->getMemberCommentList($request,$id);
+        return json($MemberCommentList);
+    }
+
+    /**
+     * 获取当前回话会员的登录记录
+     * 
+     */
+    public function getMemberSelfLoginRecord()
+    {
+        $MemberSelfLoginRecord = model('AppMemberLoginRecord')->getMemberSelfLoginRecord();
+        return json($MemberSelfLoginRecord);
+    }
+
+    /**
      * 显示创建资源表单页.
      *
      * @return \think\Response

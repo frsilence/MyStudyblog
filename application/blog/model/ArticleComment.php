@@ -16,7 +16,7 @@ class ArticleComment extends Model
      */
     public function article()
     {
-    	return $this->belongsTo('Article','article_id','id')->where(['status'=>0,'is_delete'=>0]);
+    	return $this->belongsTo('Article','article_id','id')->field('id,title,update_time')->where(['status'=>0,'is_delete'=>0]);
     }
 
     /**
@@ -44,11 +44,14 @@ class ArticleComment extends Model
      * @param int $member_id 用户ID
      * @return \think\Collection 
      */
-    public function getCommentByMemberId($member_id,$page=15)
+    public function getMemberCommentList($request,$member_id)
     {
-        $comment_list = $this->where(['member_id'=>$member_id,'is_delete'=>0])->order('create_at','desc')->paginate($page)->each(function($item,$key){
-            $item['article_info'] = $this->articlee()->field('title','id');
+        $comment_list = $this->where(['member_id'=>$member_id,'is_delete'=>0])->field('id,member_id,article_id,content,update_time')->order('update_time','desc')->paginate($request->param('list_rows'),false,['var_page' => 'page','query'=>$request->param()])->each(function($item,$key){
+                $item->member;
+                $item->article;
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->article_id]);
         });
+        return $comment_list;
     }
 
     /**

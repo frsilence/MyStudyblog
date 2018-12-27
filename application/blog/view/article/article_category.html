@@ -88,7 +88,7 @@ $(document).ready(function(){
 				pageObj.dataLength = data.total;
 				articles = data.data;
 				$('#this_article').empty()
-				for(var i=0;i<=articles.length;i++)
+				for(var i=0;i<articles.length;i++)
 				{
 					my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['title']+'</a></h4><div>';
 					my_str2='<span><a href='+articles[i]['member_url']+'><i class="Hui-iconfont"> &#xe62c;</i> 作者：'+articles[i].member.username+'&nbsp;&nbsp; </a></span>';			
