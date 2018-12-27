@@ -78,82 +78,66 @@
 		var layer = layui.layer;
 
 	})
+	
+	$(document).ready(function(){
+		$('#username').focus();
+	})
+
+
 
     /**
      * 会员登录
      */
     var token = "{$Request.token}";
     $("#loginButton").click(function (){
-    	var loading = layer.load({time: 0, scrollbar: false, shade: this.shade});
-    	$.ajax({
-    		type:"post",
-    		url:"{:url('blog/auth/post_login')}",
-    		async:false,
-            dataType:'json',
-    		data:{
-    			username: $("#username").val(),
-            	password: $("#password").val(),
-            	vercode: $("#vercode").val(),
-                __token__:token,
-    		},
-    		success:function(data){
-                token = data.token;
-    			layer.close(loading);
-                if (data.code == 0) {
-                    layer.msg(data.msg, {icon: 1, time: 3000}, function () {
-                        window.location.href = "{:url('blog/index/index')}";
-                    });
-                }
-                else {
-                    layer.msg(data.msg, {icon: 0, time: 3000});
-                }
-                
-    		},
-    		error:function(){
-                token = "{$Request.token}";
-                layer.close(loading);
-    			layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000},function(){
-                    window.location.reload();
-                });
-    		}
-    	});
-        return false;
-    })
-    /*
-    $("#loginButton").click(function () {
-        var data = {
-            username: $("#username").val(),
-            password: $("#password").val(),
-            vercode: $("#vercode").val()
-        }
-        var loading = layer.load({time: 0, scrollbar: false, shade: this.shade});
-        $.post("{:url('@blog/login')}", data, function (result) {
-                layer.close(loading);
-                if (result.code == 0) {
-                    layer.msg(result.msg, {icon: 1, time: 1000}, function () {
-                        index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
-                        window.parent.location.reload();
-                    });
-                }
-                else {
-                    layer.msg(result.msg, {icon: 2, time: 5000});
-                }
-            }
-        ).error(function(data) {
-            layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000});
-        });
-        return false;
+    	member_login();
     });
-
-    /**
-     * qq快捷登录
-     */
-    $("#qq_login").click(function () {
-        index = parent.layer.getFrameIndex(window.name);
-        parent.layer.close(index);
-        window.parent.location.href = "{:url('@blog/oauth/index')}";
-    });
+		
+		//回车提交
+		$(document).keyup(function(event){
+									if(event.keyCode ==13){
+											member_login();
+									}
+							});
+		
+		//登录函数
+		function member_login(){
+			
+			var loading = layer.load({time: 0, scrollbar: false, shade: this.shade});
+			$.ajax({
+				type:"post",
+				url:"{:url('blog/auth/post_login')}",
+				async:false,
+						dataType:'json',
+				data:{
+					username: $("#username").val(),
+							password: $("#password").val(),
+							vercode: $("#vercode").val(),
+								__token__:token,
+				},
+				success:function(data){
+								token = data.token;
+					layer.close(loading);
+								if (data.code == 0) {
+										layer.msg(data.msg, {icon: 1, time: 3000}, function () {
+												window.location.href = "{:url('blog/index/index')}";
+										});
+								}
+								else {
+										layer.msg(data.msg, {icon: 0, time: 3000});
+								}
+								
+				},
+				error:function(){
+								token = "{$Request.token}";
+								layer.close(loading);
+					layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000},function(){
+										window.location.reload();
+								});
+				}
+			});
+				return false;
+		}
 
     /**
      * 注册页面

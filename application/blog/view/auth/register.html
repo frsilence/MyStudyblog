@@ -68,7 +68,7 @@
 		                <!--<a href="#" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>-->
 		            </div>
 		            <div class="layui-form-item">
-		                <button id="loginButton" class="layui-btn layui-btn-fluid">注 册</button>
+		                <button id="RegisterButton" class="layui-btn layui-btn-fluid">注 册</button>
 		            </div>
 		            <div class="layui-trans layui-form-item layadmin-user-login-other">
 		                <label>社交账号登入</label>
@@ -87,75 +87,66 @@
 		var $ = layui.$;
 		var layer = layui.layer;
 
-	})
+	});
+	
+	$(document).ready(function(){
+		$('#username').focus();
+	});
+	
 
     /**
      * 会员登录
      */
     var token = "{$Request.token}";
-    $("#loginButton").click(function (){
-    	var loading = layer.load({time: 0, scrollbar: false, shade: this.shade});
-    	$.ajax({
-    		type:"post",
-    		url:"{:url('blog/auth/post_register')}",
-    		async:false,
-            dataType:'json',
-    		data:{
-    			username: $("#username").val(),
-    			email: $('#email').val(),
-            	password: $("#password").val(),
-            	password_confirm: $('#password_confirm').val(),
-            	vercode: $("#vercode").val(),
-                __token__:token,
-    		},
-    		success:function(data){
-                token = data.token;
-    			layer.close(loading);
-                if (data.code == 0) {
-                    layer.msg(data.msg, {icon: 1, time: 3000}, function () {
-                        window.location.href = "{:url('blog/index/index')}";
-                    });
-                }
-                else {
-                    layer.msg(data.msg, {icon: 0, time: 3000});
-                }
-                
-    		},
-    		error:function(){
-                layer.close(loading);
-    			layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000},function(){
-                    window.parent.location.reload();
-                });
-    		}
-    	});
-        return false;
-    })
-    /*
-    $("#loginButton").click(function () {
-        var data = {
-            username: $("#username").val(),
-            password: $("#password").val(),
-            vercode: $("#vercode").val()
-        }
-        var loading = layer.load({time: 0, scrollbar: false, shade: this.shade});
-        $.post("{:url('@blog/login')}", data, function (result) {
-                layer.close(loading);
-                if (result.code == 0) {
-                    layer.msg(result.msg, {icon: 1, time: 1000}, function () {
-                        index = parent.layer.getFrameIndex(window.name);
-                        parent.layer.close(index);
-                        window.parent.location.reload();
-                    });
-                }
-                else {
-                    layer.msg(result.msg, {icon: 2, time: 5000});
-                }
-            }
-        ).error(function(data) {
-            layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000});
-        });
-        return false;
+    $("#RegisterButton").click(function (){
+    	member_register();
     });
+	
+	//回车提交
+	$(document).keyup(function(event){
+			if(event.keyCode ==13){
+					member_register();
+					}
+	});
+    
+	//注册函数
+	function member_register(){
+		var loading = layer.load({time: 0, scrollbar: false, shade: this.shade});
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/auth/post_register')}",
+			async:false,
+			dataType:'json',
+			data:{
+				username: $("#username").val(),
+				email: $('#email').val(),
+				password: $("#password").val(),
+				password_confirm: $('#password_confirm').val(),
+				vercode: $("#vercode").val(),
+				__token__:token,
+			},
+			success:function(data){
+				token = data.token;
+				layer.close(loading);
+				if (data.code == 0) {
+					layer.msg(data.msg, {icon: 1, time: 3000}, function () {
+						window.location.href = "{:url('blog/index/index')}";
+					});
+				}
+				else {
+					layer.msg(data.msg, {icon: 0, time: 3000});
+				}
+				
+			},
+			error:function(){
+				layer.close(loading);
+				layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000},function(){
+					window.parent.location.reload();
+				});
+			}
+		});
+		return false;
+	}
 
     /**
      * qq快捷登录

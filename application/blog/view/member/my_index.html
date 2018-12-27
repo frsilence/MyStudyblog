@@ -2,7 +2,7 @@
 {block name="content"}
 <section>
 	<div class="container mt-20">
-		<div class="bk-gray">
+		<div class="">
 			<h3>
 				{$member_info.username}
 			</h3>
@@ -99,11 +99,9 @@
 															{if $member_info.sex=="男"}
 															<option value="男" selected>男</option>
 															<option value="女">女</option>
-															<option value="未知">未知</option>
 															{elseif $member_info.sex=="女"}
 															<option value="男">男</option>
 															<option value="女" selected>女</option>
-															<option value="未知">未知</option>
 															{else /}
 															<option value="男">男</option>
 															<option value="女">女</option>
