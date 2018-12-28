@@ -23,6 +23,8 @@
 							{volist name='article.tags' id='tag'}
 							{$tag.name}
 							{/volist}
+							<button id="collect_article" class="f-r btn btn-primary radius" style="display: none;">收藏文章</button>
+							<button id="uncollect_article" class="f-r btn btn-primary radius" style="display: none;">取消收藏</button>
 						</div>
 					</div>
 					<div class="bk-gray mt-15 pd-15">
@@ -168,5 +170,39 @@
 			}
 		});
 	});
+	
+	//收藏文章
+	$('#collect_article').on('click',function(){
+		$.ajax({
+			type:"post",
+			url:"{:url('api/blog/article/collectarticle',['id'=>$article.id])}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					layer.msg(data.msg,{icon:1,time:1000},function(){
+						$('#collect_article').css('display','none');
+						$('#uncollect_article').css('display','block');
+					});
+				}else if(data.code == 2){
+					layer.msg(data.msg,{icon:0,time:2000},function(){
+						$('#collect_article').css('display','none');
+						$('#uncollect_article').css('display','block');
+					});
+				}else{
+					layer.msg(data.msg,{icon:2,time:2000},function(){
+						window.location.reload();
+					});
+				};
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		});
+	});
+	
+	
+	
 </script>
 {/block}

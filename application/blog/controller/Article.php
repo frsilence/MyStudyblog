@@ -138,6 +138,19 @@ class Article extends Appbasic
     }
 
     /**
+     * 收藏文章
+     * @param int $id 文章id
+     * @return  json
+     */
+    public function collectarticle($id)
+    {
+        if(session('?member.id')) return json(['code'=>1,'msg'=>'未登录']);
+        $member_id = session('member.id');
+        $result = model('ArticleMember')->addArticleToMember($member_id,$id);
+        return json($result);
+    }
+
+    /**
      * 显示指定的资源
      *
      * @param  int  $id
