@@ -8,10 +8,11 @@ class BlogAuth
     {
     	if(session('?member.id'))  return $next($request);	
     	$path = $request->path();
-    	//api类
     	if(preg_match("/^api/",$path)){
-    		return json(['code'=>1,'msg'=>'未登录，非法访问']);
+    		//api类
+    		return json(['code'=>1,'msg'=>'未登录，先登录再操作！']);
     	}else{
+    		//页面请求类
     		return redirect(url('blog/auth/login'));
     	}	
     }

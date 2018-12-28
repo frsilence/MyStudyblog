@@ -4,7 +4,6 @@ use think\Controller;
 use app\common\controller\Appbasic;
 class Index extends Appbasic
 {
-    protected $middleware = ['BlogAuth'];
     public function index()
     {
     	$data =[

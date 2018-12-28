@@ -62,11 +62,19 @@
 
 						</div>
 						<div class="mt-15">
+							{if session('?member.id')}
 							<h4>发布评论</h4>
 							<div id="article_comment"></div>
 							<div class="text-r mt-10">
 								<button id="addComment" class="btn btn-primary radius"> 发表评论</button>
 							</div>
+							{else /}
+							<h4>登录发布评论  <a class="c-blue" href="{:url('blog/auth/login')}">立即登录</a></h4>
+							<div id="article_comment"></div>
+							<div class="text-r mt-10">
+								<button id="addComment" class="btn btn-primary radius"> 发表评论</button>
+							</div>
+							{/if}
 						</div>
 					</div>
 				</div>

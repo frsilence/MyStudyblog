@@ -20,6 +20,13 @@ class Upload extends Appbasic
     }
 
     /**
+     * 用户登录中间件
+     */
+    protected $middleware = [
+        'BlogAuth' => ['only'=>['upload_image','upload_userimage']]
+    ]
+
+    /**
      * 图片上传方法,上传成功返回图片url
      * @param  think/Request $request
      * @return \think\Response

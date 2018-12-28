@@ -8,7 +8,16 @@ use app\common\controller\Appbasic;
 
 class Member extends Appbasic
 {
-    protected $middleware = ['BlogAuth'];
+    /**
+     * 检测用户登录中间件
+     * @var [type]
+     */
+    protected $middleware = [
+        'BlogAuth' => [
+            'only' => ['updateInfoForm','updateUserimage','updateUserimage','getMemberSelfLoginRecord']
+        ]
+
+    ];
 
     /**
      * 显示会员个人主页

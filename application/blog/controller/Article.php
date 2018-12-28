@@ -9,6 +9,16 @@ use app\common\controller\Appbasic;
 class Article extends Appbasic
 {
     /**
+     * 检测用户登录中间件
+     */
+    protected $middleware = [
+        'BlogAuth' => ['only'=>['addArticlePage','addArticle','addComment']],
+    ];
+
+
+
+
+    /**
      * 显示添加文章页面
      *
      * @return \think\Response
