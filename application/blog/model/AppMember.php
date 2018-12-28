@@ -80,7 +80,20 @@ class AppMember extends Model
      */
     public function getAppMemberInfoById($id)
     {
-    	$member = $this->where(['id'=>$id,'is_delete'=>0,'status'=>0])->find();
+    	$member_info = $this->where(['id'=>$id,'is_delete'=>0,'status'=>0])->field('id,member_pid,username,userimage,phone,email,province,city,sex,create_time')->find();
+        if(!empty($member_info)) {
+            $member_info->articles;
+            $member_info->comments;
+            $member_info->memberloginrecords;
+            $member_info['comment_num'] = $member_info->comments()->count();
+            $member_info['article_num'] = $member_info->articles()->count();
+            $member_info['follow_num'] = 10;
+            $member_info['fans_num'] = 20;
+            return $member_info;
+        }else{
+            return '用户不存在';
+        }
+
     }
 
     /**
@@ -101,7 +114,7 @@ class AppMember extends Model
             $member_info['fans_num'] = 20;
             return $member_info;
         }else{
-            return '其他用户';
+            return '用户不存在';
         }
 
     }

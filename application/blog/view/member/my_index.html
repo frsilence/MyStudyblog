@@ -2,10 +2,20 @@
 {block name="content"}
 <section>
 	<div class="container mt-20">
-		<div class="">
-			<h3>
-				{$member_info.username}
-			</h3>
+		<div class="row">
+			<div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+				<h3>
+					{$member_info.username}
+				</h3>
+			</div>
+			<div class="col-lg-11 col-md-11 col-sm-10 col-xs-9 mt-10">
+				<span>发表文章：{$member_info.article_num}</span>
+				<span>发表评论：{$member_info.comment_num}</span>
+				<br />
+				<span>关注文章：{$member_info.fans_num}</span>
+				<span>关注会员：{$member_info.follow_num}</span>
+				<span>粉丝：{$member_info.fans_num}</span>
+			</div>
 		</div>
 		<div id="tab_demo" class="HuiTab">
 			<div class="tabBar clearfix"><span>个人资料</span> <span role="tab">我的文章</span><span role='tab'>我的评论</span><span role='tab'>登录记录</span></div>
@@ -437,10 +447,10 @@ $(document).ready(function(){
 					$('#this_loginrecord').empty()
 					for(var i=0;i<records.length;i++)
 					{
-						if(records[i].type=='登陆账号'){
+						if(records[i].type=='登录账号'){
 							var my_str1 = '<tr class="active"><th>'+records[i].username+'</th><td>'+records[i].type+'</td><td>'+records[i].login_ip+'</td><td>'+records[i].login_area+'</td><td>'+records[i].remark+'</td><td>'+records[i].create_time+'</td></tr>';
 							$('#this_loginrecord').append(my_str1);
-						}else if(records[i].type=='登陆过期'){
+						}else if(records[i].type=='登录过期'){
 							var my_str2 = '<tr class="warning"><th>'+records[i].username+'</th><td>'+records[i].type+'</td><td>'+records[i].login_ip+'</td><td>'+records[i].login_area+'</td><td>'+records[i].remark+'</td><td>'+records[i].create_time+'</td></tr>';
 							$('#this_loginrecord').append(my_str2);
 						}else{

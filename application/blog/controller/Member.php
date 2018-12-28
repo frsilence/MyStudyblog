@@ -8,6 +8,8 @@ use app\common\controller\Appbasic;
 
 class Member extends Appbasic
 {
+    protected $middleware = ['BlogAuth'];
+
     /**
      * 显示会员个人主页
      *@param  $id 会员id
@@ -17,17 +19,26 @@ class Member extends Appbasic
     {
         if(empty(model('AppMember')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->find())) return $this->fetch('public\404',['title'=>'404Page',
             'article_category'=>$this->article_category]);
+        //访问本人
         if(session('?member') && session('member.id') == $id){
             $member = model('AppMember')->getMyMemberInfo();
             //return json($member);
             $data =[
-            'title'=>'首页',
+            'title'=>'个人中心',
             'article_category'=>$this->article_category,
             'member_info'=>$member,
             ];
             return $this->fetch('my_index',$data);
         }
-        return 'you';
+        //访问他人
+        $member = model('AppMember')->getAppMemberInfoById($id);
+        $data = [
+            'title'=>'用户信息',
+            'article_category'=>$this->article_category,
+            'member_info'=>$member,
+        ];
+        return $this->fetch('member_index',$data);
+        
     }
 
     /**

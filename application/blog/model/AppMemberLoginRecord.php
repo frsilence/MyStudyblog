@@ -19,7 +19,7 @@ class AppMemberLoginRecord extends Model
      */
     public function getTypeAttr($value)
     {
-        $login = [0=>'登陆账号',1=>'主动退出',2=>'登陆过期'];
+        $login = [0=>'登录账号',1=>'主动退出',2=>'登录过期'];
         return $login[$value];
     }
 

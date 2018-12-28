@@ -41,6 +41,7 @@ Route::group('article/',function(){
 //用户操作
 Route::group('member/',function(){
 	Route::get('index/id/:id','blog/member/readMember');
+	Route::get('api/sda','blog/member/readMember');
 });
 
 //API
