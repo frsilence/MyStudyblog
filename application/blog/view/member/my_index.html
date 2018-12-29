@@ -522,13 +522,13 @@ $(document).ready(function(){
 				$('#this_collectarticle').empty()
 				for(var i=0;i<articles.length;i++)
 				{
-					var my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['title']+'</a></h4><div>';
+					var my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['article']['title']+'</a></h4><div>';
 					var my_str2='<span><a href='+articles[i]['member_url']+'><i class="Hui-iconfont"> &#xe62c;</i> 作者：'+articles[i].member.username+'&nbsp;&nbsp; </a></span>';			
 					var my_str3='<span><a href='+articles[i].category_url+'><i class="Hui-iconfont"> &#xe72d;</i> 分类：'+articles[i].category.category_title+'&nbsp;&nbsp; </a></span>';
 					var my_str4='<span><a href="javascript:"><i class="Hui-iconfont">&#xe728;</i> 时间：'+articles[i].update_time+'&nbsp;&nbsp; </a></span>';
 					var my_str5='<span><a href='+articles[i].article_url+'><i class="Hui-iconfont">&#xe622;</i>评论：'+articles[i].comment_num+'&nbsp;&nbsp; </a></span>';
-					var my_str6='<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：'+articles[i].click_num+'&nbsp;&nbsp; </a></span>';
-					var my_str7='<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：'+articles[i].praise_num+'</a></span></div></li>';
+					var my_str6='<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：'+articles[i]['article'].click_num+'&nbsp;&nbsp; </a></span>';
+					var my_str7='<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：'+articles[i]['article'].praise_num+'</a></span></div></li>';
 					$('#this_collectarticle').append(my_str1+my_str2+my_str3+my_str4+my_str5+my_str6+my_str7);
 				}
 			}

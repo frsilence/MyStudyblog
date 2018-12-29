@@ -95,7 +95,7 @@ class ArticleMember extends Model
     	$articles = $this->where(['member_id'=>$member_id,'is_delete'=>0])->order('update_time','desc')->paginate(request()->param('list_rows'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
     		$article_info = model('Article')->where(['id'=>$item['article_id'],'status'=>0,'is_delete'=>0])->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->find();
             if(!empty($article_info)){
-                $item['article_info'] = $article_info;
+                $item['article'] = $article_info;
                 $item['member'] = $article_info->member;
                 $item['category'] = $article_info->category;
                 $item['comment_num'] = $article_info->comments()->count();

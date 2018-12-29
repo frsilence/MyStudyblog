@@ -121,7 +121,11 @@ class Member extends Appbasic
      */
     public function getMemberCollectArticleList($id)
     {
-        $MemberCollectArticleList = model('ArticleMember')->getMemberCollectArticleList($id);
+        if(session('?member.id') && $id==session('member.id')){
+            $MemberCollectArticleList = model('ArticleMember')->getMemberCollectArticleList($id);
+        }else{
+            $MemberCollectArticleList = ['code'=>1,'未登录或者非法请求'];
+        }
         return json($MemberCollectArticleList);
     }
 
