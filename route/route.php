@@ -67,6 +67,7 @@ Route::group('api/',function(){
 		Route::post('index/update_info/:id','blog/member/updateInfoForm');
 		Route::post('index/update_userimage/:id','blog/member/updateUserimage');
 		Route::get('selfloginrecord','blog/member/getMemberSelfLoginRecord');
+		Route::post('checkmemberfollow/:id','blog/member/checkMemberFollow');
 });
 });
 

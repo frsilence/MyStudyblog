@@ -158,7 +158,7 @@ class Article extends Appbasic
         if($request->has('article_id') && $request->has('member_id')){
             $result = model('ArticleMember')->checkArticleMember($request->post('article_id'),session('member.id'));
         }else{
-            $result = ['code'=>2,'msg'=>'获取参数错误'];
+            $result = ['code'=>1,'msg'=>'获取参数错误'];
         }
         return json($result);
     }

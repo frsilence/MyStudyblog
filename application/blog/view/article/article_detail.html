@@ -23,8 +23,8 @@
 							{volist name='article.tags' id='tag'}
 							{$tag.name}
 							{/volist}
-							<button id="collect_article" class="f-r btn btn-primary radius" style="display: none;">收藏文章</button>
-							<button id="uncollect_article" class="f-r btn btn-primary radius" style="display: none;">取消收藏</button>
+							<button id="collect_article" class="f-r btn btn-primary radius" style="display: none;"><i class="Hui-iconfont">&#xe69e;</i>收藏文章</button>
+							<button id="uncollect_article" class="f-r btn btn-primary radius" style="display: none;"><i class="Hui-iconfont">&#xe630;</i>取消收藏</button>
 						</div>
 					</div>
 					<div class="bk-gray mt-15 pd-15">
@@ -151,7 +151,7 @@
 				if(data.code == 0){
 					$('#collect_article').css('display','block');
 					$('#uncollect_article').css('display','none');
-				}else if(data.code==1){
+				}else if(data.code==2){
 					//已登录，已关注
 					$('#collect_article').css('display','none');
 					$('#uncollect_article').css('display','block');

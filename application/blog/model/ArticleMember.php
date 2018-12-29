@@ -22,7 +22,7 @@ class ArticleMember extends Model
         if(empty($this->where(['article_id'=>$article_id,'member_id'=>$member_id,'is_delete'=>0])->find())){
             return ['code'=>0,'msg'=>'未关注'];
         }else{
-            return ['code'=>1,'msg'=>'已关注'];
+            return ['code'=>2,'msg'=>'已关注'];
         }
     }
 

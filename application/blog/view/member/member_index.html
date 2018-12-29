@@ -3,18 +3,22 @@
 <section>
 	<div class="container mt-20">
 		<div class="row">
-			<div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+			<div class="col-lg-1 col-md-2 col-sm-2 col-xs-3">
 				<h3>
 					{$member_info.username}
 				</h3>
 			</div>
-			<div class="col-lg-11 col-md-11 col-sm-10 col-xs-9 mt-10">
+			<div class="col-lg-10 col-md-9 col-sm-8 col-xs-6 mt-10">
 				<span>发表文章：{$member_info.article_num}</span>
 				<span>发表评论：{$member_info.comment_num}</span>
 				<br />
 				<span>关注文章：{$member_info.fans_num}</span>
 				<span>关注会员：{$member_info.follow_num}</span>
 				<span>粉丝：{$member_info.fans_num}</span>
+			</div>
+			<div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+				<button id="follow_member" class="btn btn-primary va-b radius" style="display: none;"><i class="Hui-iconfont">&#xe656;</i> 关注</button>
+				<button id="unfollow_member" class="btn btn-primary va-b radius" style="display: none;"><i class="Hui-iconfont">&#xe688;</i> 取消关注</button>
 			</div>
 		</div>
 		<div id="tab_demo" class="HuiTab">
@@ -126,6 +130,7 @@
 	
 	
 $(document).ready(function(){
+	checkMemberFollow();
 	var token = "{$Request.token}";
 	pageQuery(1);
 	pageQuery2(1);
@@ -241,7 +246,30 @@ $(document).ready(function(){
 		});
 	};
 	
-	
+	//检测当前会话用户是否关注该页面用户
+	function checkMemberFollow(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/member/checkMemberFollow',['id'=>$member_info.id])}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					//未关注
+					$('#follow_member').css('display','block');
+					$('#unfollow_member').css('display','none');
+				}else if(data.code == 2){
+					//已关注
+					$('#follow_member').css('display','none');
+					$('#unfollow_member').css('display','block');
+				}else{
+					return;
+				}
+			},
+			error:function(){
+				return;
+			}
+		});
+	}
 	
 	
 	
