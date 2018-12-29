@@ -57,7 +57,9 @@ Route::group('api/',function(){
 		Route::get('category/:id/articlelist','blog/article/getCategoryArticleList');
 		Route::get('member/:id/articlelist','blog/member/getMemberArticleList');
 		Route::get('member/:id/commentlist','blog/member/getMemberCommentList');
-		Route::post('collectarticle/:id','blog/article/collectarticle');
+		Route::post('collectarticle/:id','blog/article/collectArticle');
+		Route::post('uncollectarticle/:id','blog/article/uncollectArticle');
+		Route::post('checkarticlemember','blog/article/checkArticleMember');
 	});
 	//用户操作
 	Route::group('member/',function(){

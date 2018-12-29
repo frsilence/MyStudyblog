@@ -1,0 +1,532 @@
+{extend name="public/base" /}
+{block name="content"}
+<section>
+	<div class="container mt-20">
+		<div class="row">
+			<div class="col-lg-1 col-md-1 col-sm-2 col-xs-3">
+				<h3>
+					{$member_info.username}
+				</h3>
+			</div>
+			<div class="col-lg-11 col-md-11 col-sm-10 col-xs-9 mt-10">
+				<span>发表文章：{$member_info.article_num}</span>
+				<span>发表评论：{$member_info.comment_num}</span>
+				<br />
+				<span>关注文章：{$member_info.fans_num}</span>
+				<span>关注会员：{$member_info.follow_num}</span>
+				<span>粉丝：{$member_info.fans_num}</span>
+			</div>
+		</div>
+		<div id="tab_demo" class="HuiTab">
+			<div class="tabBar clearfix"><span>个人资料</span> <span role="tab">我的文章</span><span role='tab'>我的评论</span><span role='tab'>登录记录</span></div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel' id="tab_material">
+				<ul id="Huifold1" class="Huifold">
+					<li class="item">
+						<h4>查看个人资料<b>+</b></h4>
+						<div class="info">
+							<table class="table table-border table-bg table-bordered">
+								<thead>
+									<tr>
+										<th width="20%">项目</th>
+										<th>值</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th>用户名称</th>
+										<td>{$member_info.username}</td>
+									</tr>
+									<tr>
+										<th>用户邮箱</th>
+										<td>{$member_info.email}</td>
+									</tr>
+									<tr>
+										<th>会员号</th>
+										<td>{$member_info.member_pid}</td>
+									</tr>
+									
+									<tr>
+										<th>电话</th>
+										<td>{$member_info.phone}</td>
+									</tr>
+									<tr>
+										<th>省份-城市</th>
+										<td>{$member_info.province}-{$member_info.city}</td>
+									</tr>
+									<tr>
+										<th>性别</th>
+										<td>{$member_info.sex}</td>
+									</tr>
+									<tr>
+										<th>注册时间</th>
+										<td>{$member_info.create_time}</td>
+									</tr>
+									<tr>
+										<td colspan="2"><input class="btn btn-primary radius" type="button" onclick="window.location.reload()" value="刷新资料"></td>
+				
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</li>
+					<li class="item">
+						<h4>更新个人资料<b>+</b></h4>
+						<div class="info">
+							<div id="tab_material">
+								<table class="table table-border table-bg table-bordered">
+									<thead>
+										<tr>
+											<th width="20%">项目</th>
+											<th>值</th>
+										</tr>
+									</thead>
+									<tbody>									
+										<tr>
+											<th>电话</th>
+											<td><input id="userphone" type="text" class="input-text radius size-M" value="{$member_info.phone}" /></td>
+										</tr>
+										<tr>
+											<th>省份-城市</th>
+											<td>
+												<div id="area">
+													<span class="select-box">
+														<select  class="select" id="province" runat="server" onchange="selectprovince(this);" style=" width:95px;display: inline;">
+															<option value="{$member_info.province}" selected>{$member_info.province}</option>
+														</select>
+														<select class="select" class="form-control" id="city" runat="server" style=" width:95px;display: inline;">
+															<option value="{$member_info.city}" selected>{$member_info.city}</option>
+														</select>
+													</span>
+													
+												</div>
+											</td>
+										</tr>
+										<tr>
+											<th>性别</th>
+											<td>
+												<span class="select-box">
+														<select id="usersex" class="select" class="form-control" id="city" runat="server" style=" width:95px;display: inline;">
+															{if $member_info.sex=="男"}
+															<option value="男" selected>男</option>
+															<option value="女">女</option>
+															{elseif $member_info.sex=="女"}
+															<option value="男">男</option>
+															<option value="女" selected>女</option>
+															{else /}
+															<option value="男">男</option>
+															<option value="女">女</option>
+															{/if}
+														</select>
+												</span>
+											</td>
+										</tr>
+										<tr>
+											<td><input class="btn btn-primary radius" type="button" onclick="window.location.reload()" value="刷新资料"></td>
+											<td><input id="update_info" class="btn btn-primary radius" type="button" value="更新资料"></td>
+										</tr>
+									</tbody>
+								</table>
+							</div>
+						</div>
+					</li>
+					<li class="item">
+						<h4>更新头像<b>+</b></h4>
+						<div class="info">
+							<div class="row">
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
+									<h5>当前头像</h5>
+									<img class="radius userimage" src="{$member_info.userimage}" />
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
+									<h5>上传头像</h5>
+									<input id="user_image" type="file" onchange="upload_file()"  accept="image/x-png,image/gif,image/jpeg,image/bmp"/>
+									<div class="mt-25">
+										<button id="update_userimage" class="btn btn-default f-l">更换为新头像</button>
+									</div>
+								</div>
+								<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12 bk-gray">
+									<h5>新头像预览</h5>
+									<img class="radius userimage" id="newuserimage"/>
+								</div>
+							</div>
+						</div>
+					</li>
+				
+				</ul>
+			</div>
+			
+			<div class="tabCon bk-gray pd-10" role='tabpanel' id="tab_article">
+				<div class="bk-gray pd-10">
+					<ul id="this_article">
+						
+					</ul>		
+				</div>
+				<div>
+					<div id="demo1"></div>
+				</div>
+			</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel'>
+				<div class="bk-gray pd-10">
+					<ul id="this_comment" class="commentList">
+						
+					</ul>
+				</div>
+				<div>
+					<div id="demo2"></div>
+				</div>
+			</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel'>
+				<table class="table table-border table-bg table-bordered">
+					<thead>
+						<tr>
+							<th width="15%">账户</th>
+							<th width="15%">登录类型</th>
+							<th width="15%">登录IP</th>
+							<th width="15%">登录地区</th>
+							<th width="20%">备注</th>
+							<th width="20%">记录时间</th>
+						</tr>
+					</thead>
+					<tbody id="this_loginrecord">
+						
+					</tbody>
+				</table>
+				<div>
+					<div id="demo3"></div>
+				</div>
+			</div>
+			<div class="tabCon bk-gray pd-10" role='tabpanel'>登录记录</div>
+		</div>
+		<!-- 更新表单区域  -->
+		
+	</div>
+</section>
+<script>
+	$(function(){
+		$("#tab_demo").Huitab({
+			tabEvent:"click",
+			index:0
+		});
+		jQuery.Huifold = function(obj,obj_c,speed,obj_type,Event){
+		if(obj_type == 2){
+			$(obj+":first").find("b").html("-");
+			$(obj_c+":first").show()}
+		$(obj).bind(Event,function(){
+			if($(this).next().is(":visible")){
+				if(obj_type == 2){
+					return false}
+				else{
+					$(this).next().slideUp(speed).end().removeClass("selected");
+					$(this).find("b").html("+")}
+			}
+			else{
+				if(obj_type == 3){
+					$(this).next().slideDown(speed).end().addClass("selected");
+					$(this).find("b").html("-")}else{
+					$(obj_c).slideUp(speed);
+					$(obj).removeClass("selected");
+					$(obj).find("b").html("+");
+					$(this).next().slideDown(speed).end().addClass("selected");
+					$(this).find("b").html("-")}
+			}
+		})}
+		$.Huifold("#Huifold1 .item h4","#Huifold1 .item .info","fast",1,"click"); /*5个参数顺序不可打乱，分别是：相应区,隐藏显示的内容,速度,类型,事件*/
+	});
+	
+	
+		
+</script>
+{/block}
+{block name='javascript_content'}
+<script type="text/javascript" src="__STATIC__/js/blog/area.js"></script>
+<script type="text/javascript">
+	//文章分页变量容器
+	
+	var pageObj = {
+		current_page:1,
+		per_page:10 ,
+		dataLength:0,
+		
+	}
+	//评论分页变量容器
+	var pageObj2 = {
+		current_page:1,
+		per_page:10 ,
+		dataLength:0,
+		
+	}
+	//登录记录分页变量容器
+	var pageObj3 = {
+		current_page:1,
+		per_page:10 ,
+		dataLength:0,
+		
+	}
+	
+$(document).ready(function(){
+	var token = "{$Request.token}";
+	pageQuery(1);
+	pageQuery2(1);
+	pageQuery3(1);
+	layui.use(['form', 'layedit', 'laypage','layer'], function () {
+	            var form = layui.form,
+	                layer = layui.layer,
+	                layedit = layui.layedit,
+	                laypage = layui.laypage;
+
+						laypage.render({
+					    elem: 'demo1',
+					    limits:[10,20,30,40],
+							count:pageObj.dataLength,
+					    curr:pageObj.current_page,
+							layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj,first){
+								if(!first){
+									var curr = obj.curr;
+									pageObj.current_page = obj.curr;
+									pageObj.per_page = obj.limit;
+									pageQuery(curr);
+								}
+					      
+					    }
+					  });	
+					  
+					laypage.render({
+					    elem: 'demo2',
+					    limits:[10,20,30,40],
+						count:pageObj2.dataLength,
+					    curr:pageObj2.current_page,
+						layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj,first){
+								if(!first){
+									var curr = obj.curr;
+									pageObj2.current_page = obj.curr;
+									pageObj2.per_page = obj.limit;
+									pageQuery2(curr);
+								}
+					      
+					    }
+					  });
+					  
+					  
+					  laypage.render({
+					    elem: 'demo3',
+					    limits:[10,20,30,40],
+						count:pageObj3.dataLength,
+					    curr:pageObj3.current_page,
+						layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj,first){
+								if(!first){
+									var curr = obj.curr;
+									pageObj3.current_page = obj.curr;
+									pageObj3.per_page = obj.limit;
+									pageQuery3(curr);
+								}
+					      
+					    }
+					  });
+	
+	          
+	        }
+	    );
+	    
+	    
+	
+	$('#update_info').on('click',function(){
+		$.ajax({
+			type:'post',
+			url:'{:url('blog/member/updateInfoForm',['id'=>$member_info.id])}',
+			dataType:'json',
+			async:false,
+			data:{
+				phone:$('#userphone').val(),
+				sex:$('#usersex').val(),
+				province:$('#province').val(),
+				city:$('#city').val(),
+				__token__:token,
+
+			},
+			success:function(data){
+				token = data.token;
+				if(data.code==0){
+					layer.msg(data.msg, {icon: 1, time: 2000},function(){
+						parent.location.reload();
+					});
+					
+				}else{
+					layer.msg(data.msg, {icon: 2, time: 2000});
+					}
+			},
+			error:function(){
+				layer.msg('系统错误，请刷新',{icon:2,time:2000},function(){
+					parent.location.reload();
+				})
+				
+			},
+		});
+	})
+	
+	$('#update_userimage').on('click',function(){
+		update_userimage();
+	})
+	
+	
+})	
+	//文章分页函数
+	function pageQuery(pageno){
+		$.ajax({
+			type:"get",
+			url:"{:url('blog/member/getMemberArticleList',['id'=>$member_info.id])}",
+			dataType:'json',
+			async:false,
+			data:{
+				list_rows : pageObj.per_page,
+				page : pageObj.current_page,
+			},
+			success:function(data){
+				pageObj.dataLength = data.total;
+				articles = data.data;
+				$('#this_article').empty()
+				for(var i=0;i<articles.length;i++)
+				{
+					var my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['title']+'</a></h4><div>';
+					var my_str2='<span><a href='+articles[i]['member_url']+'><i class="Hui-iconfont"> &#xe62c;</i> 作者：'+articles[i].member.username+'&nbsp;&nbsp; </a></span>';			
+					var my_str3='<span><a href='+articles[i].category_url+'><i class="Hui-iconfont"> &#xe72d;</i> 分类：'+articles[i].category.category_title+'&nbsp;&nbsp; </a></span>';
+					var my_str4='<span><a href="javascript:"><i class="Hui-iconfont">&#xe728;</i> 时间：'+articles[i].update_time+'&nbsp;&nbsp; </a></span>';
+					var my_str5='<span><a href='+articles[i].article_url+'><i class="Hui-iconfont">&#xe622;</i>评论：'+articles[i].comment_num+'&nbsp;&nbsp; </a></span>';
+					var my_str6='<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：'+articles[i].click_num+'&nbsp;&nbsp; </a></span>';
+					var my_str7='<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：'+articles[i].praise_num+'</a></span></div></li>';
+					$('#this_article').append(my_str1+my_str2+my_str3+my_str4+my_str5+my_str6+my_str7);
+				}
+			}
+		});
+	};
+	
+	//评论分页函数
+	function pageQuery2(pageno){
+		$.ajax({
+			type:"get",
+			url:"{:url('blog/member/getMemberCommentList',['id'=>$member_info.id])}",
+			dataType:'json',
+			async:false,
+			data:{
+				list_rows : pageObj2.per_page,
+				page : pageObj2.current_page,
+			},
+			success:function(data){
+				pageObj2.dataLength = data.total;
+				comments = data.data;
+				$('#this_comment').empty()
+				for(var i=0;i<comments.length;i++)
+				{
+					var my_str1 = '<li class="item cl"><a href="#"><i class="avatar size-L radius"><img alt="" src="'+comments[i].member.userimage+'" /></i></a>';
+					var my_str2 = '<div class="comment-main"><header class="comment-header"><div class="">';
+					var my_str3 = comments[i].member.username= '<time  datetime='+comments[i].update_time+'>'+comments[i].update_time+'</time> 评论文章:  <a class="c-blue" href='+comments[i].article_url+'>'+comments[i].article.title+'</a>';
+					var my_str4 = '</div></header><div class="comment-body"><p>'+comments[i].content+'</p></div></div></li>';
+					$("#this_comment").append(my_str1+my_str2+my_str3+my_str4);
+				}
+			}
+		});
+	};
+	
+	//登录记录分页函数
+	function pageQuery3(pageno){
+		$.ajax({
+			type:"get",
+			url:"{:url('blog/member/getMemberSelfLoginRecord')}",
+			dataType:'json',
+			async:false,
+			data:{
+				list_rows : pageObj3.per_page,
+				page : pageObj3.current_page,
+			},
+			success:function(data){
+				if(data.code==0){
+					pageObj3.dataLength = data.login_record.total;
+					records = data.login_record.data;
+					$('#this_loginrecord').empty()
+					for(var i=0;i<records.length;i++)
+					{
+						if(records[i].type=='登录账号'){
+							var my_str1 = '<tr class="active"><th>'+records[i].username+'</th><td>'+records[i].type+'</td><td>'+records[i].login_ip+'</td><td>'+records[i].login_area+'</td><td>'+records[i].remark+'</td><td>'+records[i].create_time+'</td></tr>';
+							$('#this_loginrecord').append(my_str1);
+						}else if(records[i].type=='登录过期'){
+							var my_str2 = '<tr class="warning"><th>'+records[i].username+'</th><td>'+records[i].type+'</td><td>'+records[i].login_ip+'</td><td>'+records[i].login_area+'</td><td>'+records[i].remark+'</td><td>'+records[i].create_time+'</td></tr>';
+							$('#this_loginrecord').append(my_str2);
+						}else{
+							var my_str3 = '<tr class="danger"><th>'+records[i].username+'</th><td>'+records[i].type+'</td><td>'+records[i].login_ip+'</td><td>'+records[i].login_area+'</td><td>'+records[i].remark+'</td><td>'+records[i].create_time+'</td></tr>';
+							$('#this_loginrecord').append(my_str3);
+						}
+					}
+				}else{
+					$('#this_loginrecord').empty()
+					$('#this_loginrecord').append('未登录或者无此用户，请刷新');
+				}
+				
+			},
+			error:function(){
+				return false;
+			}
+		});
+	};
+	
+	function upload_file(){
+		var formData = new FormData();
+		formData.append('user_image',$("#user_image")[0].files[0]);
+		$.ajax({
+			type:"post",
+			url:"/api/upload/upload_userimage",
+			async:true,
+			cache: false,
+			contentType: false, //禁止设置请求类型
+			processData: false, //禁止jquery对DAta数据的处理,默认会处理
+			headers:{
+				'X-CSRF-TOKEN':$('meta[name="csrf-token"]').attr('content'),
+			},
+			data:formData,		
+			success:function(data){
+				if(data.code==0){
+					$('#newuserimage').attr('src',data.url);
+				}
+				else{
+					layer.msg(data.msg, {icon: 2, time: 2000});
+				}
+			},
+			error:function(data){
+				alert('用户头像更新失败');
+			}
+		})
+	}
+	
+	function update_userimage(){
+		$.ajax({
+			type:'post',
+			url:"{:url('blog/member/updateUserimage',['id'=>$member_info.id])}",
+			dataType:'json',
+			data:{
+				'user_imageurl':$('#newuserimage').attr('src'),
+			},
+			success:function(data){
+				if(data.code==0){
+					layer.msg(data.msg, {icon: 1, time: 2000},function(){
+						window.location.reload();
+					});
+				}
+				else{
+					layer.msg(data.msg, {icon: 2, time: 2000},function(){
+						window.location.reload();
+					});
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后重试', {icon: 2, time: 2000},function(){
+					window.location.reload();
+				});
+			}
+		})
+	}
+	
+	
+
+</script>
+{/block}

@@ -30,7 +30,7 @@ class ArticleMember extends Model
      * 用户关注（收藏）指定文章
      * @param  int $member_id 用户id
      * @param  int $article_id 文章id
-     * @return  string (0->关注成功，1->关注失败，2->已关注)
+     * @return  string (0->已关注，1->用户或者文章不存在，2->关注成功，3->关注失败)
      */
     public function addArticleToMember($member_id,$article_id)
     {
@@ -62,23 +62,23 @@ class ArticleMember extends Model
     /**
      * @param  int $member_id 用户id
      * @param  int $article_id 文章id
-     * @return  string (0->取消成功，1->取消关注失败，2->未关注，)
+     * @return  string (0->未关注，2-取消关注成功，3->取消关注失败)
      */
     public function deleteArticleToMember($member_id,$article_id)
     {
     	$articleMember = $this->where(['member_id'=>$member_id,'article_id'=>$article_id,'is_delete'=>0])->find();
     	if(empty($articleMember)){
-    		return ['code'=>2,'msg'=>'未关注'];
+    		return 0;
     	}else{
     		$this->startTrans();
     		try{
     			$articleMember->is_delete = 1;
     			$articleMember->save();
     			$this->commit();
-    			return ['code'=>0,'msg'=>'取消关注成功'];
+    			return 2;
     		}catch(\Exception $e){
     			$this->rollback();
-    			return ['code'=>1,'msg'=>'取消关注失败，请刷新重试'];
+    			return 3;
     		}
     		
     	}

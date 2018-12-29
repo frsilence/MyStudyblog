@@ -1,0 +1,9 @@
+<!--导航条-->
+<nav class="breadcrumb nav f-16">
+    <div class="container">
+        <i class="Hui-iconfont">&#xe67f;</i><a href="{:url('/')}" class="c-primary">首页</a>
+        {foreach navMenu as $menu}
+        <span class="c-gray en">&gt;</span> <span class="c-gray"><a href="{$menu.url}" class="c-primary">{$menu.name|default=''}</a></span>
+        {/foreach}
+    </div>
+</nav>

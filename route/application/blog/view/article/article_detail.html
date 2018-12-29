@@ -239,37 +239,6 @@
 		});
 	});
 	
-	//取消收藏
-	$('#uncollect_article').on('click',function(){
-		$.ajax({
-			type:"post",
-			url:"{:url('blog/article/uncollectarticle',['id'=>$article.id])}",
-			async:false,
-			success:function(data){
-				if(data.code == 0){
-					layer.msg(data.msg,{icon:1,time:1000},function(){
-						$('#collect_article').css('display','block');
-						$('#uncollect_article').css('display','none');
-					});
-				}else if(data.code == 2){
-					layer.msg(data.msg,{icon:0,time:2000},function(){
-						$('#collect_article').css('display','block');
-						$('#uncollect_article').css('display','none');
-					});
-				}else{
-					layer.msg(data.msg,{icon:2,time:2000},function(){
-						window.location.reload();
-					});
-				};
-			},
-			error:function(){
-				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
-					window.location.reload();
-				})
-			}
-		});
-	})
-	
 	
 	
 </script>

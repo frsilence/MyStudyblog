@@ -12,7 +12,7 @@ class Article extends Appbasic
      * 检测用户登录中间件
      */
     protected $middleware = [
-        'BlogAuth' => ['only'=>['addArticlePage','addArticle','addComment','collectArticle','uncollectArticle']],
+        'BlogAuth' => ['only'=>['addArticlePage','addArticle','addComment']],
     ];
 
 
@@ -144,7 +144,7 @@ class Article extends Appbasic
      */
     public function collectArticle($id)
     {
-        if(!session('?member.id')) return json(['code'=>1,'msg'=>'未登录,先登录再操作']);
+        if(!session('?member.id')) return json(['code'=>1,'msg'=>'未登录,先登录再收藏']);
         $member_id = session('member.id');
         $result = model('ArticleMember')->addArticleToMember($member_id,$id);
         return json($result);
@@ -160,19 +160,6 @@ class Article extends Appbasic
         }else{
             $result = ['code'=>2,'msg'=>'获取参数错误'];
         }
-        return json($result);
-    }
-
-    /**
-     *取消收藏文章
-     * @param int $id 文章id
-     * @return  json
-     */
-    public function uncollectArticle($id)
-    {
-        if(!session('?member.id')) return json(['code'=>1,'msg'=>'未登录,先登录再操作']);
-        $member_id = session('member.id');
-        $result = model('ArticleMember')->deleteArticleToMember($member_id,$id);
         return json($result);
     }
 

@@ -1,0 +1,74 @@
+<header class="navbar-wrapper">
+	<div class="navbar navbar-black">
+		<div class="container-fluid cl"> 
+			<a class="logo navbar-logo hidden-xs" href="/aboutHui.shtml">XXBlog</a> 
+			 
+			<span class="logo navbar-slogan hidden-xs">personer &middot; study &middot; website</span>
+			<a href="/" class="logo navbar-logo-m visible-xs Hui-iconfont" style="margin-left: 5%;">&#xe625; XXBlog</a>
+			{if session('?member')}
+				<li class="logo navbar-logo-m dropDown dropDown_hover visible-xs" style="margin-left: 5%;"><a class="logo navbar-logo-m dropDown_A Hui-iconfont">&#xe705; {$Think.session.member['username']}&#xe6d5;</a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li>
+								<a href="{:url('blog/member/readMember',['id'=>$Think.session.member.id])}">个人中心</a>
+								<a href="{:url('blog/auth/logout')}">退出登录</a>
+							</li>
+						</ul>
+					</li>
+			{else /}
+			<a href="{:url('blog/auth/login')}" class="logo navbar-logo-m visible-xs Hui-iconfont" style="margin-left: 1%;">&#xe60d 用户登录</a>
+			<a href="{:url('blog/auth/register')}" class="logo navbar-logo-m visible-xs Hui-iconfont" style="margin-left: 1%;">&#xe607; 用户注册</a>
+			{/if}
+			<a aria-hidden="false" class="nav-toggle Hui-iconfont visible-xs" href="javascript:;">&#xe667;</a>
+			<nav id="Hui-nav" class="nav navbar-nav">
+				<ul class="cl">
+					<li id="Huinav_1"> <a href="/">首页</a> </li>
+					<li class="dropDown dropDown_hover"><a href="{:url('blog/article/getAllCategory')}" class="dropDown_A">MyBlog <i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							{volist name="article_category" id="category_list"}
+							<li><a href="{:url('blog/article/getCategory',['id'=>$category_list.id])}">{$category_list.category_title}</a></li>
+							{/volist}
+						</ul>
+					</li>
+					<li class="dropDown dropDown_hover"><a href="" class="dropDown_A">MyDocument<i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="#">分类一</a></li>
+							<li><a href="#">分类二</a></li>
+							<li><a href="#">分类三</a></li>
+						</ul>
+					</li>
+					<li class="dropDown dropDown_hover"><a href="#" class="dropDown_A">MyTool<i class="Hui-iconfont">&#xe6d5;</i></a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li><a href="{:url('index/index/create_category')}">create_category</a></li>
+							<li><a href="{:url('index/index/screen')}">分辨率</a></li>
+							<li><a href="#">分类三</a></li>
+						</ul>
+					</li>
+					<li id="Huinav_5"> <a href="/cases/index.shtml">Website</a> </li>
+					<li id="Huinav_6"> <a href="{:url('blog/article/addArticlePage')}" class="Hui-iconfont">Add Article &#xe717;</a> </li>
+					{if session('?member')}
+					<li class="dropDown dropDown_hover hidden-xs" style="float: right;"><a class="dropDown_A Hui-iconfont">&#xe705; {$Think.session.member['username']}&#xe6d5;</a>
+						<ul class="dropDown-menu menu radius box-shadow">
+							<li>
+								<a href="{:url('blog/member/readMember',['id'=>$Think.session.member.id])}">个人中心</a>
+								<a href="{:url('blog/auth/logout')}">退出登录</a>
+							</li>
+						</ul>
+					</li>
+					{else /}
+					<li class="hidden-xs" style="float: right;">
+						<a class="Hui-iconfont" href="{:url('blog/auth/register')}">&#xe607; 用户注册</a>
+					</li>
+					<li class="hidden-xs" style="float: right;margin-right: 10px;">
+						<a class="Hui-iconfont" href="{:url('blog/auth/login')}">&#xe60d; 用户登录</a>
+					</li>
+					{/if}
+					
+				</ul>
+			</nav> 
+		</div>
+	</div>
+</header>
+
+
+	
+	
