@@ -18,8 +18,8 @@
 			</div>
 		</div>
 		<div id="tab_demo" class="HuiTab">
-			<div class="tabBar clearfix"><span>个人资料</span> <span role="tab">我的文章</span><span role='tab'>我的评论</span><span role='tab'>登录记录</span></div>
-			<div class="tabCon bk-gray pd-10" role='tabpanel' id="tab_material">
+			<div class="tabBar clearfix"><span>个人资料</span> <span role="tab">我的文章</span><span role='tab'>我的评论</span><span role='tab'>收藏文章</span><span role='tab'>登录记录</span></div>
+			<div class="tabCon pd-10" role='tabpanel' id="tab_material">
 				<ul id="Huifold1" class="Huifold">
 					<li class="item">
 						<h4>查看个人资料<b>+</b></h4>
@@ -155,8 +155,8 @@
 				</ul>
 			</div>
 			
-			<div class="tabCon bk-gray pd-10" role='tabpanel' id="tab_article">
-				<div class="bk-gray pd-10">
+			<div class="tabCon pd-10" role='tabpanel' id="tab_article">
+				<div class="pd-10">
 					<ul id="this_article">
 						
 					</ul>		
@@ -165,8 +165,8 @@
 					<div id="demo1"></div>
 				</div>
 			</div>
-			<div class="tabCon bk-gray pd-10" role='tabpanel'>
-				<div class="bk-gray pd-10">
+			<div class="tabCon pd-10" role='tabpanel'>
+				<div class="pd-10">
 					<ul id="this_comment" class="commentList">
 						
 					</ul>
@@ -175,7 +175,17 @@
 					<div id="demo2"></div>
 				</div>
 			</div>
-			<div class="tabCon bk-gray pd-10" role='tabpanel'>
+			<div class="tabCon  pd-10" role='tabpanel'>
+				<div class="pd-10">
+					<ul id="this_collectarticle">
+						
+					</ul>
+				</div>
+				<div>
+					<div id="demo4"></div>
+				</div>
+			</div>
+			<div class="tabCon pd-10" role='tabpanel'>
 				<table class="table table-border table-bg table-bordered">
 					<thead>
 						<tr>
@@ -262,12 +272,21 @@
 		dataLength:0,
 		
 	}
+	//收藏文章分页变量容器
+	//登录记录分页变量容器
+	var pageObj4 = {
+		current_page:1,
+		per_page:10 ,
+		dataLength:0,
+		
+	}
 	
 $(document).ready(function(){
 	var token = "{$Request.token}";
 	pageQuery(1);
 	pageQuery2(1);
 	pageQuery3(1);
+	pageQuery4(1);
 	layui.use(['form', 'layedit', 'laypage','layer'], function () {
 	            var form = layui.form,
 	                layer = layui.layer,
@@ -321,6 +340,22 @@ $(document).ready(function(){
 									pageObj3.current_page = obj.curr;
 									pageObj3.per_page = obj.limit;
 									pageQuery3(curr);
+								}
+					      
+					    }
+					  });
+					  laypage.render({
+					    elem: 'demo4',
+					    limits:[10,20,30,40],
+						count:pageObj4.dataLength,
+					    curr:pageObj4.current_page,
+						layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj,first){
+								if(!first){
+									var curr = obj.curr;
+									pageObj4.current_page = obj.curr;
+									pageObj4.per_page = obj.limit;
+									pageQuery4(curr);
 								}
 					      
 					    }
@@ -466,6 +501,36 @@ $(document).ready(function(){
 			},
 			error:function(){
 				return false;
+			}
+		});
+	};
+	
+	//收藏文章分页函数
+	function pageQuery4(pageno){
+		$.ajax({
+			type:"get",
+			url:"{:url('blog/member/getMemberCollectArticleList',['id'=>$member_info.id])}",
+			dataType:'json',
+			async:false,
+			data:{
+				list_rows : pageObj4.per_page,
+				page : pageObj4.current_page,
+			},
+			success:function(data){
+				pageObj4.dataLength = data.total;
+				articles = data.data;
+				$('#this_collectarticle').empty()
+				for(var i=0;i<articles.length;i++)
+				{
+					var my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['title']+'</a></h4><div>';
+					var my_str2='<span><a href='+articles[i]['member_url']+'><i class="Hui-iconfont"> &#xe62c;</i> 作者：'+articles[i].member.username+'&nbsp;&nbsp; </a></span>';			
+					var my_str3='<span><a href='+articles[i].category_url+'><i class="Hui-iconfont"> &#xe72d;</i> 分类：'+articles[i].category.category_title+'&nbsp;&nbsp; </a></span>';
+					var my_str4='<span><a href="javascript:"><i class="Hui-iconfont">&#xe728;</i> 时间：'+articles[i].update_time+'&nbsp;&nbsp; </a></span>';
+					var my_str5='<span><a href='+articles[i].article_url+'><i class="Hui-iconfont">&#xe622;</i>评论：'+articles[i].comment_num+'&nbsp;&nbsp; </a></span>';
+					var my_str6='<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：'+articles[i].click_num+'&nbsp;&nbsp; </a></span>';
+					var my_str7='<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：'+articles[i].praise_num+'</a></span></div></li>';
+					$('#this_collectarticle').append(my_str1+my_str2+my_str3+my_str4+my_str5+my_str6+my_str7);
+				}
 			}
 		});
 	};

@@ -33,7 +33,7 @@ class Article extends Model
      */
     public function category()
     {
-        return $this->belongsTo('ArticleCategory','category_id','id');
+        return $this->belongsTo('ArticleCategory','category_id','id')->field('id,category_title');
     }
 
     /**
@@ -169,7 +169,7 @@ class Article extends Model
      */
     public function getMemberArticleList($member_id)
     {
-        $article_list = $this->where(['member_id'=>$member_id,'status'=>0,'is_delete'=>0])->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->paginate(request()->param('list_rows'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
+        $article_list = $this->where(['member_id'=>$member_id,'status'=>0,'is_delete'=>0])->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->order('update_time','desc')->paginate(request()->param('list_rows'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
                 $item->member;
                 $item->category;
                 $item['comment_num'] = $item->comments()->count();

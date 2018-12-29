@@ -116,7 +116,17 @@ class Member extends Appbasic
     }
 
     /**
-     * 获取当前回话会员的登录记录
+     * 获取会员收藏文章列表
+     * @param int $id 用户id
+     */
+    public function getMemberCollectArticleList($id)
+    {
+        $MemberCollectArticleList = model('ArticleMember')->getMemberCollectArticleList($id);
+        return json($MemberCollectArticleList);
+    }
+
+    /**
+     * 获取当前会话会员的登录记录
      * 
      */
     public function getMemberSelfLoginRecord()
