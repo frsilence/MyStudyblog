@@ -100,4 +100,20 @@ class AppMemberFollow extends Model
     	return $follower_list;
 
     }
+
+    /**
+     * 判断用户是否已关注某用户
+     * @param   $int $followmember_id 当前会话用户
+     * @param int $member_id 被访问用户
+     */
+    public function checkMemberFollow($follower_id,$member_id)
+    {
+        $result = $this->where(['follower_id'=>$follower_id,'member_id'=>$member_id,'is_delete'=>0])->find();
+        if(empty($result)){
+            return ['code'=>0,'msg'=>'未关注'];
+        }else{
+            return ['code'=>2,'msg'=>'已关注'];
+        }
+    }
+
 }

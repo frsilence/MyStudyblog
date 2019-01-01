@@ -140,6 +140,20 @@ class Member extends Appbasic
     }
 
     /**
+     * 检测当前用户是否关注指定用户
+     * @param   $id 被关注用户id               
+     */
+    public function checkMemberFollow($id)
+    {
+        if(session('?member.id')){
+            $result = model('AppMemberFollow')->checkMemberFollow(session('member.id'),$id);
+        }else{
+            $result = ['code'=>1,'msg'=>'未登录用户'];
+        }
+        return json($result);
+    }
+
+    /**
      * 显示创建资源表单页.
      *
      * @return \think\Response
