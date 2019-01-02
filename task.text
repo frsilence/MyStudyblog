@@ -9,3 +9,7 @@
 3.blog统计  使用缓存
 3.1 阅读数 
 3.2 点赞
+ redis
+ blog_article 集合存放所接受的article_id
+ blog_article_member_praise_{article_id} 集合存该文章下点赞用户id
+ blog_article_praise_counts_{article_id} 保存点赞数
