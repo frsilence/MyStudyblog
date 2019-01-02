@@ -271,6 +271,67 @@ $(document).ready(function(){
 		});
 	}
 	
+	//关注会员
+	$('#follow_member').on('click',function(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/member/addMemberFollow',['id'=>$member_info.id])}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					layer.msg(data.msg,{icon:1,time:1000},function(){
+						$('#follow_member').css('display','none');
+						$('#unfollow_member').css('display','block');
+					});
+				}else if(data.code == 2){
+					layer.msg(data.msg,{icon:0,time:2000},function(){
+						$('#follow_member').css('display','none');
+						$('#unfollow_member').css('display','block');
+					});
+				}else{
+					layer.msg(data.msg,{icon:2,time:2000},function(){
+						window.location.reload();
+					});
+				};
+			},
+			error:function(data){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		});
+	});
+	//取消关注
+	$('#unfollow_member').on('click',function(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/member/deleteMemberFollow',['id'=>$member_info.id])}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					layer.msg(data.msg,{icon:1,time:1000},function(){
+						$('#follow_member').css('display','block');
+						$('#unfollow_member').css('display','none');
+					});
+				}else if(data.code == 2){
+					layer.msg(data.msg,{icon:0,time:2000},function(){
+						$('#follow_member').css('display','block');
+						$('#unfollow_member').css('display','none');
+					});
+				}else{
+					layer.msg(data.msg,{icon:2,time:2000},function(){
+						window.location.reload();
+					});
+				};
+			},
+			error:function(data){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		});
+	});
+	
 	
 	
 

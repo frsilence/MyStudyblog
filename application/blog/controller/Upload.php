@@ -73,8 +73,8 @@ class Upload extends Appbasic
                     $type = $image->type();
                     $width = $image->width();
                     $height = $image->height();
+                    if(!is_dir('../public/static/uploads/image/'.date('Ymd'))) mkdir('../public/static/uploads/image/'.date('Ymd'));
                     if($width>=300 || $height>=300){
-                        if(!is_dir('../public/static/uploads/image/'.date('Ymd'))) mkdir('../public/static/uploads/image/'.date('Ymd'));
                         $url = '/static/uploads/image/'.date('Ymd').'/'.time().rand(1000,9999).'.'.$type;
                         $save_url = '../public'.$url;
                         $image->crop(300,300)->save($save_url);

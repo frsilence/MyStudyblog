@@ -15,11 +15,23 @@
 
 return [
     // 驱动方式
-    'type'   => 'File',
-    // 缓存保存目录
-    'path'   => '',
-    // 缓存前缀
-    'prefix' => '',
-    // 缓存有效期 0表示永久缓存
-    'expire' => 0,
+    'type'   => 'complex',
+    'default' =>[
+    	'type'=>'file',
+    	// 缓存有效期 0表示永久缓存
+    	'expire'=>0,
+    	// 缓存前缀
+    	'prefix'=>'think',
+    	// 缓存保存目录
+    	'path'=>'../runtime/cache/',
+    ],
+    'redis' => [
+    	'type'=>'redis',
+    	'host'=>'127.0.0.1',
+    	'port'=>6379,
+    	'password'=>'root',
+    	//'expire'=>1255,
+    	'prefix'=>'blog_',
+    	'timeout'=>3600
+    ]
 ];

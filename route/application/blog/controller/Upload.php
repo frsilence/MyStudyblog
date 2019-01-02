@@ -24,7 +24,7 @@ class Upload extends Appbasic
      */
     protected $middleware = [
         'BlogAuth' => ['only'=>['upload_image','upload_userimage']]
-    ]
+    ];
 
     /**
      * 图片上传方法,上传成功返回图片url

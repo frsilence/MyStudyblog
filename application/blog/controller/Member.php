@@ -154,6 +154,34 @@ class Member extends Appbasic
     }
 
     /**
+     * 关注用户
+     * @param int $id 被关注用户id
+     */
+    public function addMemberFollow($id)
+    {
+        if(session('?member.id')){
+            $result = model('AppMemberFollow')->addMemberFollow($id,session('member.id'));
+        }else{
+            $result = ['code'=>1,'msg'=>'未登录用户'];
+        }
+        return json($result);
+    }
+
+    /**
+     * 取消关注
+     * @param int $id 被关注用户
+     */
+    public function deleteMemberFollow($id)
+    {
+        if(session('?member.id')){
+            $result = model('AppMemberFollow')->deleteMemberFollow($id,session('member.id'));
+        }else{
+            $result = ['code'=>1,'msg'=>'未登录用户'];
+        }
+        return json($result);
+    }
+
+    /**
      * 显示创建资源表单页.
      *
      * @return \think\Response

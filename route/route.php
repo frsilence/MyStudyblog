@@ -23,8 +23,8 @@ Route::group('auth/',function(){
 //test
 Route::group('test/',function(){
 	Route::get('create_category','index/index/create_category');
-	Route::get('code_line',function(){
-		return 's';
+	Route::get('redis',function(){
+		dump(Cache::store('redis')->set('test','1231231',1000000));
 	});
 });
 
@@ -68,6 +68,8 @@ Route::group('api/',function(){
 		Route::post('index/update_userimage/:id','blog/member/updateUserimage');
 		Route::get('selfloginrecord','blog/member/getMemberSelfLoginRecord');
 		Route::post('checkmemberfollow/:id','blog/member/checkMemberFollow');
+		Route::post('addmemberfollow/:id','blog/member/addMemberFollow');
+		Route::post('deletememberfollow/:id','blog/member/deleteMemberFollow');
 });
 });
 

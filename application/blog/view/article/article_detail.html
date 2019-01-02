@@ -16,7 +16,7 @@
 							<span><a href="{:url('blog/article/readArticle',['id'=>$article.id])}"><i class="Hui-iconfont">&#xe622;</i>评论：{$article.comment_num}&nbsp;&nbsp;
 								</a></span>
 							<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：{$article.click_num}&nbsp;&nbsp; </a></span>
-							<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：{$article.praise_num}</a></span>
+							<span><a id="addPraise" href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：{$article.praise_num}</a></span>
 						</div>
 						<div class="text-l">
 							<i class="Hui-iconfont">&#xe64b;</i>标签：
@@ -267,6 +267,15 @@
 					window.location.reload();
 				})
 			}
+		});
+	};
+	
+	//点赞
+	$('#addPraise').on('click',function(){
+		$.ajax({
+			type:"post",
+			url:"",
+			async:false,
 		});
 	})
 	

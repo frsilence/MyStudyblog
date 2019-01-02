@@ -14,17 +14,17 @@ class AppMemberFollow extends Model
      * 添加关注者
      * @param int $member_id 被关注者ID
      * @param int $follower_id 关注者ID
-     * @return int 关注操作完成信息 0:有用户不存在 1:已经关注 2:关注失败 3:关注成功
+     * @return int 关注操作完成信息
      */
     public function addMemberFollow($member_id,$follower_id)
     {
     	$member = model('AppMember');
     	//检查用户是否存在
     	if(empty($member->where(['id'=>$member_id,'status'=>0,'is_delete'=>0])->find()) || empty($member->where(['id'=>$follower_id,'status'=>0,'is_delete'=>0])->find())){
-			return 0;
+			return ['code'=>1,'msg'=>'用户不存在'];
 		};
     	//检查是否已经关注
-    	if(!empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find())) return 1;
+    	if(!empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find())) return ['code'=>2,'msg'=>'已关注，请勿重复操作'];
     	//执行关注
     	$this->startTrans();
     	try{
@@ -33,15 +33,15 @@ class AppMemberFollow extends Model
     			$follower->is_delete = 0;
     			$follower->save();
     			$this->commit();
-    			return 3;
+    			return ['code'=>0,'msg'=>'关注成功'];
     		} else{
     			$this->save(['member_id'=>$member_id,'follower_id'=>$follower_id]);
     			$this->commit();
-    			return 3;
+    			return ['code'=>0,'msg'=>'关注成功'];
     		}
     	} catch(\Exception $e){
     		$this->rollback();
-    		return 2;
+    		return ['code'=>1,'msg'=>'关注失败，稍后重试'];
     	}
 
     }
@@ -50,22 +50,22 @@ class AppMemberFollow extends Model
      * 取消关注
      * @param int $member_id 被关注者ID
      * @param int $follower_id 关注者ID
-     * @return int 取消关注操作完成信息 0:未关注 1:取消关注失败 2:取消关注成功
+     * @return int 取消关注操作完成信息
      */
     public function deleteMemberFollow($member_id,$follower_id)
     {
     	//检查是否关注
-    	if (empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find())){
-			return 0;
+    	if(empty($this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->find())){
+			return ['code'=>1,'msg'=>'未关注该用户，非法操作'];
 		};
     	$this->startTrans();
     	try{
-    		$this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>1])->update(['is_delete'=>0]);
-    		$thsi->commit();
-    		return 2;
+    		$this->where(['member_id'=>$member_id,'follower_id'=>$follower_id,'is_delete'=>0])->update(['is_delete'=>1]);
+    		$this->commit();
+    		return ['code'=>0,'msg'=>'取消关注成功'];
     	}catch(\Exception $e){
     		$this->rollback();
-    		return 1;
+    		return ['code'=>1,'msg'=>'取消关注失败，请重试'];
     	}
     }
 
