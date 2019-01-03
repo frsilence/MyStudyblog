@@ -177,14 +177,20 @@ class Article extends Appbasic
     }
 
     /**
-     * 显示指定的资源
+     * 点赞文章
      *
-     * @param  int  $id
+     * @param  int  $id 文章id
      * @return \think\Response
      */
-    public function read($id)
+    public function addPraise($id)
     {
-        //
+        if(session('?member.id')) return json(['code'=>1,'msg'=>'未登录用户无法操作']);
+        //将文章id添加到缓存文章列表
+        return Cache::store('redis')->get('test');
+        //return Cache::store('redis')->remember('article_praise_list',function(){
+            //return [];
+       // });
+        
     }
 
     /**

@@ -32,6 +32,6 @@ return [
     	'password'=>'root',
     	//'expire'=>1255,
     	'prefix'=>'blog_',
-    	'timeout'=>3600
+    	//'timeout'=>3600
     ]
 ];

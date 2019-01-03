@@ -24,7 +24,9 @@ Route::group('auth/',function(){
 Route::group('test/',function(){
 	Route::get('create_category','index/index/create_category');
 	Route::get('redis',function(){
-		dump(Cache::store('redis')->set('test','1231231',1000000));
+		Cache::store('redis')->set('test',[0000,'1231231'],10);
+		Cache::store('redis')->set('test',0);
+		return json(Cache::store('redis')->get('test'));
 	});
 });
 
@@ -61,6 +63,7 @@ Route::group('api/',function(){
 		Route::post('collectarticle/:id','blog/article/collectArticle');
 		Route::post('uncollectarticle/:id','blog/article/uncollectArticle');
 		Route::post('checkarticlemember','blog/article/checkArticleMember');
+		Route::post('praisearticle/:id','blog/article/addPraise');
 	});
 	//用户操作
 	Route::group('member/',function(){
