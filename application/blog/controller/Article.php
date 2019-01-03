@@ -5,6 +5,7 @@ namespace app\blog\controller;
 use think\Controller;
 use think\Request;
 use app\common\controller\Appbasic;
+use think\facade\Cache;
 
 class Article extends Appbasic
 {
@@ -185,11 +186,26 @@ class Article extends Appbasic
     public function addPraise($id)
     {
         if(session('?member.id')) return json(['code'=>1,'msg'=>'未登录用户无法操作']);
-        //将文章id添加到缓存文章列表
-        return Cache::store('redis')->get('test');
-        //return Cache::store('redis')->remember('article_praise_list',function(){
-            //return [];
-       // });
+        Cache::store('redis')->get('test');
+        $article_list = Cache::store('redis')->remember('article_praise_list',function(){
+            return [];
+        });
+        if(in_array($id,$article_list,true)){
+             
+        }else{
+            $article = model('Article')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->field('id,praise_num')->find();
+            if(!empty($article)){
+                //将文章id添加到缓存文章列表
+                $article_list[] = $article->id;
+                Cache::store('redis')->set('article_praise_list',$article_list,3600);
+                //点赞用户信息加入缓存
+                Cache::store('redis')->set('article_praise_'.$article->id.'_'.session('member.id'),1,3600);
+                //文章点赞数加一
+                Cache::store('redis')->set('article_praise_counts_'.$article->id,$article->praise_num,3600);
+                Cache::inc('article_praise_counts_'.$article->id);
+            }
+            
+        }
         
     }
 
