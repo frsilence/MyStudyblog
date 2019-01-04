@@ -24,9 +24,11 @@ Route::group('auth/',function(){
 Route::group('test/',function(){
 	Route::get('create_category','index/index/create_category');
 	Route::get('redis',function(){
-		Cache::store('redis')->set('test',[0000,'1231231'],10);
-		Cache::store('redis')->set('test',0);
-		return json(Cache::store('redis')->get('test'));
+		Cache::store('redis')->set('my_num',0,1000000);
+		return json(Cache::store('redis')->get('my_num'));
+	});
+	Route::get('shuzu',function(){
+		return json(Cache::store('redis')->get('my_num'));
 	});
 });
 

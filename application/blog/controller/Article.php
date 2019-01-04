@@ -202,7 +202,7 @@ class Article extends Appbasic
                 Cache::store('redis')->set('article_praise_'.$article->id.'_'.session('member.id'),1,3600);
                 //文章点赞数加一
                 Cache::store('redis')->set('article_praise_counts_'.$article->id,$article->praise_num,3600);
-                Cache::inc('article_praise_counts_'.$article->id);
+                Cache::store('redis')->inc('article_praise_counts_'.$article->id);
             }
             
         }
