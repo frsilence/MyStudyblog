@@ -13,3 +13,10 @@
  blog_article_praise_list 集合存放所接受的article_id
  blog_article_member_praise_{article_id} 集合存该文章下点赞用户id
  blog_article_praise_counts_{article_id} 保存点赞数
+实现思路：
+1.使用 supervisor 或者 自定义的cron 脚本，自动执行think队列。执行队列后，当新任务push进队列后自动执行。
+2.点赞逻辑：
+(1) 用户点赞后，用户ID和文章ID发送至点赞函数 blog\article\addPraise,该函数执行以下流程：
+a. redis中建立文章列表article_list；
+b.建立点赞缓存article_praise_{u_id}_{a_id};
+c.

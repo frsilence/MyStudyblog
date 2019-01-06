@@ -30,6 +30,7 @@ Route::group('test/',function(){
 	Route::get('shuzu',function(){
 		return json(Cache::store('redis')->get('my_num'));
 	});
+	Route::get('queue','common/test/actionHelloJob');
 });
 
 
