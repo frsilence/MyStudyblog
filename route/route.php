@@ -31,6 +31,14 @@ Route::group('test/',function(){
 		return json(Cache::store('redis')->get('my_num'));
 	});
 	Route::get('queue','common/test/actionHelloJob');
+	Route::get('config',function(){
+		$config =  config('cache.');
+		$redis = new Redis();
+		$redis->connect($config['redis']['host'],$config['redis']['port']);
+		$redis->auth($config['redis']['password']);
+		Log::record('redis','error');
+		return json($redis->get('blog_my_num'));
+	});
 });
 
 

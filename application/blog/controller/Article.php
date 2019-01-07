@@ -6,6 +6,8 @@ use think\Controller;
 use think\Request;
 use app\common\controller\Appbasic;
 use think\facade\Cache;
+use think\Queue;
+use Log;
 
 class Article extends Appbasic
 {
@@ -185,27 +187,58 @@ class Article extends Appbasic
      */
     public function addPraise($id)
     {
-        if(session('?member.id')) return json(['code'=>1,'msg'=>'未登录用户无法操作']);
-        Cache::store('redis')->get('test');
+        if(!session('?member.id')) return json(['code'=>1,'msg'=>'未登录用户无法操作']);
+        $member_id = session('member.id');
+        $article_id = $id;
+        Log::record('用户id:'.$member_id.'文章id：'.$article_id,'error');
+        //建立点赞文章列表list
         $article_list = Cache::store('redis')->remember('article_praise_list',function(){
             return [];
         });
-        if(in_array($id,$article_list,true)){
-             
-        }else{
-            $article = model('Article')->where(['id'=>$id,'status'=>0,'is_delete'=>0])->field('id,praise_num')->find();
-            if(!empty($article)){
-                //将文章id添加到缓存文章列表
-                $article_list[] = $article->id;
-                Cache::store('redis')->set('article_praise_list',$article_list,3600);
-                //点赞用户信息加入缓存
-                Cache::store('redis')->set('article_praise_'.$article->id.'_'.session('member.id'),1,3600);
-                //文章点赞数加一
-                Cache::store('redis')->set('article_praise_counts_'.$article->id,$article->praise_num,3600);
-                Cache::store('redis')->inc('article_praise_counts_'.$article->id);
-            }
-            
+        //建立点赞记录缓存
+        if(Cache::store('redis')->get('article_praise_recorde_'.$article_id.'_'.$member_id)){
+            Log::record('距离当前账户对该文章的上一次点赞时间不足1分钟，请稍后再试！','error');
+            return json(['code'=>2,'msg'=>'距离当前账户对该文章的上一次点赞时间不足0.5分钟，请稍后再试！']);
         }
+        Cache::store('redis')->set('article_praise_recorde_'.$article_id.'_'.$member_id,1,30);
+        Log::record('建立点赞记录:'.'article_praise_recorde_'.$article_id.'_'.$member_id,'error');
+        if(Cache::store('redis')->get('article_praise_counts_'.$article_id)){
+            Cache::store('redis')->inc('article_praise_counts_'.$article_id);
+            Log::record('该文章点赞数量缓存+1'.'article_praise_counts_'.$article_id,'error');
+        }else{
+            Cache::store('redis')->set('article_praise_counts_'.$article_id,1);
+            Log::record('首次建立点赞数量缓存'.'article_praise_counts_'.$article_id,'error');
+        }
+        //点赞文章id添加
+        $config = config('cache.');
+        $redis = new \Redis();
+        $redis->connect($config['redis']['host'],$config['redis']['port']);
+        $redis->auth($config['redis']['password']);
+        $prefix = $config['redis']['prefix'];
+        $redis->rPush($prefix.'article_praise_list',$article_id);
+        Log::record('点赞文章添加入待更新列表'.$prefix.'article_praise_list'.'为rPush','error');
+        //检测是否需要更新数据库(按时间 30秒刷新一次)
+        if(!Cache::store('redis')->get('article_praise_update')){
+            //该缓存过期，则添加点赞消息队列
+            $isPush =  addBlogQueue('ArticlePraiseUpdate','点赞消息推送队列');
+            if($isPush !== false){
+            Log::record(date('Y-m-d H:i:s').'新任务已提交队列'."<br>",'error');
+            Cache::store('redis')->set('article_praise_update',1,30);
+            }else{
+                Log::record('新任务提交队列出错','error');
+            }
+        }
+        $mysql_praise_counts = model('Article')->where(['id'=>$article_id])->field('praise_num')->find();
+        if(empty($mysql_praise_counts)){
+            return json(['code'=>1,'msg'=>'文章不存在']);
+        }else{
+            $praise_counts = $mysql_praise_counts->praise_num+(int)Cache::store('redis')->get('article_praise_counts_'.$article_id);
+            Log::record('返回文章点赞数:'.$praise_counts,'error');
+            return json(['code'=>0,'msg'=>'点赞成功','praise_counts'=>$praise_counts]);
+        }
+        
+
+        
         
     }
 

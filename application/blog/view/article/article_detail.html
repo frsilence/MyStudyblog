@@ -268,16 +268,25 @@
 				})
 			}
 		});
-	};
+	});
 	
 	//点赞
 	$('#addPraise').on('click',function(){
 		$.ajax({
 			type:"post",
-			url:"",
+			url:"{:url('blog/article/addPraise',['id'=>$article.id])}",
 			async:false,
 			success:function(data){
-				 
+				 if(data.code==0){
+				 	$('#addPraise').html('<i class="Hui-iconfont">&#xe66d;</i>点赞:'+data.praise_counts);
+				 }else{
+				 	layer.msg(data.msg,{icon:2,time:2000});
+				 }
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
 			}
 		});
 	})

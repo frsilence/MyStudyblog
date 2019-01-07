@@ -12,7 +12,6 @@ class Index extends Appbasic
     		'latest_article'=>model('Article')->getLatestArticle(),
     		];
     	//return json($data['latest_article']);
-       sleep(5);
         return $this->fetch('',$data);
     }
 }

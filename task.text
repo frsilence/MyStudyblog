@@ -17,6 +17,14 @@
 1.使用 supervisor 或者 自定义的cron 脚本，自动执行think队列。执行队列后，当新任务push进队列后自动执行。
 2.点赞逻辑：
 (1) 用户点赞后，用户ID和文章ID发送至点赞函数 blog\article\addPraise,该函数执行以下流程：
-a. redis中建立文章列表article_list；
-b.建立点赞缓存article_praise_{u_id}_{a_id};
-c.
+a.初始化一些缓存，
+b.建立点赞缓存article_praise_{u_id}_{a_id}；检测是否已建立，已建立返回；
+c.建立文章点赞数量缓存 article_praise_counts_{a_id};已建立则+1,未建立则查询数据库建立
+d.redis中建立文章列表article_list；文章id入该集合；
+e.检测缓存中是否有article_praise_update,若未过期则推送消息至articlePraiseUpdate队列；
+（2）返回点赞执行结果：
+a.一段时间内重复点赞 return 2;
+b.否则返回点赞数量，数量为当前article_praise_counts_{a_id}+数据库返回数量；
+3.articlePraiseUpdate队列逻辑
+a.从article_list中左pop一个文章id
+b.根据文章id进行数据库更新
