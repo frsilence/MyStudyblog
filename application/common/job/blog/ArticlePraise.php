@@ -2,10 +2,12 @@
 
 namespace app\common\job\blog;
 
+use think\Controller;
 use think\queue\Job;
 use think\facade\Cache;
+use Log;
 
-class ArticlePraise{
+class ArticlePraise extends Controller{
 	/**
      * fire方法是消息队列默认调用的方法
      * @param Job            $job      当前的任务对象
@@ -32,33 +34,26 @@ class ArticlePraise{
     public function doArticlePraiseJob($data)
     {
     	//缓存更新至数据库
-    	$article_list = Cache::store('redis')->remember('article_praise_list',function(){
-    		return [];
-    	});
+        Log::record('开始','error');
     	$config = config('cache.');
-        $redis = new Redis();
+        $redis = new \Redis();
         $redis->connect($config['redis']['host'],$config['redis']['port']);
         $redis->auth($config['redis']['password']);
         $prefix = $config['redis']['prefix'];
-    	while($article_id = $redis->lPop($prefix.'article_praise_list',$article_id)){
-    			//更新文章点赞
-    			$article = model('Article')->where(['id'=>$value])->find();
-    			if(!empty($article)){
-    				$this->startTrans();
-    				try{
-    					$redis_praise_counts = $this->findRedisArticlePraiseCounts($article_id)
-    					$article->praise_num = $article->praise_num +$redis_praise_counts;
-    					$article->save();
-    					$this->commit();
-    				}catch(\Exception $e){
-    					Cache::store('redis')->incr('article_praise_counts_'.$article_id,$redis_praise_counts)
-    					$this->rollback();
-    				}
-    			}
+        Log::record('redis服务已连接','error');
+    	while($article_id = ($redis->lpop($prefix.'article_praise_list'))){
+            Log::record('while');
+            Log::record('pop出的id'.$article_id,'error');
+    		//更新文章点赞
+    		$redis_praise_counts = $this->findRedisArticlePraiseCounts($article_id);
+            if($redis_praise_counts>0){
+                $update_result = model('app\blog\model\Article')->updateArticlePraiseNum($article_id,$redis_praise_counts);
+                Log::record('更新结果'.$update_result,'error');
+                if(!$update_result) Cache::store('redis')->incr('article_praise_counts_'.$article_id,$redis_praise_counts);
+            }else{
+                Log::record('数据已被更新，当前值为0，无需更新','error');
+            }               
     	}
-
-
-
     	//控制台提示信息
     	print("<info>Hello Job Started. job Data is: ".var_export($data,true)."</info> \n");
         print("<info>Hello Job is Fired at " . date('Y-m-d H:i:s') ."</info> \n");

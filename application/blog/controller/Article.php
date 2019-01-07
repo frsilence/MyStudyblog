@@ -192,15 +192,17 @@ class Article extends Appbasic
         $article_id = $id;
         Log::record('用户id:'.$member_id.'文章id：'.$article_id,'error');
         //建立点赞文章列表list
+        /*
         $article_list = Cache::store('redis')->remember('article_praise_list',function(){
             return [];
         });
+        */
         //建立点赞记录缓存
         if(Cache::store('redis')->get('article_praise_recorde_'.$article_id.'_'.$member_id)){
             Log::record('距离当前账户对该文章的上一次点赞时间不足1分钟，请稍后再试！','error');
             return json(['code'=>2,'msg'=>'距离当前账户对该文章的上一次点赞时间不足0.5分钟，请稍后再试！']);
         }
-        Cache::store('redis')->set('article_praise_recorde_'.$article_id.'_'.$member_id,1,30);
+        Cache::store('redis')->set('article_praise_recorde_'.$article_id.'_'.$member_id,1,0.1);
         Log::record('建立点赞记录:'.'article_praise_recorde_'.$article_id.'_'.$member_id,'error');
         if(Cache::store('redis')->get('article_praise_counts_'.$article_id)){
             Cache::store('redis')->inc('article_praise_counts_'.$article_id);
@@ -215,18 +217,14 @@ class Article extends Appbasic
         $redis->connect($config['redis']['host'],$config['redis']['port']);
         $redis->auth($config['redis']['password']);
         $prefix = $config['redis']['prefix'];
-        $redis->rPush($prefix.'article_praise_list',$article_id);
-        Log::record('点赞文章添加入待更新列表'.$prefix.'article_praise_list'.'为rPush','error');
-        //检测是否需要更新数据库(按时间 30秒刷新一次)
-        if(!Cache::store('redis')->get('article_praise_update')){
-            //该缓存过期，则添加点赞消息队列
-            $isPush =  addBlogQueue('ArticlePraiseUpdate','点赞消息推送队列');
-            if($isPush !== false){
+        $redis->rpush($prefix.'article_praise_list',$article_id);
+        Log::record('点赞文章'.$article_id.'添加入待更新列表'.$prefix.'article_praise_list'.'为rPush','error');
+        //添加点赞消息队列
+        $isPush =  addBlogQueue('ArticlePraiseUpdate','点赞消息推送队列');
+        if($isPush !== false){
             Log::record(date('Y-m-d H:i:s').'新任务已提交队列'."<br>",'error');
-            Cache::store('redis')->set('article_praise_update',1,30);
             }else{
                 Log::record('新任务提交队列出错','error');
-            }
         }
         $mysql_praise_counts = model('Article')->where(['id'=>$article_id])->field('praise_num')->find();
         if(empty($mysql_praise_counts)){

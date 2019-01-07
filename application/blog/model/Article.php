@@ -268,5 +268,30 @@ class Article extends Model
         return $articles;
     }
 
+    /**
+     *更新文章的点赞数量
+     *@param int $article_id 文章id
+     *@param int $add_praise_ounts 增加的点赞数量
+     *@return  
+     */
+    public function updateArticlePraiseNum($article_id,$add_praise_ounts)
+    {
+        $article = $this->where(['id'=>$article_id])->find();
+        if(!empty($article)){
+            $this->startTrans();
+                try{
+                    $article->praise_num = $article->praise_num +$add_praise_ounts;
+                    $article->save();
+                    $this->commit();
+                    return true;
+                        
+                }catch(\Exception $e){
+                    $this->rollback();
+                    return false;
+                }
+        }    
+                
+    }
+
 
 }

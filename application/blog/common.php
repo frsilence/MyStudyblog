@@ -10,7 +10,7 @@ if(!function_exists('addBlogQueue')){
 	function addBlogQueue($job_name,$job_msg)
 	{
 		$job_classname_list = [
-			'ArticlePraiseUpdate' => 'app/common/job/blog/ArticlePraise',
+			'ArticlePraiseUpdate' => 'app\common\job\blog\ArticlePraise',
 		];
 		$jobClassName = $job_classname_list[$job_name];
 		$jobData = ['time'=>time(),'jobId'=>uniqid(),'name'=>$job_msg];
