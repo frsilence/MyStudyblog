@@ -57,6 +57,8 @@ class Article extends Appbasic
         ];
         $data['last_article'] = (!empty(model('Article')->getLatestArticle($id))) ? model('Article')->getLastArticle($id) : NULL;
         $data['next_article'] = (!empty(model('Article')->getNextArticle($id))) ? model('Article')->getNextArticle($id) : NULL;
+        //新增文章点击量
+        model('Article')->where(['id' => $id])->setInc('click_num', 1);
         //return json($data);
         return $this->fetch('article_detail',$data);
     }
