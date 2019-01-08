@@ -7,7 +7,8 @@
 2.2 用户关注 √
 
 3.blog统计  使用缓存
-3.1 阅读数 
+3.1 阅读数
+使用cookie储存被访问id，并设置限制期限。限定时间内首次访问，阅读数加一。 
 3.2 点赞
  redis
  blog_article_praise_list 集合存放所接受的article_id

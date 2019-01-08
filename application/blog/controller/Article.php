@@ -8,6 +8,7 @@ use app\common\controller\Appbasic;
 use think\facade\Cache;
 use think\Queue;
 use Log;
+use think\facade\Cookie;
 
 class Article extends Appbasic
 {
@@ -44,6 +45,8 @@ class Article extends Appbasic
      */
     public function readArticle($id)
     {
+        //Cookie::delete('article_viewlist');
+        //return json(Cookie('article_viewlist'));
         $article = model('Article')->getArticleByArticleId($id);
         if(empty($article)) return $this->fetch('public\404',['title'=>'404Page',
             'article_category'=>$this->article_category]);
@@ -58,7 +61,18 @@ class Article extends Appbasic
         $data['last_article'] = (!empty(model('Article')->getLatestArticle($id))) ? model('Article')->getLastArticle($id) : NULL;
         $data['next_article'] = (!empty(model('Article')->getNextArticle($id))) ? model('Article')->getNextArticle($id) : NULL;
         //新增文章点击量
-        model('Article')->where(['id' => $id])->setInc('click_num', 1);
+        if(Cookie::has('article_viewlist')){
+            $article_viewlist = Cookie::get('article_viewlist');
+            if(!in_array($id,$article_viewlist) && count($article_viewlist)<500){
+                $article_viewlist[] = $id;
+                Cookie::set('article_viewlist',$article_viewlist);
+                model('Article')->where(['id' => $id])->setInc('click_num', 1);
+            }           
+        }else{
+            $article_viewlist = [$id];
+            Cookie::set('article_viewlist',$article_viewlist,30);
+            model('Article')->where(['id' => $id])->setInc('click_num', 1);
+        }
         //return json($data);
         return $this->fetch('article_detail',$data);
     }
