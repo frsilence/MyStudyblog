@@ -65,7 +65,7 @@ class Article extends Appbasic
             $article_viewlist = Cookie::get('article_viewlist');
             if(!in_array($id,$article_viewlist) && count($article_viewlist)<500){
                 $article_viewlist[] = $id;
-                Cookie::set('article_viewlist',$article_viewlist);
+                Cookie::set('article_viewlist',$article_viewlist,30);
                 model('Article')->where(['id' => $id])->setInc('click_num', 1);
             }           
         }else{
