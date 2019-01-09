@@ -46,7 +46,7 @@ class Article extends Appbasic
     public function readArticle($id)
     {
         //Cookie::delete('article_viewlist');
-        //return json(Cookie('article_viewlist'));
+        //return json(Cookie::get('PHPSESSID'));
         $article = model('Article')->getArticleByArticleId($id);
         if(empty($article)) return $this->fetch('public\404',['title'=>'404Page',
             'article_category'=>$this->article_category]);
@@ -65,7 +65,7 @@ class Article extends Appbasic
             $article_viewlist = Cookie::get('article_viewlist');
             if(!in_array($id,$article_viewlist) && count($article_viewlist)<500){
                 $article_viewlist[] = $id;
-                Cookie::set('article_viewlist',$article_viewlist,30);
+                Cookie::set('article_viewlist',$article_viewlist);
                 model('Article')->where(['id' => $id])->setInc('click_num', 1);
             }           
         }else{

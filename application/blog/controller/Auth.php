@@ -6,6 +6,7 @@ use think\Controller;
 use think\Request;
 use app\common\controller\Appbasic;
 use Log;
+use think\facade\Cookie;
 
 /**
  * 应用用户管理控制器
@@ -56,6 +57,8 @@ class Auth extends Appbasic
         session('member',$member_login['member']);
         //记录登录日志
         $this->LoginLog(0);
+        Cookie::set('PHPSESSID12',Cookie::get('PHPSESSID'),300);
+        Cookie::set('PHPSESSID',Cookie::get('PHPSESSID'),300);
         return json($member_login);
         
     }

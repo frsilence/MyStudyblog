@@ -24,8 +24,10 @@ Route::group('auth/',function(){
 Route::group('test/',function(){
 	Route::get('create_category','index/index/create_category');
 	Route::get('redis',function(){
-		Cache::store('redis')->set('my_num',0,1000000);
-		return json(Cache::store('redis')->get('my_num'));
+		for($i=0;$i<=10000000;$i++){
+			Cache::store('redis')->set('blog_my_num_'.($i*$i+23).'_'.$i,(($i*4+3).'testsajgdjhasgdjh'),1000000);
+		}
+		return json(Cache::store('redis')->get('my_num_9999'));
 	});
 	Route::get('shuzu',function(){
 		return json(Cache::store('redis')->get('my_num'));
@@ -38,6 +40,9 @@ Route::group('test/',function(){
 		$redis->auth($config['redis']['password']);
 		Log::record('redis','error');
 		return json($redis->get('blog_my_num'));
+	});
+	Route::get('session',function(){
+		return json(session(''));
 	});
 });
 
