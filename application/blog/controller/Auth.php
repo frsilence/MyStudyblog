@@ -57,8 +57,8 @@ class Auth extends Appbasic
         session('member',$member_login['member']);
         //记录登录日志
         $this->LoginLog(0);
-        Cookie::set('PHPSESSID12',Cookie::get('PHPSESSID'),300);
-        Cookie::set('PHPSESSID',Cookie::get('PHPSESSID'),300);
+        //是否设置记住密码
+        if($request->has('remember_me','post') && $request->post('remember_me')) Cookie::set('PHPSESSID',Cookie::get('PHPSESSID'),3600*24*7);
         return json($member_login);
         
     }
@@ -98,6 +98,7 @@ class Auth extends Appbasic
                 $member_register['member']['login_time'] = time();
                 //用户信息载入session
                 session('member',$member_register['member']);
+                Cookie::set('PHPSESSID',Cookie::get('PHPSESSID'),3600*24*7);
                 //记录登录日志
                 $this->LoginLog(0);
                 return json($member_register);

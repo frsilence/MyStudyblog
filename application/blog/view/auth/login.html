@@ -46,16 +46,15 @@
 						<input type="text" id="vercode" name="vercode"  placeholder="图形验证码" class="layui-input">
 					</div>
 					<div class="layui-col-xs5">
-						<div style="margin-left: 10px;">
+						<div style="margin-left: 10px;margin-top: 15px;">
 							<img src="{:captcha_src()}" onclick="this.src='{:captcha_src()}?seed='+Math.random()" class="layadmin-user-login-codeimg" lay-submit lay-filter="LAY-user-get-vercode">
 						</div>
 					</div>
 				</div>
 			</div>
 
-			<div class="layui-form-item" style="margin-bottom: 20px;">
-				<input type="checkbox" name="remember" lay-skin="primary" title="记住密码">
-				<!--<a href="#" class="layadmin-user-jump-change layadmin-link" style="margin-top: 7px;">忘记密码？</a>-->
+			<div class="layui-form-item">
+				<input value="1" id="remember_me" type="checkbox" name="zzz" lay-skin="switch" lay-text="开启|关闭" checked="checked"><p style="display: inline;font-size: medium;margin-top: 10px;">记住账号，一周内自动登录</p>
 			</div>
 			<div class="layui-form-item">
 				<button id="loginButton" class="layui-btn layui-btn-fluid">登 入</button>
@@ -73,9 +72,10 @@
 {/block}
 {block name="javascript_content"}
 <script>
-	layui.use(['jquery','layer'],function(){
+	layui.use(['jquery','form','layer'],function(){
 		var $ = layui.$;
 		var layer = layui.layer;
+		var form = layui.form;
 
 	})
 	
@@ -113,6 +113,7 @@
 					username: $("#username").val(),
 					password: $("#password").val(),
 					vercode: $("#vercode").val(),
+					remember_me:$('#remember_me').is(':checked'),
 					__token__:token,
 				},
 				success:function(data){
