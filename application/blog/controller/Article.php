@@ -257,6 +257,30 @@ class Article extends Appbasic
     }
 
     /**
+     * 搜索页面
+     * @param think\request
+     * @return   think\Paginator
+     */
+    public function getSearchArticle(Request $request)
+    {
+        $data=['title'=>'search',
+        'article_category'=>$this->article_category,];
+        return $this->fetch('search',$data);
+    }
+
+    /**
+     * 搜索文章
+     * @param  think\request
+     * @param  think\Paginator
+     */
+    public function searchArticle(Request $request)
+    {
+        return json($request->post('category_id'));
+    }
+
+
+
+    /**
      * 显示编辑资源表单页.
      *
      * @param  int  $id

@@ -57,6 +57,7 @@ Route::group('article/',function(){
 	Route::get('id/:id','blog/article/readArticle');
 	Route::get('category/id/:id','blog/article/getCategory');
 	Route::get('category/all','blog/article/getAllCategory');
+	Route::get('search','blog/article/getSearchArticle');
 });
 
 //用户操作
@@ -83,6 +84,7 @@ Route::group('api/',function(){
 		Route::post('uncollectarticle/:id','blog/article/uncollectArticle');
 		Route::post('checkarticlemember','blog/article/checkArticleMember');
 		Route::post('praisearticle/:id','blog/article/addPraise');
+		Route::post('searcharticle','blog/article/searchArticle');
 	});
 	//用户操作
 	Route::group('member/',function(){

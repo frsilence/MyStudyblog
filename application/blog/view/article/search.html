@@ -1,0 +1,73 @@
+{extend name="public/base" /}
+{block name="content"}
+<section>
+<div class="container mt-25">
+	<div class="row">
+		<div class="col-lg-9 col-md-9">
+			<input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_article" autocomplete="off" style="width:300px"><button type="submit" class="btn btn-default" id="searcharticle_button">搜索</button>
+			<div class="skin-minimal">
+				{volist name="article_category" id="category_list"}
+				<div class="check-box" id="category_list">
+					<input type="checkbox" name="check" id="checkbox_{$category_list.id}" value="{$category_list.id}">
+					<label for="checkbox-1">{$category_list.category_title}</label>
+				</div>
+				{/volist}
+			</div>
+		</div>
+		<div class="col-lg-3 col-md-3">
+			
+		</div>
+	</div>
+</div>
+
+
+{/block}
+{block name="javascript_content"}
+<script>
+	layui.use(['jquery','form','layer'],function(){
+		var $ = layui.$;
+		var layer = layui.layer;
+		var form = layui.form;
+
+	});
+	
+	$(document).ready(function(){
+		$('#username').focus();
+		$('.skin-minimal input').iCheck({
+			checkboxClass: 'icheckbox-blue',
+			radioClass: 'iradio-blue',
+			increaseArea: '20%'
+		})
+	});
+	
+
+    
+	
+	//回车提交
+	$(document).keyup(function(event){
+			if(event.keyCode ==13){
+					member_register();
+					}
+	});
+	$('#searcharticle_button').on('click',function(){
+		var category_id = [];
+		$("input[name='check']:checked").each(function(i){
+			category_id[i] = $(this).val();
+		})
+		alert(category_id);
+		$.ajax({
+			type:"post",
+			url:"{:url('api/article/searcharticle')}",
+			async:true,
+			data:{
+				category_id:category_id,
+			},
+			success:function(data){
+				
+			}
+		});
+	})
+    
+	
+</script>
+{/block}
