@@ -4,12 +4,15 @@
 <div class="container mt-25">
 	<div class="row">
 		<div class="col-lg-9 col-md-9">
-			<input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_article" autocomplete="off" style="width:300px"><button type="submit" class="btn btn-default" id="searcharticle_button">搜索</button>
+			<div class="text-c">
+				<input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_article" autocomplete="off" style="width:300px"><button type="submit" class="btn btn-default f-20" id="searcharticle_button">搜索</button>
+			</div> 
 			<div class="skin-minimal">
+				<p class="Hui-iconfont f-18">&#xe72d; 选择搜索分类</p>
 				{volist name="article_category" id="category_list"}
 				<div class="check-box" id="category_list">
 					<input type="checkbox" name="check" id="checkbox_{$category_list.id}" value="{$category_list.id}">
-					<label for="checkbox-1">{$category_list.category_title}</label>
+					<label for="checkbox-{$category_list.id}">{$category_list.category_title}</label>
 				</div>
 				{/volist}
 			</div>
@@ -54,16 +57,23 @@
 		$("input[name='check']:checked").each(function(i){
 			category_id[i] = $(this).val();
 		})
-		alert(category_id);
 		$.ajax({
 			type:"post",
 			url:"{:url('api/article/searcharticle')}",
 			async:true,
 			data:{
 				category_id:category_id,
+				search_word:$('#search_article').val(),
 			},
 			success:function(data){
-				
+				if(data.code == 0){
+					
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后再试', {icon: 2, time: 5000},function(){
+									window.location.reload();
+							});
 			}
 		});
 	})
