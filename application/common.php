@@ -81,7 +81,7 @@ if (!function_exists('getLoginInfo')) {
             $login_area = $areafromip[0].'-'.$areafromip[1].'-'.$areafromip[2];
             $data = [
                 'login_ip'      => $ip,
-                'login_area' => '',
+                'login_area' => $login_area,
             ];
         }  
             return $data;
