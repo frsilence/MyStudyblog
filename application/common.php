@@ -71,10 +71,19 @@ if (!function_exists('getLoginInfo')) {
      */
     function getLoginInfo($ip = '') {
         empty($ip) ? $ip = get_ip():$ip='';
-        $data = [
+        if($ip===''){
+            $data = [
             'login_ip'      => $ip,
             'login_area' => '',
         ];
-        return $data;
-    }
+        }else{
+            $areafromip = json_decode(file_get_contents("http://freeapi.ipip.net/{$ip}"));
+            $login_area = $areafromip[0].'-'.$areafromip[1].'-'.$areafromip[2];
+            $data = [
+                'login_ip'      => $ip,
+                'login_area' => '',
+            ];
+        }  
+            return $data;
+        }
 }

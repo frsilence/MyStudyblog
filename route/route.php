@@ -44,6 +44,9 @@ Route::group('test/',function(){
 	Route::get('session',function(){
 		return json(session(''));
 	});
+	Route::get('ip',function(){
+		return json(json_decode(file_get_contents('http://freeapi.ipip.net/61.183.207.98')));
+	});
 });
 
 
