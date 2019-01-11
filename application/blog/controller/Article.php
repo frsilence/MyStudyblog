@@ -275,7 +275,15 @@ class Article extends Appbasic
      */
     public function searchArticle(Request $request)
     {
-        return json($request->post('category_id'));
+        $category_list =  $request->post('category_id');
+        $search_word = $request->post('search_word');
+        $search_list = [
+            ['status','=',0],
+            ['is_delete','=',0]];
+        if(!empty($search_word)) $search_list[]=['title','LIKE',"%{$search_word}%"];
+        if(!empty($category_list)) $search_list[]=['category_id','IN',$category_list];
+        $search_result = model('Article')->searchArticle($search_list,$search_word);
+        return json(['code'=>0,'msg'=>'获取成功','article_list'=>$search_result]);
     }
 
 

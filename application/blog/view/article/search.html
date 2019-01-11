@@ -5,16 +5,26 @@
 	<div class="row">
 		<div class="col-lg-9 col-md-9">
 			<div class="text-c">
-				<input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_article" autocomplete="off" style="width:300px"><button type="submit" class="btn btn-default f-20" id="searcharticle_button">搜索</button>
+				<input type="text" placeholder="请输入关键词" class="input-text ac_input" name="search_text" value="" id="search_article" autocomplete="off" style="width:300px"><button type="submit" class="btn btn-secondary" id="searcharticle_button">搜 索 </button>
 			</div> 
 			<div class="skin-minimal">
 				<p class="Hui-iconfont f-18">&#xe72d; 选择搜索分类</p>
 				{volist name="article_category" id="category_list"}
 				<div class="check-box" id="category_list">
-					<input type="checkbox" name="check" id="checkbox_{$category_list.id}" value="{$category_list.id}">
+					<input type="checkbox" name="check" id="checkbox_{$category_list.id}" value="{$category_list.id}" checked>
 					<label for="checkbox-{$category_list.id}">{$category_list.category_title}</label>
 				</div>
 				{/volist}
+			</div>
+			<div>
+				<div class="pd-10">
+					<ul id="this_searcharticle">
+						
+					</ul>
+				</div>
+				<div>
+					<div id="article_page"></div>
+				</div>
 			</div>
 		</div>
 		<div class="col-lg-3 col-md-3">
@@ -27,10 +37,20 @@
 {/block}
 {block name="javascript_content"}
 <script>
-	layui.use(['jquery','form','layer'],function(){
+	//文章分页变量容器
+	
+	var pageObj = {
+		current_page:1,
+		per_page:10 ,
+		dataLength:0,
+		
+	}
+	layui.use(['jquery','form','laypage','layer'],function(){
 		var $ = layui.$;
 		var layer = layui.layer;
 		var form = layui.form;
+		laypage = layui.laypage;
+		
 
 	});
 	
@@ -49,25 +69,65 @@
 	//回车提交
 	$(document).keyup(function(event){
 			if(event.keyCode ==13){
-					member_register();
+					search_article();
 					}
 	});
 	$('#searcharticle_button').on('click',function(){
+		search_article();
+	})
+	
+	function search_article(){
+		pageQuery(1);
+		laypage.render({
+					    elem: 'article_page',
+					    limits:[10,20,30,40],
+						count:pageObj.dataLength,
+					    curr:pageObj.current_page,
+						layout: ['count', 'prev', 'page', 'next', 'limit', 'skip'],
+					    jump: function(obj,first){
+								if(!first){
+									var curr = obj.curr;
+									pageObj.current_page = obj.curr;
+									pageObj.per_page = obj.limit;
+									pageQuery(curr);
+								}
+					      
+					    }
+					  });
+	}
+	
+	function pageQuery(pageon){
 		var category_id = [];
 		$("input[name='check']:checked").each(function(i){
-			category_id[i] = $(this).val();
+			category_id.push($(this).val());
 		})
 		$.ajax({
 			type:"post",
 			url:"{:url('api/article/searcharticle')}",
-			async:true,
+			async:false,
 			data:{
 				category_id:category_id,
 				search_word:$('#search_article').val(),
+				list_rows : pageObj.per_page,
+				page : pageObj.current_page,
 			},
 			success:function(data){
 				if(data.code == 0){
-					
+					data = data.article_list;
+					pageObj.dataLength = data.total;
+					articles = data.data;
+					$('#this_searcharticle').empty()
+					for(var i=0;i<articles.length;i++)
+					{
+						var my_str1= '<li class="bk-gray pd-10 mt-10"><h4 class="title"><a href='+articles[i]['article_url']+'>'+articles[i]['title']+'</a></h4><div>';
+						var my_str2='<span><a href='+articles[i]['member_url']+'><i class="Hui-iconfont"> &#xe62c;</i> 作者：'+articles[i].member.username+'&nbsp;&nbsp; </a></span>';			
+						var my_str3='<span><a href='+articles[i].category_url+'><i class="Hui-iconfont"> &#xe72d;</i> 分类：'+articles[i].category.category_title+'&nbsp;&nbsp; </a></span>';
+						var my_str4='<span><a href="javascript:"><i class="Hui-iconfont">&#xe728;</i> 时间：'+articles[i].update_time+'&nbsp;&nbsp; </a></span>';
+						var my_str5='<span><a href='+articles[i].article_url+'><i class="Hui-iconfont">&#xe622;</i>评论：'+articles[i].comment_num+'&nbsp;&nbsp; </a></span>';
+						var my_str6='<span><a href="javascript:"><i class="Hui-iconfont">&#xe725;</i>浏览：'+articles[i].click_num+'&nbsp;&nbsp; </a></span>';
+						var my_str7='<span><a href="javascript:"><i class="Hui-iconfont">&#xe66d;</i>点赞：'+articles[i].praise_num+'</a></span></div></li>';
+						$('#this_searcharticle').append(my_str1+my_str2+my_str3+my_str4+my_str5+my_str6+my_str7);
+					}
 				}
 			},
 			error:function(){
@@ -76,7 +136,7 @@
 							});
 			}
 		});
-	})
+	}
     
 	
 </script>

@@ -249,22 +249,24 @@ class Article extends Model
 
     /**
      * 搜索文章标题
-     * @param string $search_word
+     * @param string $search_word 
      * @return  /think/Paginator
      */
-    public function searchArticle($search_word)
+    public function searchArticle($search_list,$search_word)
     {
-        $search_list = [
-            ['status','=',0],
-            ['is_delete','=',0],
-            ['title','LIKE',"{$search_word}"]];
-        $articles = $this->where(['category_id'=>$category_id,'status'=>0,'is_delete'=>0])->paginator($page)->each(function($item,$key){
-                $item->member();
-                $item->categorys();
-                $item->tags();
+        $articles = $this->where($search_list)->field('id,member_id,category_id,title,praise_num,click_num,collect_num,update_time')->order('update_time','desc')->paginate(request()->param('list_rows'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
+                $item->member;
+                $item->category;
                 $item['comment_num'] = $item->comments()->count();
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+                $item['member_url'] = url('blog/member/readMember',['id'=>$item['member_id']]);
+                $item['category_url'] = url('blog/article/getCategory',['id'=>$item['category_id']]);
 
         });
+        //替换被查询字段的颜色
+        foreach ($articles as $key => $value) {
+            $value['title'] = $this->replaceTitle($search_word,$value['title']);
+        }
         return $articles;
     }
 
@@ -291,6 +293,18 @@ class Article extends Model
                 }
         }    
                 
+    }
+
+    /**
+     * 替换字体颜色
+     * @param $word
+     * @param $title
+     * @return mixed
+     */
+    protected function replaceTitle($word, $title) {
+        $format_word = "<span style='color:red'>{$word}</span>";
+        $title = str_ireplace($word, $format_word, $title);
+        return $title;
     }
 
 
