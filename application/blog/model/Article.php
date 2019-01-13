@@ -3,6 +3,7 @@
 namespace app\blog\model;
 
 use think\Model;
+use think\Db;
 
 /**
  * 文章数据表模型
@@ -305,6 +306,72 @@ class Article extends Model
         $format_word = "<span style='color:red'>{$word}</span>";
         $title = str_ireplace($word, $format_word, $title);
         return $title;
+    }
+
+    /**
+     * 获取相关文章
+     */
+    public function getRelatedArticle($article_id,$limit=4)
+    {
+        //初始化
+        list($articleList, $whereTagIn, $whereArticleIn, $whereArticleCateNotIn, $whereArticleNotIn, $order) = [
+            [], [], [], [], [],
+            ['click_num' => 'desc', 'recommend' => 'desc', 'praise_num' => 'desc',  'create_time' => 'desc'],
+        ];
+
+        /**
+         * 1、根据文章标签查找计算相关帖子
+         */
+        $tagList = Db::name('ArticleTag')->where(['article_id' => $article_id])->distinct(true)->field('tag_id')->select();
+        if (!empty($tagList)) {
+            foreach ($tagList as $vo) $whereTagIn[] = $vo['tag_id'];
+
+            $articleIdTagList = Db::name('ArticleTag')->whereIn('tag_id', $whereTagIn)->distinct(true)->field('article_id')->select();
+
+            foreach ($articleIdTagList as $vo) $whereArticleIn[] = $vo['article_id'];
+
+            $articleList = Db::name('Article')->field('id,title')->whereNotIn('id', $article_id)->whereIn('id', $whereArticleIn)
+                ->where(['status' => 0, 'is_delete' => 0])->order($order)->limit($limit)->select();
+        }
+
+        /**
+         * 2、如果根据标签查找出的文章数量不够限制数据，将根据该文章分类下的所有文章的点击量、评论量、点赞量、更新时间的查找出对应的帖子进行补充
+         */
+        if (count($articleList) <= $limit) {
+            foreach ($articleList as $vo) $whereArticleCateNotIn[] = $vo['id'];
+            $whereArticleCateNotIn = $article_id;
+            $category_id = Db::name('Article')->where(['id' => $article_id])->value('category_id');
+
+            $articleOtherList = Db::name('Article')->field('id,title')->whereNotIn('id', $whereArticleCateNotIn)
+                ->where(['status' => 0, 'is_delete' => 0, 'category_id' => $category_id,])->order($order)->limit($limit)->select();
+
+            foreach ($articleOtherList as $vo) {
+                if (count($articleList) >= $limit) break;
+                $articleList[] = $vo;
+            }
+        }
+
+        /**
+         * 3、如果根据标签查找出的文章数量不够限制数据，将根据全部分类文章的点击量、评论量、点赞量、更新时间的查找出对应的帖子进行补充
+         */
+        if (count($articleList) <= $limit) {
+            foreach ($articleList as $vo) $whereArticleNotIn[] = $vo['id'];
+            $whereArticleNotIn = $article_id;
+
+            $articleOtherList = Db::name('Article')->field('id,title')->whereNotIn('id', $whereArticleNotIn)->where(['status' => 0, 'is_delete' => 0])
+                ->order($order)->limit($limit)->select();
+
+            foreach ($articleOtherList as $vo) {
+                if (count($articleList) >= $limit) break;
+                $articleList[] = $vo;
+            }
+        }
+
+        //返回结果
+        foreach ($articleList as &$value) {
+            $value['article_url'] = url('blog/article/readArticle',['id'=>$value['id']]);
+        }
+        return $articleList;
     }
 
 

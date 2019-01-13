@@ -286,6 +286,16 @@ class Article extends Appbasic
         return json(['code'=>0,'msg'=>'获取成功','article_list'=>$search_result]);
     }
 
+    /**
+     * 相关文章
+     * @param   $id 文章ID
+     * @return think\Paginator
+     */
+    public function getRelatedArticle($id)
+    {
+        $relatedarticle = model('Article')->getRelatedArticle($id);
+        return json(['code'=>0,'data'=>$relatedarticle]);
+    }
 
 
     /**

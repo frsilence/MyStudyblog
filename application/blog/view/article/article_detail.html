@@ -82,7 +82,10 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-3">
-
+				<div class="panel panel-default">
+					<div class="panel-header">相关文章</div>
+					<div class="panel-body">sd</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -134,6 +137,7 @@
 	var member_id = "{$Think.session.member.id}";
 	$(document).ready(function(){
 		checkArticleMember();
+		getRelatedArticle();
 	});
 	s = $('#collect_article').css('display');
 	//检测文章与用户关系
@@ -290,6 +294,25 @@
 			}
 		});
 	})
+	
+	//获取相关文章
+	function getRelatedArticle(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/article/getRelatedArticle',['id'=>$article.id])}",
+			async:false,
+			success:function(data){
+				if(1){
+					
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		})
+	}
 	
 	
 	
