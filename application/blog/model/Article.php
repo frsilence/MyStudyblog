@@ -311,7 +311,7 @@ class Article extends Model
     /**
      * 获取相关文章
      */
-    public function getRelatedArticle($article_id,$limit=4)
+    public function getRelatedArticle($article_id,$limit=6)
     {
         //初始化
         list($articleList, $whereTagIn, $whereArticleIn, $whereArticleCateNotIn, $whereArticleNotIn, $order) = [

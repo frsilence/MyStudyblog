@@ -84,7 +84,19 @@
 			<div class="col-lg-3 col-md-3">
 				<div class="panel panel-default">
 					<div class="panel-header">相关文章</div>
-					<div class="panel-body">sd</div>
+					<div class="panel-body">
+						<ol class="list-group" id="RelatedArticle">
+							
+						</ol>
+					</div>
+				</div>
+				<div class="panel panel-default mt-15">
+					<div class="panel-header">点赞排行榜</div>
+					<div class="panel-body">
+						<ol class="list-group" id="PraiseList">
+							
+						</ol>
+					</div>
 				</div>
 			</div>
 		</div>
@@ -302,8 +314,12 @@
 			url:"{:url('blog/article/getRelatedArticle',['id'=>$article.id])}",
 			async:false,
 			success:function(data){
-				if(1){
-					
+				if(data.code == 0){
+					var article = data.data;
+					for(var i=1;i<article.length;i++){
+						var relatedStr = "<li><a class='f-18' href="+article[i].article_url+">"+article[i].title+"</li>";
+						$('#RelatedArticle').append(relatedStr);
+					}		
 				}
 			},
 			error:function(){
