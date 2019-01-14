@@ -297,6 +297,26 @@ class Article extends Appbasic
         return json(['code'=>0,'data'=>$relatedarticle]);
     }
 
+    /**
+     * 点赞文章排序
+     */
+    public function getPraiseArticleList(Request $request)
+    {
+        $category_id = $request->has('category_id','post')?$request->post('category_id'):0;
+        $praisearticlelist = model('Article')->getPraiseArticleList($category_id);
+        return json(['code'=>0,'msg'=>'获取成功','data'=>$praisearticlelist]);
+    }
+
+    /**
+     * 阅读量排行
+     */
+    public function getClickArticleList(Request $request)
+    {
+        $category_id = $request->has('category_id','post')?$request->post('category_id'):0;
+        $clickarticlelist = model('Article')->getClickArticleList($category_id);
+        return json(['code'=>0,'msg'=>'获取成功','data'=>$clickarticlelist]);
+    }
+
 
     /**
      * 显示编辑资源表单页.

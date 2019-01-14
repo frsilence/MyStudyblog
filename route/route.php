@@ -86,6 +86,8 @@ Route::group('api/',function(){
 		Route::post('praisearticle/:id','blog/article/addPraise');
 		Route::post('searcharticle','blog/article/searchArticle');
 		Route::post('relatedarticle','blog/article/getRelatedArticle');
+		Route::post('praisearticlelist','blog/article/getPraiseArticleList');
+		Route::post('clickarticlelist','blog/article/getClickArticleList');
 
 	});
 	//用户操作

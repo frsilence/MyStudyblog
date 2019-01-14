@@ -91,9 +91,17 @@
 					</div>
 				</div>
 				<div class="panel panel-default mt-15">
-					<div class="panel-header">点赞排行榜</div>
+					<div class="panel-header">点赞排行</div>
 					<div class="panel-body">
 						<ol class="list-group" id="PraiseList">
+							
+						</ol>
+					</div>
+				</div>
+				<div class="panel panel-default mt-15">
+					<div class="panel-header">阅读量排行</div>
+					<div class="panel-body">
+						<ol class="list-group" id="ClickList">
 							
 						</ol>
 					</div>
@@ -150,6 +158,8 @@
 	$(document).ready(function(){
 		checkArticleMember();
 		getRelatedArticle();
+		getPraiseArticleList();
+		getClickArticleList();
 	});
 	s = $('#collect_article').css('display');
 	//检测文章与用户关系
@@ -316,8 +326,8 @@
 			success:function(data){
 				if(data.code == 0){
 					var article = data.data;
-					for(var i=1;i<article.length;i++){
-						var relatedStr = "<li><a class='f-18' href="+article[i].article_url+">"+article[i].title+"</li>";
+					for(var i=0;i<article.length;i++){
+						var relatedStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
 						$('#RelatedArticle').append(relatedStr);
 					}		
 				}
@@ -328,6 +338,51 @@
 				})
 			}
 		})
+	}
+	
+	//获取点赞排序列表
+	function getPraiseArticleList(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/article/getPraiseArticleList')}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					var article = data.data;
+					for(var i=0;i<article.length;i++){
+						var PraiseStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						$('#PraiseList').append(PraiseStr);
+					}		
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		}) 
+	}
+	//获取点赞排序列表
+	function getClickArticleList(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/article/getClickArticleList')}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					var article = data.data;
+					for(var i=0;i<article.length;i++){
+						var ClickStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						$('#ClickList').append(ClickStr);
+					}		
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		}) 
 	}
 	
 	

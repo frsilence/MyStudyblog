@@ -4,6 +4,7 @@ namespace app\blog\model;
 
 use think\Model;
 use think\Db;
+use think\facade\Request;
 
 /**
  * 文章数据表模型
@@ -372,6 +373,42 @@ class Article extends Model
             $value['article_url'] = url('blog/article/readArticle',['id'=>$value['id']]);
         }
         return $articleList;
+    }
+
+    /**
+     * 获取点赞文章列表
+     */
+    public function getPraiseArticleList($category_id,$limit = 8)
+    {
+        if($category_id === 0){
+            $praisearticlelist = $this->where(['status'=>0,'is_delete'=>0])->field('id,title,praise_num')->order('praise_num','desc')->limit($limit)->select()->each(function($item,$key){
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+            });
+        }else{
+            $praisearticlelist = $this->where(['status'=>0,'is_delete'=>0,'category_id'=>$category_id])->field('id,title,praise_num')->order('praise_num','desc')->limit($limit)->select()->each(function($item,$key){
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+            });
+        }
+        
+        return $praisearticlelist;
+    }
+
+    /**
+     * 获取阅读量文章列表
+     */
+    public function getClickArticleList($category_id,$limit=8)
+    {
+        if($category_id === 0){
+            $clickarticlelist = $this->where(['status'=>0,'is_delete'=>0])->field('id,title,click_num')->order('click_num','desc')->limit($limit)->select()->each(function($item,$key){
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+            });
+        }else{
+            $clickarticlelist = $this->where(['status'=>0,'is_delete'=>0,'category_id'=>$category_id])->field('id,title,click_num')->order('click_num','desc')->limit($limit)->select()->each(function($item,$key){
+                $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+            });
+        }
+        
+        return $clickarticlelist;
     }
 
 

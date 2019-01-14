@@ -29,7 +29,25 @@
 				</div>
 			</div>
 			<div class="col-lg-3 col-md-3 col-sm-4">
-				<div id="calendar" class="calendar"></div>
+				<div id="calendar" class="calendar">
+					
+				</div>
+				<div class="panel panel-default mt-15">
+					<div class="panel-header">点赞排行</div>
+					<div class="panel-body">
+						<ol class="list-group" id="PraiseList">
+							
+						</ol>
+					</div>
+				</div>
+				<div class="panel panel-default mt-15">
+					<div class="panel-header">阅读量排行</div>
+					<div class="panel-body">
+						<ol class="list-group" id="ClickList">
+							
+						</ol>
+					</div>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -37,11 +55,57 @@
 </section>
 
 	
-	<script type="text/javascript">
-		$(function(){
-			$('#user_screen').text('屏幕宽度：' + screen.availWidth+'屏幕高度：' + screen.availHeight);
+<script type="text/javascript">
+$(function(){
+	getPraiseArticleList();
+	getClickArticleList();
 			
-		})
+})
+//获取点赞排序列表
+	function getPraiseArticleList(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/article/getPraiseArticleList')}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					var article = data.data;
+					for(var i=0;i<article.length;i++){
+						var PraiseStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						$('#PraiseList').append(PraiseStr);
+					}		
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		}) 
+	}
+	//获取点赞排序列表
+	function getClickArticleList(){
+		$.ajax({
+			type:"post",
+			url:"{:url('blog/article/getClickArticleList')}",
+			async:false,
+			success:function(data){
+				if(data.code == 0){
+					var article = data.data;
+					for(var i=0;i<article.length;i++){
+						var ClickStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						$('#ClickList').append(ClickStr);
+					}		
+				}
+			},
+			error:function(){
+				layer.msg('系统错误，请稍后尝试！',{icon:2,time:2000},function(){
+					window.location.reload();
+				})
+			}
+		}) 
+	}
+		
 
 </script>
 	
