@@ -55,6 +55,8 @@
 	}
 	
 $(document).ready(function(){
+	//返回顶部
+	$.Huitotop();
 	getPraiseArticleList();
 	getClickArticleList();
 	pageQuery(1);
@@ -134,7 +136,7 @@ $(document).ready(function(){
 				if(data.code == 0){
 					var article = data.data;
 					for(var i=0;i<article.length;i++){
-						var PraiseStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						var PraiseStr = "<li class='slider_li'><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
 						$('#PraiseList').append(PraiseStr);
 					}		
 				}
@@ -144,7 +146,7 @@ $(document).ready(function(){
 			}
 		}) 
 	}
-	//获取点赞排序列表
+	//获取阅读量排序列表
 	function getClickArticleList(){
 		$.ajax({
 			type:"post",
@@ -157,7 +159,7 @@ $(document).ready(function(){
 				if(data.code == 0){
 					var article = data.data;
 					for(var i=0;i<article.length;i++){
-						var ClickStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						var ClickStr = "<li class='slider_li'><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
 						$('#ClickList').append(ClickStr);
 					}		
 				}

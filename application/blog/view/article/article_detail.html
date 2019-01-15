@@ -156,6 +156,8 @@
 	var article_id = "{$article.id}";
 	var member_id = "{$Think.session.member.id}";
 	$(document).ready(function(){
+		//返回顶部
+		$.Huitotop();
 		checkArticleMember();
 		getRelatedArticle();
 		getPraiseArticleList();
@@ -327,7 +329,7 @@
 				if(data.code == 0){
 					var article = data.data;
 					for(var i=0;i<article.length;i++){
-						var relatedStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						var relatedStr = "<li class='slider_li'><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
 						$('#RelatedArticle').append(relatedStr);
 					}		
 				}
@@ -350,7 +352,7 @@
 				if(data.code == 0){
 					var article = data.data;
 					for(var i=0;i<article.length;i++){
-						var PraiseStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						var PraiseStr = "<li class='slider_li'><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
 						$('#PraiseList').append(PraiseStr);
 					}		
 				}
@@ -372,7 +374,7 @@
 				if(data.code == 0){
 					var article = data.data;
 					for(var i=0;i<article.length;i++){
-						var ClickStr = "<li><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
+						var ClickStr = "<li class='slider_li'><a class='f-14' href="+article[i].article_url+">"+article[i].title+"</li>";
 						$('#ClickList').append(ClickStr);
 					}		
 				}

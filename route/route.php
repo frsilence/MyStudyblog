@@ -57,7 +57,7 @@ Route::group('article/',function(){
 	Route::get('id/:id','blog/article/readArticle');
 	Route::get('category/id/:id','blog/article/getCategory');
 	Route::get('category/all','blog/article/getAllCategory');
-	Route::get('search','blog/article/get              SearchArticle');
+	Route::get('search','blog/article/getSearchArticle');
 });
 
 //用户操作
