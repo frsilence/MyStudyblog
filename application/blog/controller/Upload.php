@@ -33,9 +33,9 @@ class Upload extends Appbasic
      */
     public function upload_image(Request $request)
     {
-        $files = $request->file();
+        $files = $request->file('image');
         if(is_array($files)){
-            foreach ($files as $key => $value) {
+            foreach ($files as $value) {
                 if($value->validate(['ext'=>'jpg,png,gif'])){
                     $info = $value->move('../public/static/uploads/image');
                     if($info){
@@ -47,6 +47,7 @@ class Upload extends Appbasic
                     return json(['code'=>1,'msg'=>'文件格式不是图片']);
                 }
             }
+            return json(['code'=>0,'msg'=>'多张图片上传成功','url'=>$url]);
         }else{
                 if($files->validate(['ext'=>'jpg,png,gif'])){
                     $info = $files->move('../public/static/uploads/image');

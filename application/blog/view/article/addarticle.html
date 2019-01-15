@@ -30,9 +30,9 @@
 						<input id="article_tag" class="input-text" placeholder="标签之间以英文分号;分割"/>
 					</div>
 				</div>
-				<div class="row cl">
-					<label class="form-label col-xs-2 col-sm-3 col-lg-2 col-md-2" for="article_content">文章内容</label>
-					<div class="formControls col-xs-10 col-sm-9 col-lg-10 col-lg-10">
+				<div class="cl mt-25">
+					
+					<div class="formControls">
 						<div id="article_content" class="editor-bg">
 						</div>
 						<div class="text-r mt-10">
@@ -81,7 +81,7 @@
     var E = window.wangEditor
     var editor = new E('#article_content')
     editor.customConfig.uploadImgServer = "{:url('blog/upload/upload_image')}"
-    editor.customConfig.uploadFileName = 'image'
+    editor.customConfig.uploadFileName = 'image[]'
     editor.customConfig.pasteFilterStyle = false
     editor.customConfig.uploadImgMaxLength = 5
     editor.customConfig.uploadImgHooks = {
