@@ -78,7 +78,7 @@
 	color: #d1c7b7 !important;
 }
 
-.item {
+.items {
 	color: #333;
 	float: left;
 	text-align: center;
@@ -88,7 +88,7 @@
 	font-size: 13px;
 }
 
-.item:hover {
+.items:hover {
 	color: #b9121b;
 }
 

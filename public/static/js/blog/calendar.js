@@ -30,12 +30,12 @@ var CalendarHandler = {
 		});
 		$(".dayItem").css("width", $("#context").width() + "px");
 		var itemPaddintTop = $(".dayItem").height() / 6;
-		$(".item").css({
+		$(".items").css({
 			"width": $(".week").width() / 7 + "px",
 			"line-height": itemPaddintTop + "px",
 			"height": itemPaddintTop + "px"
 		});
-		$(".currentItem>a").css("margin-left", ($(".item").width() - 25) / 2 + "px").css("margin-top", ($(".item").height() - 25) / 2 + "px");
+		$(".currentItem>a").css("margin-left", ($(".items").width() - 25) / 2 + "px").css("margin-top", ($(".items").height() - 25) / 2 + "px");
 		$(".week>h3").css("width", $(".week").width() / 7 + "px");
 		this.RunningTime();
 	},
@@ -182,14 +182,14 @@ var CalendarHandler = {
 		if(nowWeek != 0) {
 			//生成上月剩下的日期
 			for(var i = (lastMonthDaysNub - (nowWeek - 1)); i < lastMonthDaysNub; i++) {
-				$dayItem.append("<div class=\"item lastItem\"><a>" + (i + 1) + "</a></div>");
+				$dayItem.append("<div class=\"items lastItem\"><a>" + (i + 1) + "</a></div>");
 			}
 		}
 
 		//生成当月的日期
 		for(var i = 0; i < nowDaysNub; i++) {
-			if(i == (nowDay - 1)) $dayItem.append("<div class=\"item currentItem\"><a>" + (i + 1) + "</a></div>");
-			else $dayItem.append("<div class=\"item\"><a>" + (i + 1) + "</a></div>");
+			if(i == (nowDay - 1)) $dayItem.append("<div class=\"items currentItem\"><a>" + (i + 1) + "</a></div>");
+			else $dayItem.append("<div class=\"items\"><a>" + (i + 1) + "</a></div>");
 		}
 
 		//获取总共已经生成的天数
@@ -197,7 +197,7 @@ var CalendarHandler = {
 		//如果小于42，往下个月推算
 		if(hasCreateDaysNub < 42) {
 			for(var i = 0; i <= (42 - hasCreateDaysNub); i++) {
-				$dayItem.append("<div class=\"item lastItem\"><a>" + (i + 1) + "</a></div>");
+				$dayItem.append("<div class=\"items lastItem\"><a>" + (i + 1) + "</a></div>");
 			}
 		}
 
@@ -205,12 +205,12 @@ var CalendarHandler = {
 	},
 	CSS: function() {
 		var itemPaddintTop = $(".dayItem").height() / 6;
-		$(".item").css({
+		$(".items").css({
 			"width": $(".week").width() / 7 + "px",
 			"line-height": itemPaddintTop + "px",
 			"height": itemPaddintTop + "px"
 		});
-		$(".currentItem>a").css("margin-left", ($(".item").width() - 25) / 2 + "px").css("margin-top", ($(".item").height() - 25) / 2 + "px");
+		$(".currentItem>a").css("margin-left", ($(".items").width() - 25) / 2 + "px").css("margin-top", ($(".items").height() - 25) / 2 + "px");
 	},
 	CalculateNextMonthDays: function() {
 		if(this.isRunning == false) {
