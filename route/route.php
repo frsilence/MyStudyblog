@@ -102,7 +102,19 @@ Route::group('api/',function(){
 		Route::post('checkmemberfollow/:id','blog/member/checkMemberFollow');
 		Route::post('addmemberfollow/:id','blog/member/addMemberFollow');
 		Route::post('deletememberfollow/:id','blog/member/deleteMemberFollow');
+	});
 });
+
+//后台管理
+Route::group('master7948/',function(){
+	Route::group('index/',function(){
+		Route::get('welcome','admin/index/welcome');
+		Route::get('','admin/index/index');
+	});
+	Route::get('','admin/index/index');
+	Route::group('test/',function(){
+		Route::get('sys_info','admin/index/sys');
+	});
 });
 
 
