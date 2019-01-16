@@ -106,7 +106,7 @@ Route::group('api/',function(){
 });
 
 //后台管理
-Route::group('master7948/',function(){
+Route::group('master/',function(){
 	Route::group('index/',function(){
 		Route::get('welcome','admin/index/welcome');
 		Route::get('','admin/index/index');
