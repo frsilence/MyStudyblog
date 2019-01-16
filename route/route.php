@@ -70,7 +70,7 @@ Route::group('member/',function(){
 	Route::get('api/sda','blog/member/readMember');
 });
 
-//API
+//blog API
 Route::group('api/',function(){
 	//文章编辑图片上传
 	Route::post('upload/upload_image','blog/Upload/upload_image');
@@ -115,6 +115,11 @@ Route::group('master/',function(){
 	Route::group('test/',function(){
 		Route::get('sys_info','admin/index/sys');
 	});
+});
+
+//admin API
+Route::group('api/admin/',function(){
+	Route::get('blog_statisticsinformation','admin/blog/getBlogStatisticsInformation');
 });
 
 
