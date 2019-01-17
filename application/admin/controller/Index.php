@@ -16,9 +16,10 @@ class Index extends Adminbasic
     		'server_os' => php_uname(),
     		'server_ip' => GetHostByName($_SERVER['SERVER_NAME']),
     		'server_port' => $_SERVER['SERVER_PORT'],
+            'server_name' => $_SERVER,
     	];
         $blog = new Blog();
-        //return ($blog->getBlogStatisticsInformation());
+        return json($server_info);
     	return $this->fetch('welcome',['BlogStatisticsInformation'=>$blog->getBlogStatisticsInformation(),'ServerInfo'=>$server_info]);
     }
     public function sys()
