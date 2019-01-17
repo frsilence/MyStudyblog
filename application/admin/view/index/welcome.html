@@ -91,28 +91,28 @@
 		</thead>
 		<tbody>
 			<tr>
-				<th width="30%">服务器计算机名</th>
-				<td><span id="lbServerName">http://127.0.0.1/</span></td>
+				<th width="30%">域名</th>
+				<td><span id="lbServerName">{$ServerInfo['SERVER_NAME']}</span></td>
 			</tr>
 			<tr>
-				<td>服务器IP地址</td>
-				<td>{$ServerInfo['server_ip']}</td>
+				<td>主机HOST</td>
+				<td>{$ServerInfo['HTTP_HOST']}</td>
 			</tr>
 			<tr>
-				<td>服务器域名</td>
-				<td>www.h-ui.net</td>
+				<td>文件根目录</td>
+				<td>{$ServerInfo['DOCUMENT_ROOT']}</td>
+			</tr>
+			<tr>
+				<td>系统操作系统 </td>
+				<td>{$ServerInfo['server_os']}</td>
+			</tr>
+			<tr>
+				<td>服务器软件版本 </td>
+				<td>{$ServerInfo['SERVER_SOFTWARE']}</td>
 			</tr>
 			<tr>
 				<td>服务器端口 </td>
 				<td>{$ServerInfo['server_port']}</td>
-			</tr>
-			<tr>
-				<td>服务器IIS版本 </td>
-				<td>Microsoft-IIS/6.0</td>
-			</tr>
-			<tr>
-				<td>本文件所在文件夹 </td>
-				<td>D:\WebSite\HanXiPuTai.com\XinYiCMS.Web\</td>
 			</tr>
 			<tr>
 				<td>服务器操作系统 </td>

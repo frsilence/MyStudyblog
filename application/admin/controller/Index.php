@@ -14,12 +14,15 @@ class Index extends Adminbasic
     {
     	$server_info = [
     		'server_os' => php_uname(),
-    		'server_ip' => GetHostByName($_SERVER['SERVER_NAME']),
     		'server_port' => $_SERVER['SERVER_PORT'],
-            'server_name' => $_SERVER,
+            'SERVER_NAME' => $_SERVER['SERVER_NAME'],
+            'HTTP_HOST' => $_SERVER['HTTP_HOST'],
+            'DOCUMENT_ROOT' => $_SERVER['DOCUMENT_ROOT'],
+            'SERVER_SOFTWARE' => $_SERVER['SERVER_SOFTWARE'],
+
     	];
         $blog = new Blog();
-        return json($server_info);
+        //return json($server_info);
     	return $this->fetch('welcome',['BlogStatisticsInformation'=>$blog->getBlogStatisticsInformation(),'ServerInfo'=>$server_info]);
     }
     public function sys()
