@@ -2,6 +2,7 @@
 namespace app\admin\controller;
 
 use app\common\controller\Adminbasic;
+use app\admin\controller\Blog;
 
 class Index extends Adminbasic
 {
@@ -11,12 +12,14 @@ class Index extends Adminbasic
     }
     public function welcome()
     {
-    	$data = [
+    	$server_info = [
     		'server_os' => php_uname(),
     		'server_ip' => GetHostByName($_SERVER['SERVER_NAME']),
     		'server_port' => $_SERVER['SERVER_PORT'],
     	];
-    	return $this->fetch('welcome',$data);
+        $blog = new Blog();
+        //return ($blog->getBlogStatisticsInformation());
+    	return $this->fetch('welcome',['BlogStatisticsInformation'=>$blog->getBlogStatisticsInformation(),'ServerInfo'=>$server_info]);
     }
     public function sys()
     {

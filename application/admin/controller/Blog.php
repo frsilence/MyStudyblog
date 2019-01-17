@@ -26,12 +26,46 @@ class Blog extends Adminbasic
     public function getBlogStatisticsInformation()
     {
         //return json($this->createTimeSearch('today'));
-        $bolg_category_sumnum = model('blog/ArticleCategory')->where(['status'=>0])->count();
-        $bolg_category_todaynum = model('blog/ArticleCategory')->where(['status'=>0])->whereTime('create_time','between',$this->createTimeSearch('today'))->count();
+        //blog 分类统计
+        $blog_category_sumnum = model('blog/ArticleCategory')->where(['status'=>0])->count();
+        $blog_category_todaynum = model('blog/ArticleCategory')->where(['status'=>0])->whereTime('create_time','between',$this->createTimeSearch('today'))->count();
+        $blog_category_yesterdaynum = model('blog/ArticleCategory')->where(['status'=>0])->whereTime('create_time','between',$this->createTimeSearch('yesterday'))->count();
+        $blog_category_last7num = model('blog/ArticleCategory')->where(['status'=>0])->whereTime('create_time','between',$this->createTimeSearch('last7'))->count();
+        $blog_category_last30num = model('blog/ArticleCategory')->where(['status'=>0])->whereTime('create_time','between',$this->createTimeSearch('last30'))->count();
+        //blog 文章统计
+        $blog_article_sumnum = model('blog/Article')->where(['is_delete'=>0,'status'=>0])->count();
+        $blog_article_todaynum = model('blog/Article')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('today'))->count();
+        $blog_article_yesternum = model('blog/Article')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('yesterday'))->count();
+        $blog_article_last7num = model('blog/Article')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('last7'))->count();
+        $blog_article_last30num = model('blog/Article')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('last30'))->count();
+        //评论统计
+        $blog_comment_sumnum = model('blog/ArticleComment')->where(['is_delete'=>0])->count();
+        $blog_comment_todaynum = model('blog/ArticleComment')->where(['is_delete'=>0])->whereTime('create_time','between',$this->createTimeSearch('today'))->count();
+        $blog_comment_yesternum = model('blog/ArticleComment')->where(['is_delete'=>0])->whereTime('create_time','between',$this->createTimeSearch('yesterday'))->count();
+        $blog_comment_last7num = model('blog/ArticleComment')->where(['is_delete'=>0])->whereTime('create_time','between',$this->createTimeSearch('last7'))->count();
+        $blog_comment_last30num = model('blog/ArticleComment')->where(['is_delete'=>0])->whereTime('create_time','between',$this->createTimeSearch('last30'))->count();
+        //用户统计
+        $blog_member_sumnum = model('blog/AppMember')->where(['is_delete'=>0,'status'=>0])->count();
+        $blog_member_todaynum = model('blog/AppMember')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('today'))->count();
+        $blog_member_yesternum = model('blog/AppMember')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('yesterday'))->count();
+        $blog_member_last7num = model('blog/AppMember')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('last7'))->count();
+        $blog_member_last30num = model('blog/AppMember')->where(['is_delete'=>0,'status'=>0])->whereTime('create_time','between',$this->createTimeSearch('last30'))->count();
+        //注册用户登录量统计
+        $blog_memberlogin_sumnum = model('blog/AppMemberLoginRecord')->where(['type'=>0])->count();
+        $blog_memberlogin_todaynum = model('blog/AppMemberLoginRecord')->where(['type'=>0])->whereTime('create_time','between',$this->createTimeSearch('today'))->count();
+        $blog_memberlogin_yesternum = model('blog/AppMemberLoginRecord')->where(['type'=>0])->whereTime('create_time','between',$this->createTimeSearch('yesterday'))->count();
+        $blog_memberlogin_last7num = model('blog/AppMemberLoginRecord')->where(['type'=>0])->whereTime('create_time','between',$this->createTimeSearch('last7'))->count();
+        $blog_memberlogin_last30num = model('blog/AppMemberLoginRecord')->where(['type'=>0])->whereTime('create_time','between',$this->createTimeSearch('last30'))->count();
         $BlogStatisticsInformation = [
-            'blog_category_num'=>[$bolg_category_sumnum,$bolg_category_todaynum],
-        ];
-        return json($BlogStatisticsInformation);
+            'blog_category_num'=>[$blog_category_sumnum,$blog_category_todaynum,$blog_category_yesterdaynum,$blog_category_last7num,$blog_category_last30num],
+            'blog_article_num'=>[$blog_article_sumnum,$blog_article_todaynum,$blog_article_yesternum,$blog_article_last7num,$blog_article_last30num],
+            'blog_comment_num' =>[$blog_comment_sumnum,$blog_comment_todaynum,$blog_comment_yesternum,$blog_comment_last7num,$blog_comment_last30num],
+            'blog_member_num' =>[$blog_member_sumnum,$blog_member_todaynum,$blog_member_yesternum,$blog_member_last7num,$blog_member_last30num],
+            'blog_memberlogin_num'=>[$blog_memberlogin_sumnum,$blog_memberlogin_todaynum,$blog_memberlogin_yesternum,$blog_memberlogin_last7num,$blog_memberlogin_last30num]
+        ];     
+        return ($BlogStatisticsInformation);
+       
+        
     }
 
     /**
@@ -39,14 +73,15 @@ class Blog extends Adminbasic
      */
     public function createTimeSearch($time)
     {
+        $nextday_date = date("Y-m-d",strtotime("1 day"));
         $now_date = date("Y-m-d");
         $yesterday_date = date("Y-m-d",strtotime("-1 day"));
         $last7_date = date("Y-m-d",strtotime("-7 day"));
         $last30_date = date("Y-m-d",strtotime("-30 day"));
-        $time_search =  ['today'=>[$now_date.' 00:00:00',$now_date.' 23:59:59'],
-                'yesterday'=>[$yesterday_date.' 00:00:00',$now_date.' 00:00:00'],
-                'last7'=>[$last7_date.' 00:00:00',$now_date.' 00:00:00'],
-                'last30'=>[$last30_date.' 00:00:00',$now_date.' 00:00:00'],
+        $time_search =  ['today'=>[$now_date,$nextday_date],
+                'yesterday'=>[$yesterday_date,$now_date],
+                'last7'=>[$last7_date,$nextday_date],
+                'last30'=>[$last30_date,$nextday_date],
         ];
         return $time_search[$time];
     }

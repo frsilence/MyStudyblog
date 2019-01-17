@@ -36,50 +36,50 @@
 				<th>文章</th>
 				<th>评论</th>
 				<th>用户</th>
-				<th>访问量</th>
+				<th>注册用户登录</th>
 				<th>管理员</th>
 			</tr>
 		</thead>
 		<tbody>
 			<tr class="text-c">
 				<td>总数</td>
-				<td>92</td>
-				<td>9</td>
-				<td>0</td>
-				<td>8</td>
-				<td>20</td>
+				<td>{$BlogStatisticsInformation.blog_category_num[0]}</td>
+				<td>{$BlogStatisticsInformation.blog_article_num[0]}</td>
+				<td>{$BlogStatisticsInformation.blog_comment_num[0]}</td>
+				<td>{$BlogStatisticsInformation.blog_member_num[0]}</td>
+				<td>{$BlogStatisticsInformation.blog_memberlogin_num[0]}</td>
 			</tr>
 			<tr class="text-c">
 				<td>今日</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
+				<td>{$BlogStatisticsInformation.blog_category_num[1]}</td>
+				<td>{$BlogStatisticsInformation.blog_article_num[1]}</td>
+				<td>{$BlogStatisticsInformation.blog_comment_num[1]}</td>
+				<td>{$BlogStatisticsInformation.blog_member_num[1]}</td>
+				<td>{$BlogStatisticsInformation.blog_memberlogin_num[1]}</td>
 			</tr>
 			<tr class="text-c">
 				<td>昨日</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
+				<td>{$BlogStatisticsInformation.blog_category_num[2]}</td>
+				<td>{$BlogStatisticsInformation.blog_article_num[2]}</td>
+				<td>{$BlogStatisticsInformation.blog_comment_num[2]}</td>
+				<td>{$BlogStatisticsInformation.blog_member_num[2]}</td>
+				<td>{$BlogStatisticsInformation.blog_memberlogin_num[2]}</td>
 			</tr>
 			<tr class="text-c">
 				<td>近7天</td>
-				<td>2</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
+				<td>{$BlogStatisticsInformation.blog_category_num[3]}</td>
+				<td>{$BlogStatisticsInformation.blog_article_num[3]}</td>
+				<td>{$BlogStatisticsInformation.blog_comment_num[3]}</td>
+				<td>{$BlogStatisticsInformation.blog_member_num[3]}</td>
+				<td>{$BlogStatisticsInformation.blog_memberlogin_num[3]}</td>
 			</tr>
 			<tr class="text-c">
 				<td>近30天</td>
-				<td>2</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
-				<td>0</td>
+				<td>{$BlogStatisticsInformation.blog_category_num[4]}</td>
+				<td>{$BlogStatisticsInformation.blog_article_num[4]}</td>
+				<td>{$BlogStatisticsInformation.blog_comment_num[4]}</td>
+				<td>{$BlogStatisticsInformation.blog_member_num[4]}</td>
+				<td>{$BlogStatisticsInformation.blog_memberlogin_num[4]}</td>
 			</tr>
 		</tbody>
 	</table>
@@ -96,7 +96,7 @@
 			</tr>
 			<tr>
 				<td>服务器IP地址</td>
-				<td>{$server_ip}</td>
+				<td>{$ServerInfo['server_ip']}</td>
 			</tr>
 			<tr>
 				<td>服务器域名</td>
@@ -104,7 +104,7 @@
 			</tr>
 			<tr>
 				<td>服务器端口 </td>
-				<td>{$server_port}</td>
+				<td>{$ServerInfo['server_port']}</td>
 			</tr>
 			<tr>
 				<td>服务器IIS版本 </td>
@@ -116,7 +116,7 @@
 			</tr>
 			<tr>
 				<td>服务器操作系统 </td>
-				<td>{$server_os}</td>
+				<td>{$ServerInfo['server_os']}</td>
 			</tr>
 			<tr>
 				<td>系统所在文件夹 </td>
