@@ -51,6 +51,10 @@ Route::group('test/',function(){
 		$download = new \think\response\Download('pyvm.zip');
 		return $download->name('pyvm.zip');
 	});
+	Route::get('session',function(){
+		Session::start();
+		return session_id();
+	});
 });
 
 
