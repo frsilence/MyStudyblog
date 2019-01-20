@@ -114,6 +114,7 @@ Route::group('master/',function(){
 	Route::group('index/',function(){
 		Route::get('welcome','admin/index/welcome');
 		Route::get('','admin/index/index');
+		Route::get('blog/category_manage','admin/index/getBlogCategory');
 	});
 	Route::get('','admin/index/index');
 	Route::group('test/',function(){

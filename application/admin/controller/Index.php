@@ -6,10 +6,18 @@ use app\admin\controller\Blog;
 
 class Index extends Adminbasic
 {
+    /**
+     * 获取管理界面
+     * @return [type] [description]
+     */
     public function index()
     {
         return $this->fetch('admin_index');
     }
+    /**
+     * 管理界面/Blog管理/我的桌面 页面
+     * @return [type] [description]
+     */
     public function welcome()
     {
     	$server_info = [
@@ -25,8 +33,12 @@ class Index extends Adminbasic
         //return json($server_info);
     	return $this->fetch('welcome',['BlogStatisticsInformation'=>$blog->getBlogStatisticsInformation(),'ServerInfo'=>$server_info]);
     }
-    public function sys()
+    /**
+     * 管理界面/Blog管理/分类管理 页面
+     * @return [type] [description]
+     */
+    public function getBlogCategory()
     {
-    	return '系统类型版本：'.php_uname();
+    	return $this->fetch('category_manage');
     }
 }
