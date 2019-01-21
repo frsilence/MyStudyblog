@@ -89,7 +89,20 @@
 		$('.table-sort').dataTable({
 			//服务器模式
 			serverSide:true,
-			ajax:"{:url('admin/blog/getAllCategory')}",
+			ajax:{
+				url:"{:url('admin/blog/getAllCategory')}",
+				data:function(d){
+					d.extra_search = 's';
+				}
+			},
+			"columnDefs":[
+				{
+					"targets":-1,
+					"render":function(data,type,full,meta){
+						return '<a style="text-decoration:none" class="ml-40" onClick="article_edit('+"'资讯编辑','article-add.html','10001')"+'" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>'+' <a style="text-decoration:none" class="ml-50" onClick="article_del(this,'+"'10001'"+')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i>删除</a>';
+					}
+				}
+			],
 			 columns: [
 		            { "data": "select" },
 		            { "data": "id" },
@@ -97,7 +110,8 @@
 		            { "data": "status" },
 		            { "data": "create_time" },
 		            { "data": "update_time" },
-		            { "data": "operation" }
+					{"data": null}
+		            
 		        ]
 		});
 		
@@ -107,7 +121,7 @@
 
 
 /*状态更改*/
-$('#mySwitch').on('switch-change', function (e, data) {
+$('#mySwitch_1').on('switch-change', function (e, data) {
   var $el = $(data.el) ,value = data.value;
   //alert(value);
 });

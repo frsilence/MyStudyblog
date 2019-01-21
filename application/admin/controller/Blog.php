@@ -99,10 +99,10 @@ class Blog extends Adminbasic
                 'select'=>'<input type="checkbox" value="" name="">',
                 'id'=>$value['id'],
                 'name'=>$value['category_title'],
-                'status'=>$value['status'],
+                'status'=>'<div id="mySwitch_'.$value['status'].'" class="switch" data-on-label="启用" data-off-label="禁止"><input type="checkbox" unchecked/></div>',
                 'create_time'=>$value['create_time'],
                 'update_time'=>$value['update_time'],
-                'operation'=>'sdads '
+                //'operation'=>'sdads '
             ];
             array_push($category_list,$obj);
         }
