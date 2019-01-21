@@ -125,6 +125,7 @@ Route::group('master/',function(){
 //admin API
 Route::group('api/admin/',function(){
 	Route::get('blog_statisticsinformation','admin/blog/getBlogStatisticsInformation');
+	Route::get('blog_allcategory','admin/blog/getAllCategory');
 });
 
 

@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use think\Request;
+use think\facade\Request;
 use app\common\controller\Adminbasic;
 
 class Blog extends Adminbasic
@@ -84,6 +84,36 @@ class Blog extends Adminbasic
                 'last30'=>[$last30_date,$nextday_date],
         ];
         return $time_search[$time];
+    }
+
+    /**
+     * 获取文章分类
+     */
+    public function getAllCategory()
+    {
+        $article_categorys = model('blog/ArticleCategory')->where('status',0)->select();
+        $category_list = [];
+        foreach ($article_categorys as $key => $value) {
+            $obj = [
+                'DT_RowId'=>"row_".$value['id'],
+                'select'=>'<input type="checkbox" value="" name="">',
+                'id'=>$value['id'],
+                'name'=>$value['category_title'],
+                'status'=>$value['status'],
+                'create_time'=>$value['create_time'],
+                'update_time'=>$value['update_time'],
+                'operation'=>'sdads '
+            ];
+            array_push($category_list,$obj);
+        }
+        $data = [
+            'draw' => Request::get('draw'),
+            'recordsTotal' => 20,
+            'recordsFiltered' => 7,
+            'data' => $category_list,
+            //'error' => 'error999',
+        ];
+        return json($data);
     }
 
 
