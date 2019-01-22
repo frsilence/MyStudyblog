@@ -15,6 +15,7 @@
 <link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
 <link rel="stylesheet" type="text/css" href="/static/h-ui.admin/skin/default/skin.css" id="skin" />
 <link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css" />
 <!--[if IE 6]>
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
@@ -43,6 +44,10 @@
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
 	<div class="mt-20">
+		<table id="categorylist_table">
+			
+		</table>
+		<!--
 		<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
 			<thead>
 				<tr class="text-c">
@@ -72,11 +77,13 @@
 				
 			</tbody>
 		</table>
+		-->
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->
 <script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
 <script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
 <script type="text/javascript" src="/static/h-ui/js/H-ui.min.js"></script>
 <script type="text/javascript" src="/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
 
@@ -84,13 +91,47 @@
 <script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
 <script type="text/javascript" src="/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
 <script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<!--表单模板绑定--开始-->
+    <script type="text/html" id="CategoryStatus">
+        <input type="checkbox" name="{{d.id}}" value="{{d.status}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="modifyStatus" {{ d.status== 0 ? 'checked' : '' }}>
+    </script>
+<!--表单模板绑定--结束-->
 <script type="text/javascript">
+	layui.use('table',function(){
+		var table = layui.table;
+		
+		table.render({
+			elem:"#categorylist_table",
+			url:"{:url('admin/blog/getAllCategory')}",
+			method:'get',
+			toolbar:'<button class="button">删除</button>',
+			page:true,
+			limit:10,
+			title:'Blog分类表',
+			defaultToolbar:['filter', 'print','exports'],
+			cols:[[
+				{field:'id',title:'ID',sort:true},
+				{field:'category_title',title:'名称',sort:true},
+				{field:'status',title:'状态',templet:'#CategoryStatus'},
+				{field:'create_time',title:'创建时间',sort:true},
+				{field:'update_time',title:'更新时间',sort:true}
+			]],
+			done:function(res,curr,count){
+				//alert(res);
+			}
+		});
+	});
+	
+	
+	
+	
+	/*
 	$(document).ready(function(){
 		$('.table-sort').dataTable({
 			//服务器模式
 			serverSide:true,
 			ajax:{
-				url:"{:url('admin/blog/getAllCategory')}",
+				url
 				data:function(d){
 					d.extra_search = 's';
 				}
@@ -107,7 +148,10 @@
 		            { "data": "select" },
 		            { "data": "id" },
 		            { "data": "name" },
-		            { "data": "status" },
+		            { "data": "status" ,
+		              "render": function(data,type,full,meta){
+		              	 return "<div id='mySwitch_1' class='switch' data-on-label='开' data-off-label='关'><input type='checkbox' checked/></div>";
+		              }},
 		            { "data": "create_time" },
 		            { "data": "update_time" },
 					{"data": null}
@@ -119,11 +163,11 @@
 		
 	});
 
-
+	*/
 /*状态更改*/
 $('#mySwitch_1').on('switch-change', function (e, data) {
   var $el = $(data.el) ,value = data.value;
-  //alert(value);
+  alert(value);
 });
 
 /*资讯-添加*/

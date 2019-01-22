@@ -91,27 +91,13 @@ class Blog extends Adminbasic
      */
     public function getAllCategory()
     {
-        $article_categorys = model('blog/ArticleCategory')->where('status',0)->select();
-        $category_list = [];
-        foreach ($article_categorys as $key => $value) {
-            $obj = [
-                'DT_RowId'=>"row_".$value['id'],
-                'select'=>'<input type="checkbox" value="" name="">',
-                'id'=>$value['id'],
-                'name'=>$value['category_title'],
-                'status'=>'<div id="mySwitch_'.$value['status'].'" class="switch" data-on-label="启用" data-off-label="禁止"><input type="checkbox" unchecked/></div>',
-                'create_time'=>$value['create_time'],
-                'update_time'=>$value['update_time'],
-                //'operation'=>'sdads '
-            ];
-            array_push($category_list,$obj);
-        }
+        $article_categorys = model('blog/ArticleCategory')->select();
+        $category_list = [];   
         $data = [
-            'draw' => Request::get('draw'),
-            'recordsTotal' => 20,
-            'recordsFiltered' => 7,
-            'data' => $category_list,
-            //'error' => 'error999',
+            'code' =>0,
+            'message' => "success",
+            'count' => 7,
+            'data' => $article_categorys,
         ];
         return json($data);
     }
