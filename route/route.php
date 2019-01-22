@@ -126,6 +126,7 @@ Route::group('master/',function(){
 Route::group('api/admin/',function(){
 	Route::get('blog_statisticsinformation','admin/blog/getBlogStatisticsInformation');
 	Route::get('blog_allcategory','admin/blog/getAllCategory');
+	Route::post('blog/category/statuschange','admin/blog/categorystatuschange');
 });
 
 

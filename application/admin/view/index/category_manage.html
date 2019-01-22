@@ -97,8 +97,10 @@
     </script>
 <!--表单模板绑定--结束-->
 <script type="text/javascript">
-	layui.use('table',function(){
+	layui.use(['table','form','layer'],function(){
 		var table = layui.table;
+		var form = layui.form;
+		var layer = layui.layer;
 		
 		table.render({
 			elem:"#categorylist_table",
@@ -119,6 +121,22 @@
 			done:function(res,curr,count){
 				//alert(res);
 			}
+		});
+		
+		//修改状态按钮
+		form.on('switch(modifyStatus)',function(data){
+			$.ajax({
+				url:"{:url('admin/blog/categorystatuschange')}",
+				type:'post',
+				data:{
+					id:data.value,
+				},
+				success:function(res){
+					if(res.data == 0){
+						layer.msg(data.msg, {icon: 1, time: 2000});
+					}
+				}
+			})
 		});
 	});
 	

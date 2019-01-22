@@ -102,6 +102,14 @@ class Blog extends Adminbasic
         return json($data);
     }
 
+    /**
+     * 修改文章分类的状态
+     */
+    public function categorystatuschange()
+    {
+        return 0;
+    }
+
 
     /**
      * 保存新建的资源
