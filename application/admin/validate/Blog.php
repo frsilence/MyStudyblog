@@ -15,6 +15,8 @@ class Blog extends Validate
 	protected $rule = [
         'category_id|文章分类ID'=>'require|number',
         'category_status|文章分类状态'=>'require|number|in:0,1',
+        'category_createtimemin|文章分类创建时间min'=>'date',
+        'category_createtimemax|文章分类创建时间max'=>'date'
     ];
     
     /**
@@ -30,5 +32,6 @@ class Blog extends Validate
      */
     protected $scene = [
         'category_statuschange'=>['category_id','category_status'],
+        'category_search'=>['category_createtimemin','category_createtimemax'],
     ];
 }

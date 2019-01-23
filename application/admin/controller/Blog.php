@@ -89,9 +89,19 @@ class Blog extends Adminbasic
     /**
      * 获取文章分类
      */
-    public function getCategoryList()
+    public function getCategoryList(Request $request)
     {
-        $article_categorys = model('blog/ArticleCategory')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        //验证输入参数
+        $post_info = $request->get();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.category_search');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        $post_info['category_createtimemin'] !='' ? $category_createtimemin = $post_info['category_createtimemin'] : $category_createtimemin = '2018-01-01';
+        $post_info['category_createtimemax'] !='' ? $category_createtimemax = $post_info['category_createtimemax'] : $category_createtimemax = date("Y-m-d");
+        if($post_info['categort_searchtitle'] !=''){
+            $article_categorys = model('blog/ArticleCategory')->where('category_title','LIKE',"%{$post_info['categort_searchtitle']}%")->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        }else{
+            $article_categorys = model('blog/ArticleCategory')->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        }
         //return json($article_categorys);   
         $data = [
             'code' =>0,
