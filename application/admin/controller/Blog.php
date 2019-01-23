@@ -3,7 +3,7 @@
 namespace app\admin\controller;
 
 use think\Controller;
-use think\facade\Request;
+use think\Request;
 use app\common\controller\Adminbasic;
 
 class Blog extends Adminbasic
@@ -89,15 +89,15 @@ class Blog extends Adminbasic
     /**
      * 获取文章分类
      */
-    public function getAllCategory()
+    public function getCategoryList()
     {
-        $article_categorys = model('blog/ArticleCategory')->select();
-        $category_list = [];   
+        $article_categorys = model('blog/ArticleCategory')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        //return json($article_categorys);   
         $data = [
             'code' =>0,
             'message' => "success",
-            'count' => 7,
-            'data' => $article_categorys,
+            'count' => $article_categorys->toArray()['total'],
+            'data' => $article_categorys->toArray()['data'],
         ];
         return json($data);
     }
@@ -105,9 +105,35 @@ class Blog extends Adminbasic
     /**
      * 修改文章分类的状态
      */
-    public function categorystatuschange()
+    public function categorystatuschange(Request $request)
     {
-        return 0;
+        //验证输入参数
+        $post_info = $request->post();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.category_statuschange');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        $category = model('blog/ArticleCategory')->where(['id'=>$post_info['category_id']])->find();
+        if(empty($category)){
+            return json(['code'=>1,'msg'=>'分类不存在']);
+        }else{
+            //判断分类状态是否已改变
+            if($category->status != $post_info['category_status']) return json(['code'=>2,'msg'=>'状态已经修改，请刷新页面再试']);
+            //未改变
+            $category->status == 1 ? list($msg,$status) = ['启用成功',0] : list($msg,$status) = ['禁用成功',1];
+            $result = model('blog/ArticleCategory')->where(['id'=>$post_info['category_id']])->update(['status'=>$status]);
+            if($result>=1){
+                //更新该分类下的文章状态
+                $articles = model('blog/Article')->where(['category_id'=>$post_info['category_id']])->select();
+                foreach ($articles as $key => $value) {
+                    $value->status = $status;
+                    $value->save();
+                }
+                //日志记录
+                return json(['code'=>0,'msg'=>$msg,'status'=>$status]);
+            }
+            return json(['code'=>1,'msg'=>'状态修改失败']);    
+        };
+        
     }
 
 

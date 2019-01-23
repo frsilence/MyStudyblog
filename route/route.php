@@ -125,8 +125,9 @@ Route::group('master/',function(){
 //admin API
 Route::group('api/admin/',function(){
 	Route::get('blog_statisticsinformation','admin/blog/getBlogStatisticsInformation');
-	Route::get('blog_allcategory','admin/blog/getAllCategory');
+	Route::get('blog/category/categorylist','admin/blog/getCategoryList');
 	Route::post('blog/category/statuschange','admin/blog/categorystatuschange');
+	Route::get('blog/category/categorysearch','admin/blog/categorysearch');
 });
 
 

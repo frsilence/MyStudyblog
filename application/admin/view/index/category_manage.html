@@ -39,45 +39,15 @@
 		<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
 		-
 		<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
-		<input type="text" name="" id="" placeholder=" 分类名称" style="width:250px" class="input-text">
-		<button name="" id="" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜分类</button>
+		<input type="text" name="" id="category_searchtitle" placeholder=" 分类名称" style="width:250px" class="input-text">
+		<button name="" id="category_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜分类</button>
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
 	<div class="mt-20">
-		<table id="categorylist_table">
+		<table id="categorylist_table" lay-data="{id:'category_table'}">
 			
 		</table>
-		<!--
-		<table class="table table-border table-bordered table-bg table-hover table-sort table-responsive">
-			<thead>
-				<tr class="text-c">
-					<th width="25"><input type="checkbox" name="" value=""></th>
-					<th width="80">ID</th>
-					<th width="200">分类名称</th>
-					<th width="80">启用状态</th>
-					<th width="80">发布时间</th>
-					<th width="80">更新时间</th>
-					<th width="120">操作</th>
-				</tr>
-			</thead>
-			<tbody>
-				<tr class="text-c">
-					<td><input type="checkbox" value="" name=""></td>
-					<td>10001</td>
-					<td class="text-l"><u style="cursor:pointer" class="text-primary" onClick="article_edit('查看','article-zhang.html','10001')" title="查看">资讯标题</u></td>
-					<td>
-						<div id="mySwitch" class="switch" data-on-label="启用" data-off-label="禁止">
-							<input type="checkbox" unchecked />
-						</div>
-					</td>
-					<td>2014-6-11 11:11:42</td>
-					<td>2014-6-11 11:11:42</td>
-					<td class="f-14 td-manage"><a style="text-decoration:none" onClick="article_stop(this,'10001')" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_edit('资讯编辑','article-add.html','10001')" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i></a> <a style="text-decoration:none" class="ml-5" onClick="article_del(this,'10001')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i></a></td>
-				</tr>
-				
-			</tbody>
-		</table>
-		-->
+	
 	</div>
 </div>
 <!--_footer 作为公共模版分离出去-->
@@ -93,7 +63,7 @@
 <script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
 <!--表单模板绑定--开始-->
     <script type="text/html" id="CategoryStatus">
-        <input type="checkbox" name="{{d.id}}" value="{{d.status}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="modifyStatus" {{ d.status== 0 ? 'checked' : '' }}>
+        <input type="checkbox" id="status_{{d.id}}" name="{{d.id}}" value="{{d.status}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="modifyStatus" {{ d.status== 0 ? 'checked' : '' }}>
     </script>
 <!--表单模板绑定--结束-->
 <script type="text/javascript">
@@ -102,10 +72,15 @@
 		var form = layui.form;
 		var layer = layui.layer;
 		
-		table.render({
+		var category_table = table.render({
 			elem:"#categorylist_table",
-			url:"{:url('admin/blog/getAllCategory')}",
+			url:"{:url('admin/blog/getCategoryList')}",
 			method:'get',
+			where:{
+				category_createtimemin:$('#logmin').val(),
+				category_createtimemax:$('#logmax').val(),
+				categort_searchtitle:$('#category_searchtitle').val(),
+			},
 			toolbar:'<button class="button">删除</button>',
 			page:true,
 			limit:10,
@@ -125,63 +100,84 @@
 		
 		//修改状态按钮
 		form.on('switch(modifyStatus)',function(data){
-			$.ajax({
-				url:"{:url('admin/blog/categorystatuschange')}",
-				type:'post',
-				data:{
-					id:data.value,
+			var x  = data.elem.checked;//预期展现的状态值
+			layer.open({
+				content:'此操作会 启用 或 禁止 该分类和该分类下的文章，确认操作？',
+				icon:3,
+				title:'提示',
+				btn:['确认','取消'],
+				yes:function(index,layero){
+					layer.close(index);
+					//加载等待动画
+					var load_index = layer.load();
+					$.ajax({
+						url:"{:url('admin/blog/categorystatuschange')}",
+						type:'post',
+						data:{
+							category_id:data.elem.name,
+							category_status:data.elem.value,
+						},
+						success:function(res){
+							if(res.code == 0){
+								//渲染switch效果
+								data.elem.checked = x;
+								data.elem.value = res.status;
+								form.render();								
+								layer.msg(res.msg, {icon: 1, time: 2000});
+							}else{
+								data.elem.checked = !x;
+								form.render();								
+								layer.msg(res.msg,{icon:0,time:2000});
+							}
+							layer.close(load_index);
+						},
+						error:function(){
+							layer.msg('系统错误，请重试',{icon:2,time:2000},function(){
+									window.location.reload();
+								});
+						}
+					});
 				},
-				success:function(res){
-					if(res.data == 0){
-						layer.msg(data.msg, {icon: 1, time: 2000});
-					}
+				btn2:function(index,layero){
+					data.elem.checked = !x;
+					form.render();
+					layer.close(index);
+				},
+				cancel:function(){
+					data.elem.checked = !x;
+					form.render();
 				}
-			})
+				
+			});
+			return false;
+			
 		});
+		$('#category_search').on('click',function(){
+			category_search(category_table);
+		})
+		
+		//回车提交
+		$(document).keyup(function(event){
+							if(event.keyCode ==13){
+								member_login();
+							}
+						});
+		//分类搜索
+		function category_search(category_table){
+			category_table.reload({
+				page:{
+					curr:1
+				}
+			});
+		}
+		
+		
+		
 	});
 	
 	
 	
 	
-	/*
-	$(document).ready(function(){
-		$('.table-sort').dataTable({
-			//服务器模式
-			serverSide:true,
-			ajax:{
-				url
-				data:function(d){
-					d.extra_search = 's';
-				}
-			},
-			"columnDefs":[
-				{
-					"targets":-1,
-					"render":function(data,type,full,meta){
-						return '<a style="text-decoration:none" class="ml-40" onClick="article_edit('+"'资讯编辑','article-add.html','10001')"+'" href="javascript:;" title="编辑"><i class="Hui-iconfont">&#xe6df;</i>编辑</a>'+' <a style="text-decoration:none" class="ml-50" onClick="article_del(this,'+"'10001'"+')" href="javascript:;" title="删除"><i class="Hui-iconfont">&#xe6e2;</i>删除</a>';
-					}
-				}
-			],
-			 columns: [
-		            { "data": "select" },
-		            { "data": "id" },
-		            { "data": "name" },
-		            { "data": "status" ,
-		              "render": function(data,type,full,meta){
-		              	 return "<div id='mySwitch_1' class='switch' data-on-label='开' data-off-label='关'><input type='checkbox' checked/></div>";
-		              }},
-		            { "data": "create_time" },
-		            { "data": "update_time" },
-					{"data": null}
-		            
-		        ]
-		});
-		
-		
-		
-	});
-
-	*/
 /*状态更改*/
 $('#mySwitch_1').on('switch-change', function (e, data) {
   var $el = $(data.el) ,value = data.value;
