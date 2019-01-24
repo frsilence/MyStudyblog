@@ -96,7 +96,7 @@ class Blog extends Adminbasic
         $result = $this->validate($post_info,'app\admin\validate\Blog.category_search');
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         $post_info['category_createtimemin'] !='' ? $category_createtimemin = $post_info['category_createtimemin'] : $category_createtimemin = '2018-01-01';
-        $post_info['category_createtimemax'] !='' ? $category_createtimemax = $post_info['category_createtimemax'] : $category_createtimemax = date("Y-m-d");
+        $post_info['category_createtimemax'] !='' ? $category_createtimemax = $post_info['category_createtimemax'] : $category_createtimemax = date("Y-m-d",strtotime("1 day"));;
         if($post_info['categort_searchtitle'] !=''){
             $article_categorys = model('blog/ArticleCategory')->where('category_title','LIKE',"%{$post_info['categort_searchtitle']}%")->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }else{
@@ -173,6 +173,26 @@ class Blog extends Adminbasic
             return json(['code'=>1,'msg'=>'文章分类信息更新失败error']);
         }
         
+    }
+
+    /**
+     *新增文章分类
+     *@param $category_title 新的分类标题
+     *@param $category_content 新的分类简介
+     */
+    public function addCategory(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->post();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.category_add');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        $save =  model('blog/ArticleCategory')->addBlogCategory($post_info['category_title'],$post_info['category_content']);
+        if($save['code']==0){
+            return json(['code'=>$save['code'],'msg'=>$save['msg'],'category_id'=>$save['category_id']]);
+        }else{
+            return json(['code'=>$save['code'],'msg'=>$save['msg']]);
+        }
     }
 
 

@@ -51,4 +51,11 @@ class Index extends Adminbasic
         if(empty($category)) return '未找到该文章分类，请刷新该页面再试！';
         return $this->fetch('category_manageedit',['category'=>$category]);
     }
+    /**
+     * 管理界面/Blog管理/分类管理/新增分类页面
+     */
+    public function addBlogCategory()
+    {
+        return $this->fetch('category_manageadd');
+    }
 }

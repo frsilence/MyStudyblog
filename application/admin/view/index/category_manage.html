@@ -68,7 +68,6 @@
 <!--表单模板绑定--结束-->
 <!--表单操作栏--开始-->
     <script type="text/html" id="currentTableBar">
-
         <a class="layui-btn layui-btn-xs" onclick="category_edit('编辑',{{d.id}})" data-width="500px" data-height="300px">编辑</a>
         <a class="layui-btn layui-btn-xs layui-btn-danger" data-title="确定批量删除？" data-del='{:url("del")}?id={{d.id}}'>删除</a>
 
@@ -78,8 +77,8 @@
   <div class="layui-btn-container">
     <button class="layui-btn layui-btn-sm" lay-event="refresh">刷新当前数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="refresh_all">刷新所有数据</button>
-    <button class="layui-btn layui-btn-sm" lay-event="refresh_all">批量删除</button>
-    <button class="layui-btn layui-btn-sm" lay-event="refresh_all">刷新所有数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="delete_all">批量删除</button>
+    <button class="layui-btn layui-btn-sm" lay-event="add_category">新增分类</button>
 
   </div>
 </script>
@@ -127,8 +126,10 @@
 			    case 'refresh_all':
 			      categoryrefreshedall(category_table);
 			    break;
-			    case 'update':
-			      layer.msg('编辑');
+				case 'delete_all':
+				  category_deleteall();
+			    case 'add_category':
+			      add_category();
 			    break;
 			  };
 			});
@@ -245,17 +246,33 @@
 				}
 			});
 		}
+		
+		//添加新分类
+		function add_category(){
+			var index = layer.open({
+				type: 2,
+				fixed: false,
+				maxmin :true,
+				area:['100%','70%'],
+				title: '新增文章分类',
+				content: "{:url('admin/index/addBlogCategory')}",
+				cancel: function(index,layero){ 
+				  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
+				  		layer.close(myindex);
+				    	layer.close(index);
+					});
+					return false;
+				}    
+			});
+		}
+		
+		
+		
+		
+		
 	});
 
-/*资讯-添加*/
-function article_add(title,url,w,h){
-	var index = layer.open({
-		type: 2,
-		title: title,
-		content: url
-	});
-	layer.full(index);
-}
+
 /*资讯-编辑*/
 function category_edit(title,id){
 	var index = layer.open({

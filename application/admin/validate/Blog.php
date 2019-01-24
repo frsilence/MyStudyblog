@@ -35,6 +35,7 @@ class Blog extends Validate
     protected $scene = [
         'category_statuschange'=>['category_id','category_status'],
         'category_search'=>['category_createtimemin','category_createtimemax'],
-        'category_update'=>['category_title','category_content'],
+        'category_update'=>['category_id','category_title','category_content'],
+        'category_add'=>['category_title','category_content'],
     ];
 }
