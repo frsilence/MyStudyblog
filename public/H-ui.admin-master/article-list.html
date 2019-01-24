@@ -226,10 +226,13 @@ $('.table-sort').dataTable({
 function article_add(title,url,w,h){
 	var index = layer.open({
 		type: 2,
+		fixed: false,
+		maxmin :true,
+		area:['400px','500px'],
 		title: title,
 		content: url
 	});
-	layer.full(index);
+	//layer.full(index);
 }
 /*资讯-编辑*/
 function article_edit(title,url,id,w,h){

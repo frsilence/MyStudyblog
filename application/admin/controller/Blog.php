@@ -146,6 +146,35 @@ class Blog extends Adminbasic
         
     }
 
+    /**
+     * 更新文章分类信息
+     * @param int $id 分类ID
+     * @param $category_title 新的分类标题
+     * @param $category_content 新的分类简介
+     */
+    public function updateCategory(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->post();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.category_update');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        try{
+            $result = model('blog/ArticleCategory')->where('id',$post_info['category_id'])->update([
+                    'category_title'=>$post_info['category_title'],
+                    'category_content'=>$post_info['category_content'],
+                ]);
+            if($result>=1){
+                return json(['code'=>0,'msg'=>'文章分类信息更新成功']);
+            }else{
+                return json(['code'=>1,'msg'=>'文章分类信息更新失败']);
+            }
+        }catch (\Exception $e){
+            return json(['code'=>1,'msg'=>'文章分类信息更新失败error']);
+        }
+        
+    }
+
 
     /**
      * 保存新建的资源

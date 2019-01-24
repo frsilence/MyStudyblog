@@ -30,11 +30,11 @@
 	Blog管理
 	<span class="c-gray en">&gt;</span>
 	分类管理
-	<a class="btn btn-success radius r" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i></a>
+	<a class="btn btn-success radius r ml-15" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i>刷新页面</a><button onclick="removeIframe()" class="btn btn-primary radius r" style="line-height:1.6em;margin-top:3px">关闭选项卡</button>
 </nav>
 <div class="page-container">
 	<div class="text-c">
-		<button onclick="removeIframe()" class="btn btn-primary radius">关闭选项卡</button>
+		
 	  	日期范围：
 		<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
 		-
@@ -42,9 +42,9 @@
 		<input type="text" name="" id="category_searchtitle" placeholder=" 分类名称" style="width:250px" class="input-text">
 		<button name="" id="category_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜分类</button>
 	</div>
-	<div class="cl pd-5 bg-1 bk-gray mt-20"> <span class="l"><a href="javascript:;" onclick="datadel()" class="btn btn-danger radius"><i class="Hui-iconfont">&#xe6e2;</i> 批量删除</a> <a class="btn btn-primary radius" data-title="添加资讯" data-href="article-add.html" onclick="Hui_admin_tab(this)" href="javascript:;"><i class="Hui-iconfont">&#xe600;</i> 添加资讯</a></span> <span class="r">共有数据：<strong>54</strong> 条</span> </div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"><button id="hiddcategorytable_refreshed" class="layui-btn layui-btn-sm" style="display:none">数据刷新</button> </div>
 	<div class="mt-20">
-		<table id="categorylist_table" lay-data="{id:'category_table'}">
+		<table id="categorylist_table" lay-data="{id:'category_table'}" lay-filter="category_table">
 			
 		</table>
 	
@@ -69,11 +69,20 @@
 <!--表单操作栏--开始-->
     <script type="text/html" id="currentTableBar">
 
-        <a class="layui-btn layui-btn-xs" data-open='{:url("edit")}?id={{d.id}}' data-title="修改分类信息" data-width="500px" data-height="300px">编辑</a>
+        <a class="layui-btn layui-btn-xs" onclick="category_edit('编辑',{{d.id}})" data-width="500px" data-height="300px">编辑</a>
         <a class="layui-btn layui-btn-xs layui-btn-danger" data-title="确定批量删除？" data-del='{:url("del")}?id={{d.id}}'>删除</a>
 
     </script>
 <!--表单操作栏--结束-->
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="refresh">刷新当前数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="refresh_all">刷新所有数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="refresh_all">批量删除</button>
+    <button class="layui-btn layui-btn-sm" lay-event="refresh_all">刷新所有数据</button>
+
+  </div>
+</script>
 <script type="text/javascript">
 	layui.use(['table','form','layer'],function(){
 		var table = layui.table;
@@ -89,7 +98,7 @@
 				category_createtimemax:$('#logmax').val(),
 				categort_searchtitle:$('#category_searchtitle').val(),
 			},
-			toolbar:'<button class="button">删除</button>',
+			toolbar:'#toolbarDemo',
 			page:true,
 			limit:10,
 			title:'Blog分类表',
@@ -107,6 +116,22 @@
 				//alert(res);
 			}
 		});
+		
+		//监听表格事件
+		table.on('toolbar(category_table)', function(obj){
+			  var checkStatus = table.checkStatus(obj.config.id);
+			  switch(obj.event){
+			    case 'refresh':
+			      categoryrefreshed(category_table);
+			    break;
+			    case 'refresh_all':
+			      categoryrefreshedall(category_table);
+			    break;
+			    case 'update':
+			      layer.msg('编辑');
+			    break;
+			  };
+			});
 		
 		//修改状态按钮
 		form.on('switch(modifyStatus)',function(data){
@@ -162,9 +187,12 @@
 			return false;
 			
 		});
+		
+		//搜索
 		$('#category_search').on('click',function(){
 			category_search(category_table);
 		})
+		
 		
 		//回车提交
 		$(document).keyup(function(event){
@@ -184,20 +212,40 @@
 					curr:1
 				}
 			});
+		};
+		
+		//隐藏的表格数据刷新
+		$('#hiddcategorytable_refreshed').on('click',function(){
+			categoryrefreshed(category_table);
+		})
+		//刷新当前数据
+		function categoryrefreshed(category_table){
+			category_table.reload({
+				where:{
+					category_createtimemin:$('#logmin').val(),
+					category_createtimemax:$('#logmax').val(),
+					categort_searchtitle:$('#category_searchtitle').val(),
+				}
+			});
 		}
-		
-		
-		
+		//刷新所有数据
+		function categoryrefreshedall(category_table){
+			//清空搜索条件
+			$('#logmin').val(''),
+			$('#logmax').val(''),
+			$('#category_searchtitle').val(''),
+			category_table.reload({
+				where:{
+					category_createtimemin:'',
+					category_createtimemax:'',
+					categort_searchtitle:'',
+				},
+				page:{
+					curr:1
+				}
+			});
+		}
 	});
-	
-	
-	
-	
-/*状态更改*/
-$('#mySwitch_1').on('switch-change', function (e, data) {
-  var $el = $(data.el) ,value = data.value;
-  alert(value);
-});
 
 /*资讯-添加*/
 function article_add(title,url,w,h){
@@ -209,13 +257,23 @@ function article_add(title,url,w,h){
 	layer.full(index);
 }
 /*资讯-编辑*/
-function article_edit(title,url,id,w,h){
+function category_edit(title,id){
 	var index = layer.open({
 		type: 2,
+		fixed: false,
+		maxmin :true,
+		area:['100%','70%'],
 		title: title,
-		content: url
+		content: "/master/index/blog/categorymanage/categoryedit/id/"+id,
+		cancel: function(index,layero){ 
+		  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
+		  		layer.close(myindex);
+		    	layer.close(index);
+			});
+			return false;
+		}    
 	});
-	layer.full(index);
+	//layer.full(index);
 }
 /*资讯-删除*/
 function article_del(obj,id){
