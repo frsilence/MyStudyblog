@@ -3,6 +3,7 @@
 namespace app\blog\model;
 
 use think\Model;
+use app\blog\model\Article;
 
 /**
  * 文章分类模型
@@ -49,7 +50,15 @@ class ArticleCategory extends Model
         $this->startTrans();
         try{
             foreach ($categoryid_list as $key => $value) {
+                //删除分类
                 $this->where('id',$value)->delete();
+                //禁用分类下的文章
+                $article = new Article();
+                $articles = $article->where(['category_id'=>$value])->select();
+                foreach ($articles as $key => $value) {
+                    $value->status = 1;
+                    $value->save();
+                }
             }
             $this->commit();
             return ['code'=>0,'msg'=>'删除分类成功'];

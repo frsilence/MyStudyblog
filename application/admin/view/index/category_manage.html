@@ -320,7 +320,7 @@ function category_deleteall(checkStatus)
  * 删除文章分类
  */
 function delete_category(id_list){
-	layer.confirm('确认要删除吗？',function(index){
+	layer.confirm('确认要删除吗？该操作将删除该分类信息并将该分类下的所有文章禁用！！！',function(index){
 		$.ajax({
 			type: 'delete',
 			url: "{:url('admin/blog/deleteCategory')}",
