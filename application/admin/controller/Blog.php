@@ -195,6 +195,25 @@ class Blog extends Adminbasic
         }
     }
 
+    /**
+     * 删除文章分类
+     * @param   $categoryid_list 文章分类ID数组
+     */
+    public function deleteCategory(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->delete();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.category_delete');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        $delete =  model('blog/ArticleCategory')->deleteBlogCategory($post_info['categoryid_list']);
+        if($delete['code']==0){
+            return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+        }else{
+            return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+        }
+    }
+
 
     /**
      * 保存新建的资源

@@ -39,4 +39,23 @@ class ArticleCategory extends Model
     		return ['code'=>1,'msg'=>'新增分类失败'];
     	}
     }
+
+    /**
+     * 删除分类
+     * @param array $categoryid_list 被删除分类的id集合（数组）
+     */
+    public function deleteBlogCategory($categoryid_list)
+    {
+        $this->startTrans();
+        try{
+            foreach ($categoryid_list as $key => $value) {
+                $this->where('id',$value)->delete();
+            }
+            $this->commit();
+            return ['code'=>0,'msg'=>'删除分类成功'];
+        }catch(\Exception $e){
+            $this->rollback();
+            return ['code'=>1,'msg'=>'删除分类失败'];
+        }
+    }
 }

@@ -131,6 +131,7 @@ Route::group('api/admin/',function(){
 	Route::post('blog/category/statuschange','admin/blog/categorystatuschange');
 	Route::post('blog/category/update','admin/blog/updateCategory');
 	Route::post('blog/category/add','admin/blog/addCategory');
+	Route::delete('blog/category/delete','admin/blog/deleteCategory');
 });
 
 

@@ -69,7 +69,7 @@
 <!--表单操作栏--开始-->
     <script type="text/html" id="currentTableBar">
         <a class="layui-btn layui-btn-xs" onclick="category_edit('编辑',{{d.id}})" data-width="500px" data-height="300px">编辑</a>
-        <a class="layui-btn layui-btn-xs layui-btn-danger" data-title="确定批量删除？" data-del='{:url("del")}?id={{d.id}}'>删除</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="category_delete(this,{{d.id}})">删除</a>
 
     </script>
 <!--表单操作栏--结束-->
@@ -127,7 +127,8 @@
 			      categoryrefreshedall(category_table);
 			    break;
 				case 'delete_all':
-				  category_deleteall();
+				  category_deleteall(checkStatus);//函数参数为选取行信息
+				break;
 			    case 'add_category':
 			      add_category();
 			    break;
@@ -292,19 +293,54 @@ function category_edit(title,id){
 	});
 	//layer.full(index);
 }
-/*资讯-删除*/
-function article_del(obj,id){
+/*单个分类删除*/
+function category_delete(obj,id){
+	var id_list = [];
+	id_list.push(id);
+	delete_category(id_list);
+}
+
+/*批量删除*/
+function category_deleteall(checkStatus)
+{
+	//var checkStatus = table.checkStatus(table_data);
+	data = checkStatus.data;
+	console.log(data);
+	id_list = []
+	if(data.length>0){
+		for (let i in data) {
+                id_list.push(data[i].id);
+            }
+	};
+	delete_category(id_list);
+}
+
+
+/**
+ * 删除文章分类
+ */
+function delete_category(id_list){
 	layer.confirm('确认要删除吗？',function(index){
 		$.ajax({
-			type: 'POST',
-			url: '',
+			type: 'delete',
+			url: "{:url('admin/blog/deleteCategory')}",
 			dataType: 'json',
-			success: function(data){
-				$(obj).parents("tr").remove();
-				layer.msg('已删除!',{icon:1,time:1000});
+			data:{
+				categoryid_list:id_list,
+			},
+			success: function(res){
+				if(res.code == 0){
+					layer.msg(res.msg, {icon: 1, time: 2000},function(){
+						$('#hiddcategorytable_refreshed').click();
+					});
+				}else{
+					layer.msg(res.msg,{icon:0,time:2000});
+				}
 			},
 			error:function(data) {
-				console.log(data.msg);
+				layer.msg('系统错误，稍后重试', {icon: 2, time: 2000},function(){
+						window.location.reload();
+					});
 			},
 		});
 	});
