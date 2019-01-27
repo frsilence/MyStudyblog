@@ -122,6 +122,10 @@ Route::group('master/',function(){
 	Route::group('test/',function(){
 		Route::get('sys_info','admin/index/sys');
 	});
+	Route::group('auth/',function(){
+		Route::get('login','admin/auth/login');
+		Route::post('postlogin','admin/auth/postlogin');
+	});
 });
 
 //admin API

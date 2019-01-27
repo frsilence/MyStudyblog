@@ -17,23 +17,19 @@ class Adminbasic extends Controller
      */
     protected $article_category = [];
     /**
-     * 当前登录用户
+     * 当前登录管理员用户
      */
-    protected $member = [];
+    protected $adminuser = [];
     /**
      * 构造函数
      */
     public function __construct()
     {
         parent::__construct();
-        $config = new BlogConfig();
-        $this->app_config = $config->getBlogConfig();
-        $this->article_category = model('ArticleCategory')->where('status',0)->select();
-        $this->member = session('member');
+        $this->adminuser = session('adminuser');
         //检查登录是否过期
-        if(!empty($this->member))
-        {
-            $this->checkLoginOver($this->member);
+        if(!empty($this->adminuser)){
+            $this->checkLoginOver($this->adminuser);
         }
 
 
@@ -45,19 +41,15 @@ class Adminbasic extends Controller
      */
     public function checkLoginOver($member)
     {
-        if(isset($this->app_config['LoginDuartion']) && !empty($this->app_config['LoginDuartion'])){
-            $LoginDuartion = $this->app_config['LoginDuartion'];
-        }
-        else{
-            $LoginDuartion = '';
-        }
+        //管理员用户每一小时必须重新登录
+        $LoginDuartion = 3600;
         if(isset($member['login_time']) && !empty($LoginDuartion)){
             Log::record(time()-$member['login_time']);
             if(time()-$member['login_time'] >= $LoginDuartion){
                 //用户退出并记录日志
                 $this->LoginLog(2);
                 //清空session数据
-                $this->member = [];
+                $this->adminuser = [];
                 session(null);
             }
             

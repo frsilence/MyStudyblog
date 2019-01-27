@@ -7,6 +7,10 @@ use app\admin\controller\Blog;
 class Index extends Adminbasic
 {
     /**
+     * 检测用户登录中间件
+     */
+    protected $middleware = [];
+    /**
      * 获取管理界面
      * @return [type] [description]
      */

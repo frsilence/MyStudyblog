@@ -20,6 +20,8 @@ class Blog extends Validate
         'category_createtimemax|文章分类创建时间max'=>'date',
         'category_title|文章分类标题'=>'require|unique:article_category|max:15',
         'category_content|文章分类简介'=>'require|max:200',
+        'username|用户名' => 'require|max:20|token',
+        'password|密码' => 'require|min:6|max:20',
     ];
     
     /**
@@ -39,5 +41,6 @@ class Blog extends Validate
         'category_update'=>['category_id','category_title','category_content'],
         'category_add'=>['category_title','category_content'],
         'category_delete'=>['categoryid_list'],
+        'admin_authlogin'=>['username','password'],
     ];
 }
