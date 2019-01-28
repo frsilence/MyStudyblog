@@ -116,7 +116,7 @@ class AdminUser extends Model
     }
 
     /**
-     * 注册用户信息,注册成功并登陆
+     * 注册用户信息
      * @param  $member_info [用户信息]
      * @return   [json]
      */
@@ -124,15 +124,12 @@ class AdminUser extends Model
     {
     	//开启数据模型事务
     	$this->startTrans();
-    	$member = $this->order('member_pid','desc')->select()->toArray();
-    	empty($member) ? $member_pid = 10000 : $member_pid = $member[0]['member_pid'] + 1;
-        $member_info['member_pid'] = $member_pid;
     	try{
     		$member = $this->save($member_info);
             $member_id = $this->id;
             $member = $this->where('id',$member_id)->field('id,username,email,member_pid')->find();
             $this->commit();
-    		return ['code'=>0,'msg'=>'用户注册成功，正在进入系统...','member'=>$member];
+    		return ['code'=>0,'msg'=>'管理员账号添加成功','member'=>$member];
     	} catch (\Exception $e){
     		//保存失败，数据库操作回滚
     		$this->rollback();

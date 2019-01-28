@@ -36,7 +36,7 @@ class Auth extends Adminbasic
      *@param  $ararry 登录信息
      * @return \think\Response
      */
-    public function post_login(Request $request)
+    public function postlogin(Request $request)
     {
         //验证传入参数
         $result = $this->validate($request->post(),'app\blog\validate\Auth.login');
@@ -56,13 +56,23 @@ class Auth extends Adminbasic
     }
 
     /**
-     * 显示创建资源表单页.
+     * 新增管理员账号
      *
      * @return \think\Response
      */
-    public function create()
+    public function addAdminuser(Request $request)
     {
-        //
+        //验证传入参数
+        $result = $this->validate($request->post(),'app\admin\validate\Blog.adminuser_add');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //注册用户
+        $member_register = model('AdminUser')->register($request->post());
+        if($member_register['code'] == 1) return json($member_register);
+        //注册成功，并记录
+        if($member_register['code'] == 0) 
+            {
+                return json($member_register);
+            }
     }
 
     /**

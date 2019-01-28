@@ -117,6 +117,8 @@ Route::group('master/',function(){
 		Route::get('blog/categorymanage','admin/index/getBlogCategory');
 		Route::get('blog/categorymanage/categoryedit/id/:id','admin/index/getBlogCategoryEdit');
 		Route::get('blog/categorymanage/addcategory','admin/index/addBlogCategory');
+		Route::get('system/adminuser','admin/index/AdminuserManage');
+		Route::get('system/addadminuser','admin/index/addAdminuser');
 	});
 	Route::get('','admin/index/index');
 	Route::group('test/',function(){
@@ -136,6 +138,7 @@ Route::group('api/admin/',function(){
 	Route::post('blog/category/update','admin/blog/updateCategory');
 	Route::post('blog/category/add','admin/blog/addCategory');
 	Route::delete('blog/category/delete','admin/blog/deleteCategory');
+	Route::post('adminuser/user/add','admin/auth/addAdminuser');
 });
 
 

@@ -62,4 +62,19 @@ class Index extends Adminbasic
     {
         return $this->fetch('category_manageadd');
     }
+
+    /**
+     * 管理界面/管理设置/管理员设置/管理员列表
+     */
+    public function AdminuserManage()
+    {
+        return $this->fetch('adminuser_manage');
+    }
+    /**
+     * 管理界面/管理设置/管理员设置/新增管理员
+     */
+    public function addAdminuser()
+    {
+        return $this->fetch('adminuser_manageadd');
+    }
 }
