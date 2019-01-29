@@ -36,6 +36,21 @@ class SystemNode extends Seeder
                 'is_RBAC'=>1,
                 'create_by'=>0,
             ],
+            [
+                'node' => 'admin/blog/getBlogStatisticsInformation',
+                'node_name'=>'Blog管理/获取系统信息',
+                'type'=>3,
+                'is_RBAC'=>1,
+                'create_by'=>0,
+            ],
+            [
+                'node' => 'admin/blog/getCategoryList',
+                'node_name'=>'Blog管理/获取文章分类列表',
+                'type'=>3,
+                'is_RBAC'=>1,
+                'create_by'=>0,
+            ],
+
         ];
         $this->table('systemadmin_node')->insert($data)->save();
     }
