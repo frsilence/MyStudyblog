@@ -4,6 +4,7 @@ namespace app\common\controller;
 
 use think\Controller;
 use think\Request;
+use Log;
 
 class Adminbasic extends Controller
 {

@@ -117,23 +117,23 @@ class AdminUser extends Model
 
     /**
      * 注册用户信息
-     * @param  $member_info [用户信息]
+     * @param  $adminuser_info [用户信息]
      * @return   [json]
      */
-    public function register($member_info)
+    public function register($adminuser_info)
     {
     	//开启数据模型事务
     	$this->startTrans();
     	try{
-    		$member = $this->save($member_info);
-            $member_id = $this->id;
-            $member = $this->where('id',$member_id)->field('id,username,email,member_pid')->find();
+    		$adminuser = $this->save($adminuser_info);
+            $adminuser_id = $this->id;
+            $adminuser = $this->where('id',$adminuser_id)->field('id,username,email')->find();
             $this->commit();
-    		return ['code'=>0,'msg'=>'管理员账号添加成功','member'=>$member];
+    		return ['code'=>0,'msg'=>'管理员账号添加成功','adminuser'=>$adminuser];
     	} catch (\Exception $e){
     		//保存失败，数据库操作回滚
     		$this->rollback();
-    		return ['code'=>1,'msg'=>'用户注册失败，请重试!'];
+    		return ['code'=>1,'msg'=>'管理员账户添加失败，请重试!'];
     	}
     	
     }
@@ -146,14 +146,14 @@ class AdminUser extends Model
      */
     public function login($username,$password)
     {
-    	$member = $this->where(['username'=>$username,'status'=>0,'is_delete'=>0])->find();
-            if(empty($member)){
+    	$adminuser = $this->where(['username'=>$username,'status'=>0,'is_delete'=>0])->find();
+            if(empty($adminuser)){
                 return ['code'=>1,'msg'=>'用户不存在！'];
             } 
-            if(password_verify($password,$member->password)){
-                $member = $member->toArray();
-                unset($member['password']);
-                return ['code'=>0,'msg'=>'登录成功，正在进入系统...','member'=>$member];
+            if(password_verify($password,$adminuser->password)){
+                $adminuser = $adminuser->toArray();
+                unset($adminuser['password']);
+                return ['code'=>0,'msg'=>'登录成功，正在进入系统...','adminuser'=>$adminuser];
             }else{
                 return ['code'=>1,'msg'=>'用户名密码错误！'];
             }       

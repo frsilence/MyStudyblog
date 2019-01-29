@@ -8,6 +8,12 @@ use app\common\controller\Adminbasic;
 
 class Blog extends Adminbasic
 {
+
+
+    /**
+     * 检测用户登录中间件
+     */
+    protected $middleware = ['AdminAuth'];
     /**
      * 显示资源列表
      *
@@ -98,16 +104,16 @@ class Blog extends Adminbasic
         $post_info['category_createtimemin'] !='' ? $category_createtimemin = $post_info['category_createtimemin'] : $category_createtimemin = '2018-01-01';
         $post_info['category_createtimemax'] !='' ? $category_createtimemax = $post_info['category_createtimemax'] : $category_createtimemax = date("Y-m-d",strtotime("1 day"));;
         if($post_info['categort_searchtitle'] !=''){
-            $article_categorys = model('blog/ArticleCategory')->where('category_title','LIKE',"%{$post_info['categort_searchtitle']}%")->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+            $adminusers = model('blog/ArticleCategory')->where('category_title','LIKE',"%{$post_info['categort_searchtitle']}%")->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }else{
-            $article_categorys = model('blog/ArticleCategory')->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+            $adminusers = model('blog/ArticleCategory')->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }
         //return json($article_categorys);   
         $data = [
             'code' =>0,
             'message' => "success",
-            'count' => $article_categorys->toArray()['total'],
-            'data' => $article_categorys->toArray()['data'],
+            'count' => $adminusers->toArray()['total'],
+            'data' => $adminusers->toArray()['data'],
         ];
         return json($data);
     }

@@ -141,17 +141,15 @@
 				});
 				$.ajax({
 					type: "post",
-					url: "{:url('admin/auth/post_login')}",
+					url: "{:url('admin/auth/postlogin')}",
 					async: false,
 					dataType: 'json',
 					data: {
 						username: $("#username").val(),
 						password: $("#password").val(),
 						vercode: $("#vercode").val(),
-						__token__: token,
 					},
 					success: function(data) {
-						token = data.token;
 						layer.close(loading);
 						if (data.code == 0) {
 							layer.msg(data.msg, {

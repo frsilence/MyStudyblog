@@ -6,7 +6,7 @@ class AdminAuth
 {
     public function handle($request, \Closure $next)
     {
-    	if(session('?member.id'))  return $next($request);	
+    	if(session('?adminuser.id'))  return $next($request);	
     	$path = $request->path();
     	if(preg_match("/^api/",$path)){
     		//api类

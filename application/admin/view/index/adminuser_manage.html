@@ -40,7 +40,7 @@
 		-
 		<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
 		管理员名称
-		<input type="text" name="" id="category_searchtitle" placeholder=" 管理员名称" style="width:250px" class="input-text">
+		<input type="text" name="" id="adminuser_searchname" placeholder=" 管理员名称" style="width:250px" class="input-text">
 		<button name="" id="category_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜管理员</button>
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"><button id="hiddcategorytable_refreshed" class="layui-btn layui-btn-sm" style="display:none">数据刷新</button> </div>
@@ -91,12 +91,12 @@
 		
 		var category_table = table.render({
 			elem:"#categorylist_table",
-			url:"{:url('admin/blog/getCategoryList')}",
+			url:"{:url('admin/auth/getAdminuserList')}",
 			method:'get',
 			where:{
-				category_createtimemin:$('#logmin').val(),
-				category_createtimemax:$('#logmax').val(),
-				categort_searchtitle:$('#category_searchtitle').val(),
+				adminuser_createtimemin:$('#logmin').val(),
+				adminuser_createtimemax:$('#logmax').val(),
+				adminuser_searchname:$('#adminuser_searchname').val(),
 			},
 			toolbar:'#toolbarDemo',
 			page:true,

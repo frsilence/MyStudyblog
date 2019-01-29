@@ -16,8 +16,8 @@ class Auth extends Adminbasic
         parent::__construct();
         $action = $this->request->action();
         //已登录的会话访问注册和登录相关方法，强制跳转至首页
-        if(!empty(session('member')) && $action != 'logout'){
-            return $this->redirect(url('master/index/index'));
+        if(!empty(session('adminuser')) && (($action == 'postlogin')||($action == 'login'))){
+            return $this->redirect(url('master/index'));
         }
 
     }
@@ -39,19 +39,18 @@ class Auth extends Adminbasic
     public function postlogin(Request $request)
     {
         //验证传入参数
-        $result = $this->validate($request->post(),'app\blog\validate\Auth.login');
-        if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
+        $result = $this->validate($request->post(),'app\admin\validate\Blog.login');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         //验证用户信息
-        $member_login = model('AppMember')->login($request->post('username'),$request->post('password'));
-        $member_login['token'] = $request->token();
-        if($member_login['code'] == 1) return json($member_login);
+        $adminuser_login = model('AdminUser')->login($request->post('username'),$request->post('password'));
+        if($adminuser_login['code'] == 1) return json($adminuser_login);
         //登录成功记录时间
-        $member_login['member']['login_time'] = time();
+        $adminuser_login['adminuser']['login_time'] = time();
         //用户信息载入session
-        session('member',$member_login['member']);
+        session('adminuser',$adminuser_login['adminuser']);
         //记录登录日志
         $this->LoginLog(0);
-        return json($member_login);
+        return json($adminuser_login);
         
     }
 
@@ -67,12 +66,38 @@ class Auth extends Adminbasic
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         //注册用户
         $member_register = model('AdminUser')->register($request->post());
-        if($member_register['code'] == 1) return json($member_register);
+        if($member_register['code'] == 1) return json(['code'=>$member_register['code'],'msg'=>$member_register['msg'],'adminuser'=>$member_register['adminuser']]);
         //注册成功，并记录
         if($member_register['code'] == 0) 
             {
-                return json($member_register);
+                return json(['code'=>$member_register['code'],'msg'=>$member_register['msg']]);
             }
+    }
+
+    /**
+     * 获取管理员列表
+     */
+    public function getAdminuserList(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->get();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.adminuser_search');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        $post_info['adminuser_createtimemin'] !='' ? $adminuser_createtimemin = $post_info['adminuser_createtimemin'] : $adminuser_createtimemin = '2018-01-01';
+        $post_info['adminuser_createtimemax'] !='' ? $adminuser_createtimemax = $post_info['adminuser_createtimemax'] : $adminuser_createtimemax = date("Y-m-d",strtotime("1 day"));;
+        if($post_info['adminuser_searchname'] !=''){
+            $article_categorys = model('AdminUser')->where('category_title','LIKE',"%{$post_info['adminuser_searchname']}%")->whereTime('create_time','between',[$adminuser_createtimemin,$adminuser_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        }else{
+            $article_categorys = model('AdminUser')->whereTime('create_time','between',[$adminuser_createtimemin,$adminuser_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        }
+        //return json($article_categorys);   
+        $data = [
+            'code' =>0,
+            'message' => "success",
+            'count' => $article_categorys->toArray()['total'],
+            'data' => $article_categorys->toArray()['data'],
+        ];
+        return json($data);
     }
 
     /**

@@ -139,6 +139,7 @@ Route::group('api/admin/',function(){
 	Route::post('blog/category/add','admin/blog/addCategory');
 	Route::delete('blog/category/delete','admin/blog/deleteCategory');
 	Route::post('adminuser/user/add','admin/auth/addAdminuser');
+	Route::get('adminuser/user/list','admin/auth/getAdminuserList');
 });
 
 
