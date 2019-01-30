@@ -20,27 +20,28 @@
 <script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
 <script>DD_belatedPNG.fix('*');</script>
 <![endif]-->
-<title>分类列表</title>
+<title>管理员</title>
 </head>
 <body>
 <nav class="breadcrumb">
 	<i class="Hui-iconfont">&#xe67f;</i>
 	首页
 	<span class="c-gray en">&gt;</span>
-	Blog管理
+	管理设置
 	<span class="c-gray en">&gt;</span>
-	分类管理
+	管理员
 	<a class="btn btn-success radius r ml-15" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i>刷新页面</a><button onclick="removeIframe()" class="btn btn-primary radius r" style="line-height:1.6em;margin-top:3px">关闭选项卡</button>
 </nav>
 <div class="page-container">
 	<div class="text-c">
 		
-	  	日期范围：
+	  	创建日期范围：
 		<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
 		-
 		<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
-		<input type="text" name="" id="category_searchtitle" placeholder=" 分类名称" style="width:250px" class="input-text">
-		<button name="" id="category_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜分类</button>
+		管理员名称
+		<input type="text" name="" id="adminuser_searchname" placeholder=" 管理员名称" style="width:250px" class="input-text">
+		<button name="" id="category_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜管理员</button>
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"><button id="hiddcategorytable_refreshed" class="layui-btn layui-btn-sm" style="display:none">数据刷新</button> </div>
 	<div class="mt-20">
@@ -78,7 +79,7 @@
     <button class="layui-btn layui-btn-sm" lay-event="refresh">刷新当前数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="refresh_all">刷新所有数据</button>
     <button class="layui-btn layui-btn-sm" lay-event="delete_all">批量删除</button>
-    <button class="layui-btn layui-btn-sm" lay-event="add_category">新增分类</button>
+    <button class="layui-btn layui-btn-sm" lay-event="add_category">新增管理员</button>
 
   </div>
 </script>
@@ -90,12 +91,12 @@
 		
 		var category_table = table.render({
 			elem:"#categorylist_table",
-			url:"{:url('admin/blog/getCategoryList')}",
+			url:"{:url('admin/auth/getAdminuserList')}",
 			method:'get',
 			where:{
-				category_createtimemin:$('#logmin').val(),
-				category_createtimemax:$('#logmax').val(),
-				categort_searchtitle:$('#category_searchtitle').val(),
+				adminuser_createtimemin:$('#logmin').val(),
+				adminuser_createtimemax:$('#logmax').val(),
+				adminuser_searchname:$('#adminuser_searchname').val(),
 			},
 			toolbar:'#toolbarDemo',
 			page:true,
@@ -105,7 +106,8 @@
 			cols:[[
 				{type: "checkbox", width: 50, fixed: "left"},
 				{field:'id',title:'ID',sort:true},
-				{field:'category_title',title:'名称',sort:true},
+				{field:'username',title:'名称',sort:true},
+				{field:'email',title:'email',sort:true},
 				{field:'status',title:'状态',templet:'#CategoryStatus'},
 				{field:'create_time',title:'创建时间',sort:true},
 				{field:'update_time',title:'更新时间',sort:true},
@@ -206,9 +208,9 @@
 		function category_search(category_table){
 			category_table.reload({
 				where:{
-					category_createtimemin:$('#logmin').val(),
-					category_createtimemax:$('#logmax').val(),
-					categort_searchtitle:$('#category_searchtitle').val(),
+					adminuser_createtimemin:$('#logmin').val(),
+					adminuser_createtimemax:$('#logmax').val(),
+					adminuser_searchname:$('#adminuser_searchname').val(),
 				},
 				page:{
 					curr:1
@@ -224,9 +226,9 @@
 		function categoryrefreshed(category_table){
 			category_table.reload({
 				where:{
-					category_createtimemin:$('#logmin').val(),
-					category_createtimemax:$('#logmax').val(),
-					categort_searchtitle:$('#category_searchtitle').val(),
+					adminuser_createtimemin:$('#logmin').val(),
+					adminuser_createtimemax:$('#logmax').val(),
+					adminuser_searchname:$('#adminuser_searchname').val(),
 				}
 			});
 		}
@@ -235,12 +237,12 @@
 			//清空搜索条件
 			$('#logmin').val(''),
 			$('#logmax').val(''),
-			$('#category_searchtitle').val(''),
+			$('#adminuser_searchname').val(''),
 			category_table.reload({
 				where:{
-					category_createtimemin:'',
-					category_createtimemax:'',
-					categort_searchtitle:'',
+					adminuser_createtimemin:'',
+					adminuser_createtimemax:'',
+					adminuser_searchname:'',
 				},
 				page:{
 					curr:1
@@ -255,8 +257,8 @@
 				fixed: false,
 				maxmin :true,
 				area:['100%','70%'],
-				title: '新增文章分类',
-				content: "{:url('admin/index/addBlogCategory')}",
+				title: '新增管理员',
+				content: "{:url('admin/auth/getaddAdminuser')}",
 				cancel: function(index,layero){ 
 				  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
 				  		layer.close(myindex);

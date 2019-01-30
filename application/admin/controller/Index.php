@@ -37,44 +37,17 @@ class Index extends Adminbasic
         //return json($server_info);
     	return $this->fetch('welcome',['BlogStatisticsInformation'=>$blog->getBlogStatisticsInformation(),'ServerInfo'=>$server_info]);
     }
-    /**
-     * 管理界面/Blog管理/分类管理 页面
-     * @return [type] [description]
-     */
-    public function getBlogCategory()
-    {
-    	return $this->fetch('category_manage');
-    }
-    /**
-     * 管理界面/Blog管理/分类管理/分类编辑页面
-     * @param $id 分类id
-     */
-    public function getBlogCategoryEdit($id)
-    {
-        $category = model('blog/ArticleCategory')->where('id',$id)->find();
-        if(empty($category)) return '未找到该文章分类，请刷新该页面再试！';
-        return $this->fetch('category_manageedit',['category'=>$category]);
-    }
-    /**
-     * 管理界面/Blog管理/分类管理/新增分类页面
-     */
-    public function addBlogCategory()
-    {
-        return $this->fetch('category_manageadd');
-    }
 
     /**
-     * 管理界面/管理设置/管理员设置/管理员列表
+     * 权限测试
      */
-    public function AdminuserManage()
+    public function isnode()
     {
-        return $this->fetch('adminuser_manage');
+        $user = model('AdminUser')->where('id',2)->find();
+        if($user->checknode('admin/blog/getCategoryList')) return 'ok';
+        return 'no';
     }
-    /**
-     * 管理界面/管理设置/管理员设置/新增管理员
-     */
-    public function addAdminuser()
-    {
-        return $this->fetch('adminuser_manageadd');
-    }
+    
+
+    
 }

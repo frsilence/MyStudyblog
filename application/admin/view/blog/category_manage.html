@@ -1,0 +1,397 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="renderer" content="webkit|ie-comp|ie-stand">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1.0,maximum-scale=1.0,user-scalable=no" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+<!--[if lt IE 9]>
+<script type="text/javascript" src="lib/html5shiv.js"></script>
+<script type="text/javascript" src="lib/respond.min.js"></script>
+<![endif]-->
+<link rel="stylesheet" type="text/css" href="/static/h-ui/css/H-ui.min.css" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/H-ui.admin.css" />
+<link rel="stylesheet" type="text/css" href="/lib/Hui-iconfont/1.0.8/iconfont.css" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/skin/default/skin.css" id="skin" />
+<link rel="stylesheet" type="text/css" href="/static/h-ui.admin/css/style.css" />
+<link rel="stylesheet" type="text/css" href="/static/layui/css/layui.css" />
+<!--[if IE 6]>
+<script type="text/javascript" src="lib/DD_belatedPNG_0.0.8a-min.js" ></script>
+<script>DD_belatedPNG.fix('*');</script>
+<![endif]-->
+<title>分类列表</title>
+</head>
+<body>
+<nav class="breadcrumb">
+	<i class="Hui-iconfont">&#xe67f;</i>
+	首页
+	<span class="c-gray en">&gt;</span>
+	Blog管理
+	<span class="c-gray en">&gt;</span>
+	分类管理
+	<a class="btn btn-success radius r ml-15" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i>刷新页面</a><button onclick="removeIframe()" class="btn btn-primary radius r" style="line-height:1.6em;margin-top:3px">关闭选项卡</button>
+</nav>
+<div class="page-container">
+	<div class="text-c">
+		
+	  	日期范围：
+		<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
+		-
+		<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
+		<input type="text" name="" id="category_searchtitle" placeholder=" 分类名称" style="width:250px" class="input-text">
+		<button name="" id="category_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜分类</button>
+	</div>
+	<div class="cl pd-5 bg-1 bk-gray mt-20"><button id="hiddcategorytable_refreshed" class="layui-btn layui-btn-sm" style="display:none">数据刷新</button> </div>
+	<div class="mt-20">
+		<table id="categorylist_table" lay-data="{id:'category_table'}" lay-filter="category_table">
+			
+		</table>
+	
+	</div>
+</div>
+<!--_footer 作为公共模版分离出去-->
+<script type="text/javascript" src="/lib/jquery/1.9.1/jquery.min.js"></script>
+<script type="text/javascript" src="/lib/layer/2.4/layer.js"></script>
+<script type="text/javascript" src="/static/layui/layui.js"></script>
+<script type="text/javascript" src="/static/h-ui/js/H-ui.min.js"></script>
+<script type="text/javascript" src="/static/h-ui.admin/js/H-ui.admin.js"></script> <!--/_footer 作为公共模版分离出去-->
+
+<!--请在下方写此页面业务相关的脚本-->
+<script type="text/javascript" src="/lib/My97DatePicker/4.8/WdatePicker.js"></script>
+<script type="text/javascript" src="/lib/datatables/1.10.15/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="/lib/laypage/1.2/laypage.js"></script>
+<!--表单模板绑定--开始-->
+    <script type="text/html" id="CategoryStatus">
+        <input type="checkbox" id="status_{{d.id}}" name="{{d.id}}" value="{{d.status}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="modifyStatus" {{ d.status== 0 ? 'checked' : '' }}>
+    </script>
+<!--表单模板绑定--结束-->
+<!--表单操作栏--开始-->
+    <script type="text/html" id="currentTableBar">
+        <a class="layui-btn layui-btn-xs" onclick="category_edit('编辑',{{d.id}})" data-width="500px" data-height="300px">编辑</a>
+        <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="category_delete(this,{{d.id}})">删除</a>
+
+    </script>
+<!--表单操作栏--结束-->
+<script type="text/html" id="toolbarDemo">
+  <div class="layui-btn-container">
+    <button class="layui-btn layui-btn-sm" lay-event="refresh">刷新当前数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="refresh_all">刷新所有数据</button>
+    <button class="layui-btn layui-btn-sm" lay-event="delete_all">批量删除</button>
+    <button class="layui-btn layui-btn-sm" lay-event="add_category">新增分类</button>
+
+  </div>
+</script>
+<script type="text/javascript">
+	layui.use(['table','form','layer'],function(){
+		var table = layui.table;
+		var form = layui.form;
+		var layer = layui.layer;
+		
+		var category_table = table.render({
+			elem:"#categorylist_table",
+			url:"{:url('admin/blog/getCategoryList')}",
+			method:'get',
+			where:{
+				category_createtimemin:$('#logmin').val(),
+				category_createtimemax:$('#logmax').val(),
+				categort_searchtitle:$('#category_searchtitle').val(),
+			},
+			toolbar:'#toolbarDemo',
+			page:true,
+			limit:10,
+			title:'Blog分类表',
+			defaultToolbar:['filter', 'print','exports'],
+			cols:[[
+				{type: "checkbox", width: 50, fixed: "left"},
+				{field:'id',title:'ID',sort:true},
+				{field:'category_title',title:'名称',sort:true},
+				{field:'status',title:'状态',templet:'#CategoryStatus'},
+				{field:'create_time',title:'创建时间',sort:true},
+				{field:'update_time',title:'更新时间',sort:true},
+				{title: '操作', minWidth: 100, templet: '#currentTableBar', fixed: "right", align: "center"}
+			]],
+			done:function(res,curr,count){
+				//alert(res);
+			}
+		});
+		
+		//监听表格事件
+		table.on('toolbar(category_table)', function(obj){
+			  var checkStatus = table.checkStatus(obj.config.id);
+			  switch(obj.event){
+			    case 'refresh':
+			      categoryrefreshed(category_table);
+			    break;
+			    case 'refresh_all':
+			      categoryrefreshedall(category_table);
+			    break;
+				case 'delete_all':
+				  category_deleteall(checkStatus);//函数参数为选取行信息
+				break;
+			    case 'add_category':
+			      add_category();
+			    break;
+			  };
+			});
+		
+		//修改状态按钮
+		form.on('switch(modifyStatus)',function(data){
+			var x  = data.elem.checked;//预期展现的状态值
+			layer.open({
+				content:'此操作会 启用 或 禁止 该分类和该分类下的文章，确认操作？',
+				icon:3,
+				title:'提示',
+				btn:['确认','取消'],
+				yes:function(index,layero){
+					layer.close(index);
+					//加载等待动画
+					var load_index = layer.load();
+					$.ajax({
+						url:"{:url('admin/blog/categorystatuschange')}",
+						type:'post',
+						data:{
+							category_id:data.elem.name,
+							category_status:data.elem.value,
+						},
+						success:function(res){
+							if(res.code == 0){
+								//渲染switch效果
+								data.elem.checked = x;
+								data.elem.value = res.status;
+								form.render();								
+								layer.msg(res.msg, {icon: 1, time: 2000});
+							}else{
+								data.elem.checked = !x;
+								form.render();								
+								layer.msg(res.msg,{icon:0,time:2000});
+							}
+							layer.close(load_index);
+						},
+						error:function(){
+							layer.msg('系统错误，请重试',{icon:2,time:2000},function(){
+									window.location.reload();
+								});
+						}
+					});
+				},
+				btn2:function(index,layero){
+					data.elem.checked = !x;
+					form.render();
+					layer.close(index);
+				},
+				cancel:function(){
+					data.elem.checked = !x;
+					form.render();
+				}
+				
+			});
+			return false;
+			
+		});
+		
+		//搜索
+		$('#category_search').on('click',function(){
+			category_search(category_table);
+		})
+		
+		
+		//回车提交
+		$(document).keyup(function(event){
+							if(event.keyCode ==13){
+								category_search(category_table);
+							}
+						});
+		//分类搜索
+		function category_search(category_table){
+			category_table.reload({
+				where:{
+					category_createtimemin:$('#logmin').val(),
+					category_createtimemax:$('#logmax').val(),
+					categort_searchtitle:$('#category_searchtitle').val(),
+				},
+				page:{
+					curr:1
+				}
+			});
+		};
+		
+		//隐藏的表格数据刷新
+		$('#hiddcategorytable_refreshed').on('click',function(){
+			categoryrefreshed(category_table);
+		})
+		//刷新当前数据
+		function categoryrefreshed(category_table){
+			category_table.reload({
+				where:{
+					category_createtimemin:$('#logmin').val(),
+					category_createtimemax:$('#logmax').val(),
+					categort_searchtitle:$('#category_searchtitle').val(),
+				}
+			});
+		}
+		//刷新所有数据
+		function categoryrefreshedall(category_table){
+			//清空搜索条件
+			$('#logmin').val(''),
+			$('#logmax').val(''),
+			$('#category_searchtitle').val(''),
+			category_table.reload({
+				where:{
+					category_createtimemin:'',
+					category_createtimemax:'',
+					categort_searchtitle:'',
+				},
+				page:{
+					curr:1
+				}
+			});
+		}
+		
+		//添加新分类
+		function add_category(){
+			var index = layer.open({
+				type: 2,
+				fixed: false,
+				maxmin :true,
+				area:['100%','70%'],
+				title: '新增文章分类',
+				content: "{:url('admin/blog/addBlogCategory')}",
+				cancel: function(index,layero){ 
+				  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
+				  		layer.close(myindex);
+				    	layer.close(index);
+					});
+					return false;
+				}    
+			});
+		}
+		
+		
+		
+		
+		
+	});
+
+
+/*资讯-编辑*/
+function category_edit(title,id){
+	var index = layer.open({
+		type: 2,
+		fixed: false,
+		maxmin :true,
+		area:['100%','70%'],
+		title: title,
+		content: "/master/index/blog/categorymanage/categoryedit/id/"+id,
+		cancel: function(index,layero){ 
+		  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
+		  		layer.close(myindex);
+		    	layer.close(index);
+			});
+			return false;
+		}    
+	});
+	//layer.full(index);
+}
+/*单个分类删除*/
+function category_delete(obj,id){
+	var id_list = [];
+	id_list.push(id);
+	delete_category(id_list);
+}
+
+/*批量删除*/
+function category_deleteall(checkStatus)
+{
+	//var checkStatus = table.checkStatus(table_data);
+	data = checkStatus.data;
+	console.log(data);
+	id_list = []
+	if(data.length>0){
+		for (let i in data) {
+                id_list.push(data[i].id);
+            }
+	};
+	delete_category(id_list);
+}
+
+
+/**
+ * 删除文章分类
+ */
+function delete_category(id_list){
+	layer.confirm('确认要删除吗？该操作将删除该分类信息并将该分类下的所有文章禁用！！！',function(index){
+		$.ajax({
+			type: 'delete',
+			url: "{:url('admin/blog/deleteCategory')}",
+			dataType: 'json',
+			data:{
+				categoryid_list:id_list,
+			},
+			success: function(res){
+				if(res.code == 0){
+					layer.msg(res.msg, {icon: 1, time: 2000},function(){
+						$('#hiddcategorytable_refreshed').click();
+					});
+				}else{
+					layer.msg(res.msg,{icon:0,time:2000});
+				}
+			},
+			error:function(data) {
+				layer.msg('系统错误，稍后重试', {icon: 2, time: 2000},function(){
+						window.location.reload();
+					});
+			},
+		});
+	});
+}
+
+/*资讯-审核*/
+function article_shenhe(obj,id){
+	layer.confirm('审核文章？', {
+		btn: ['通过','不通过','取消'],
+		shade: false,
+		closeBtn: 0
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布', {icon:6,time:1000});
+	},
+	function(){
+		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
+		$(obj).remove();
+    	layer.msg('未通过', {icon:5,time:1000});
+	});
+}
+/*资讯-下架*/
+function article_stop(obj,id){
+	layer.confirm('确认要下架吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
+		$(obj).remove();
+		layer.msg('已下架!',{icon: 5,time:1000});
+	});
+}
+
+/*资讯-发布*/
+function article_start(obj,id){
+	layer.confirm('确认要发布吗？',function(index){
+		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
+		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
+		$(obj).remove();
+		layer.msg('已发布!',{icon: 6,time:1000});
+	});
+}
+/*资讯-申请上线*/
+function article_shenqing(obj,id){
+	$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
+	$(obj).parents("tr").find(".td-manage").html("");
+	layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
+}
+
+</script>
+</body>
+</html>

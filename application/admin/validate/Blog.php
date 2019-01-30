@@ -20,7 +20,8 @@ class Blog extends Validate
         'category_createtimemax|文章分类创建时间max'=>'date',
         'category_title|文章分类标题'=>'require|unique:article_category|max:15',
         'category_content|文章分类简介'=>'require|max:200',
-        'username|管理员用户名' => 'require|unique:admin_user|max:20',
+        'username|管理员用户名' => 'require|max:20',
+        'newusername|新增管理员用户名' => 'require|unique:admin_user,username|max:20',
         'password|密码' => 'require|min:6|max:20',
         'password_confirm|确认密码' => 'require|confirm:password|min:6',
         'email|邮箱' => 'require|email|unique:admin_user|max:35',
@@ -50,7 +51,7 @@ class Blog extends Validate
         'category_add'=>['category_title','category_content'],
         'category_delete'=>['categoryid_list'],
         'admin_authlogin'=>['username','password'],
-        'adminuser_add'=>['username','email','password','password_confirm'],
+        'adminuser_add'=>['newusername','email','password','password_confirm'],
         'adminuser_search'=>['limit','page','adminuser_createtimemin','adminuser_createtimemax'],
         'login'=>['username','password','vercode'],
     ];

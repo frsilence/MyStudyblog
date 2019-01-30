@@ -23,6 +23,31 @@ class Blog extends Adminbasic
     {
         return 's';
     }
+    /**
+     * 管理界面/Blog管理/分类管理 页面
+     * @return [type] [description]
+     */
+    public function getBlogCategory()
+    {
+        return $this->fetch('category_manage');
+    }
+    /**
+     * 管理界面/Blog管理/分类管理/分类编辑页面
+     * @param $id 分类id
+     */
+    public function getBlogCategoryEdit($id)
+    {
+        $category = model('blog/ArticleCategory')->where('id',$id)->find();
+        if(empty($category)) return '未找到该文章分类，请刷新该页面再试！';
+        return $this->fetch('category_manageedit',['category'=>$category]);
+    }
+    /**
+     * 管理界面/Blog管理/分类管理/新增分类页面
+     */
+    public function addBlogCategory()
+    {
+        return $this->fetch('category_manageadd');
+    }
 
     /**
      * 获取Blog统计信息

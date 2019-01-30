@@ -208,9 +208,9 @@
 		function category_search(category_table){
 			category_table.reload({
 				where:{
-					category_createtimemin:$('#logmin').val(),
-					category_createtimemax:$('#logmax').val(),
-					categort_searchtitle:$('#category_searchtitle').val(),
+					adminuser_createtimemin:$('#logmin').val(),
+					adminuser_createtimemax:$('#logmax').val(),
+					adminuser_searchname:$('#adminuser_searchname').val(),
 				},
 				page:{
 					curr:1
@@ -226,9 +226,9 @@
 		function categoryrefreshed(category_table){
 			category_table.reload({
 				where:{
-					category_createtimemin:$('#logmin').val(),
-					category_createtimemax:$('#logmax').val(),
-					categort_searchtitle:$('#category_searchtitle').val(),
+					adminuser_createtimemin:$('#logmin').val(),
+					adminuser_createtimemax:$('#logmax').val(),
+					adminuser_searchname:$('#adminuser_searchname').val(),
 				}
 			});
 		}
@@ -237,12 +237,12 @@
 			//清空搜索条件
 			$('#logmin').val(''),
 			$('#logmax').val(''),
-			$('#category_searchtitle').val(''),
+			$('#adminuser_searchname').val(''),
 			category_table.reload({
 				where:{
-					category_createtimemin:'',
-					category_createtimemax:'',
-					categort_searchtitle:'',
+					adminuser_createtimemin:'',
+					adminuser_createtimemax:'',
+					adminuser_searchname:'',
 				},
 				page:{
 					curr:1
@@ -258,7 +258,7 @@
 				maxmin :true,
 				area:['100%','70%'],
 				title: '新增管理员',
-				content: "{:url('admin/index/addAdminuser')}",
+				content: "{:url('admin/auth/getaddAdminuser')}",
 				cancel: function(index,layero){ 
 				  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
 				  		layer.close(myindex);

@@ -114,15 +114,18 @@ Route::group('master/',function(){
 	Route::group('index/',function(){
 		Route::get('welcome','admin/index/welcome');
 		Route::get('','admin/index/index');
-		Route::get('blog/categorymanage','admin/index/getBlogCategory');
-		Route::get('blog/categorymanage/categoryedit/id/:id','admin/index/getBlogCategoryEdit');
-		Route::get('blog/categorymanage/addcategory','admin/index/addBlogCategory');
-		Route::get('system/adminuser','admin/index/AdminuserManage');
-		Route::get('system/addadminuser','admin/index/addAdminuser');
+		Route::get('blog/categorymanage','admin/blog/getBlogCategory');
+		Route::get('blog/categorymanage/categoryedit/id/:id','admin/blog/getBlogCategoryEdit');
+		Route::get('blog/categorymanage/addcategory','admin/blog/addBlogCategory');
+		Route::get('system/adminuser','admin/auth/AdminuserManage');
+		Route::get('system/addadminuser','admin/auth/getaddAdminuser');
+		Route::get('system/adminrole','admin/auth/AdminroleManage');
+		Route::get('system/addadminrole','admin/auth/getaddAdminrole');
 	});
 	Route::get('','admin/index/index');
 	Route::group('test/',function(){
 		Route::get('sys_info','admin/index/sys');
+		Route::get('node','admin/index/isnode');
 	});
 	Route::group('auth/',function(){
 		Route::get('login','admin/auth/login');

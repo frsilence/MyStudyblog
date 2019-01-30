@@ -9,6 +9,15 @@ class AdminUser extends Model
     protected $table = 'admin_user';
 
     /**
+     * 关联用户表（多对多关联）
+     */
+    public function adminroles()
+    {
+        return $this->belongsToMany('AdminRole','admin_user_role','role_id','adminuser_id')->where('status',0);
+    }
+    
+
+    /**
      * 密码修改器，保存密码时自动加密密码
      * @param string $value 密码明文
      */
@@ -35,6 +44,21 @@ class AdminUser extends Model
     {
         $sex = ['男'=>0,'女'=>1];
         return $sex[$value];
+    }
+
+    /**
+     * 权限判断
+     * @param string $node 节点信息
+     * @param  $user_id 用户id
+     * @return  true/false
+     */
+    public function checknode($node)
+    {
+        $roles = $this->adminroles;
+        foreach ($roles as $key => $value) {
+            if($value->checkRoleNode($node)) return true;
+        };
+        return false;
     }
 
     /**
@@ -122,10 +146,11 @@ class AdminUser extends Model
      */
     public function register($adminuser_info)
     {
+        $role_id = $adminuser_info['role_id'];
     	//开启数据模型事务
     	$this->startTrans();
     	try{
-    		$adminuser = $this->save($adminuser_info);
+    		$adminuser = $this->save(['username'=>$adminuser_info['newusername'],'email'=>$adminuser_info['email'],'password'=>$adminuser_info['password']]);
             $adminuser_id = $this->id;
             $adminuser = $this->where('id',$adminuser_id)->field('id,username,email')->find();
             $this->commit();

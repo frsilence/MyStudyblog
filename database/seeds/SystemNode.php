@@ -37,19 +37,42 @@ class SystemNode extends Seeder
                 'create_by'=>0,
             ],
             [
-                'node' => 'admin/blog/getBlogStatisticsInformation',
-                'node_name'=>'Blog管理/获取系统信息',
-                'type'=>3,
-                'is_RBAC'=>1,
-                'create_by'=>0,
-            ],
-            [
                 'node' => 'admin/blog/getCategoryList',
                 'node_name'=>'Blog管理/获取文章分类列表',
                 'type'=>3,
                 'is_RBAC'=>1,
                 'create_by'=>0,
             ],
+            [
+                'node' => 'admin/blog/categorystatuschange',
+                'node_name'=>'Blog管理/文章分类状态更改',
+                'type'=>3,
+                'is_RBAC'=>1,
+                'create_by'=>0,
+            ],
+            [
+                'node' => 'admin/blog/updateCategory',
+                'node_name'=>'Blog管理/更新文章分类',
+                'type'=>3,
+                'is_RBAC'=>1,
+                'create_by'=>0,
+            ],
+            [
+                'node' => 'admin/blog/addCategory',
+                'node_name'=>'Blog管理/新增文章分类',
+                'type'=>3,
+                'is_RBAC'=>1,
+                'create_by'=>0,
+            ],
+            [
+                'node' => 'admin/blog/deleteCategory',
+                'node_name'=>'Blog管理/删除文章分类',
+                'type'=>3,
+                'is_RBAC'=>1,
+                'create_by'=>0,
+            ],
+            
+
 
         ];
         $this->table('systemadmin_node')->insert($data)->save();

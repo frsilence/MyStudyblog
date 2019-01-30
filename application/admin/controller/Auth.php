@@ -32,6 +32,28 @@ class Auth extends Adminbasic
     }
 
     /**
+     * 管理界面/管理设置/管理员设置/管理员列表
+     */
+    public function AdminuserManage()
+    {
+        return $this->fetch('adminuser_manage');
+    }
+    /**
+     * 管理界面/管理设置/管理员设置/新增管理员
+     */
+    public function getaddAdminuser()
+    {
+        return $this->fetch('adminuser_manageadd');
+    }
+    /**
+     * 管理界面/管理设置/角色设置
+     */
+    public function AdminroleManage()
+    {
+        return $this->fetch('adminrole_manage');
+    }
+
+    /**
      * 用户登录
      *@param  $ararry 登录信息
      * @return \think\Response
@@ -62,10 +84,13 @@ class Auth extends Adminbasic
     public function addAdminuser(Request $request)
     {
         //验证传入参数
-        $result = $this->validate($request->post(),'app\admin\validate\Blog.adminuser_add');
+        $posts = $request->post();
+        $result = $this->validate($posts,'app\admin\validate\Blog.adminuser_add');
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         //注册用户
-        $member_register = model('AdminUser')->register($request->post());
+        $role = model('AdminRole')->where(['id'=>$post['id'],'status'=>0])->find();
+        if(empty($role)) return json(['code'=>1,'msg'=>'所指定的角色无法使用']);
+        $member_register = model('AdminUser')->register($posts);
         if($member_register['code'] == 1) return json(['code'=>$member_register['code'],'msg'=>$member_register['msg'],'adminuser'=>$member_register['adminuser']]);
         //注册成功，并记录
         if($member_register['code'] == 0) 
