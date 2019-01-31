@@ -42,4 +42,36 @@ class AdminRole extends Model
     	return false;
 
     }
+
+    /**
+     * 修改角色状态
+     * @param   $adminrole_status 当前角色状态
+     */
+    public function adminrolestatuschange($adminrole_status)
+    {
+            //判断分类状态是否已改变
+            if($this->status != $adminrole_status) return ['code'=>2,'msg'=>'状态已经修改，请刷新页面再试'];
+            //未改变
+            $this->status == 1 ? list($msg,$status) = ['启用成功',0] : list($msg,$status) = ['禁用成功',1];
+            $this->startTrans();
+            try{
+                $this->status = $status;
+                $this->save();
+                $this->commit();
+                return ['code'=>0,'msg'=>$msg,'status'=>$status];
+            }catch(\Exception $e){
+                $this->rollback();
+                return ['code'=>1,'msg'=>'状态修改失败']; 
+            }
+            
+               
+    }
+
+    /**
+     * 获取所有状态为0的角色
+     */
+    public function getAdminRoles()
+    {
+        return $this->where('status',0)->select();
+    }
 }

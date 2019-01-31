@@ -121,6 +121,7 @@ Route::group('master/',function(){
 		Route::get('system/addadminuser','admin/auth/getaddAdminuser');
 		Route::get('system/adminrole','admin/auth/AdminroleManage');
 		Route::get('system/addadminrole','admin/auth/getaddAdminrole');
+		Route::get('system/adminrole/adminroleedit/id/:id','admin/auth/geteditAdminrole');
 	});
 	Route::get('','admin/index/index');
 	Route::group('test/',function(){
@@ -143,6 +144,8 @@ Route::group('api/admin/',function(){
 	Route::delete('blog/category/delete','admin/blog/deleteCategory');
 	Route::post('adminuser/user/add','admin/auth/addAdminuser');
 	Route::get('adminuser/user/list','admin/auth/getAdminuserList');
+	Route::get('adminuser/role/list','admin/auth/getAdminroleList');
+	Route::post('adminuser/role/statuschange','admin/auth/adminrolestatuschange');
 });
 
 

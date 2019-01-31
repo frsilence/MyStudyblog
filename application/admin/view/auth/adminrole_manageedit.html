@@ -24,7 +24,7 @@
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title>增加管理员 - 管理设置 - 后台管理</title>
+<title>修改分类 - 文章管理 - 后台管理</title>
 <meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
 <meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
@@ -32,40 +32,21 @@
 <article class="page-container">
 	<form class="form form-horizontal" id="form-article-add">
 		<div class="row cl">
-			<label class="form-label col-xs-3 col-sm-3">管理员名称：</label>
+			<label class="form-label col-xs-3 col-sm-3">文章分类标题：</label>
 			<div class="formControls col-xs-9 col-sm-9">
-				<input type="text" class="input-text" placeholder="输入管理员名称" id="username" name="articletitle">
+				<input type="text" class="input-text" value="{$category.category_title}" placeholder="输入分类标题" id="category_title" name="articletitle">
 			</div>
 		</div>
+		
 		<div class="row cl">
-			<label class="form-label col-xs-3 col-sm-3">管理员邮箱：</label>
+			<label class="form-label col-xs-3 col-sm-3">文章分类简介：</label>
 			<div class="formControls col-xs-9 col-sm-9">
-				<input type="text" class="input-text" placeholder="输入管理员邮箱" id="email" name="articletitle">
+				<textarea id="category_content" name="abstract" cols="" rows="" class="textarea"  placeholder="最多输入200个字符">{$category.category_content}</textarea>
 			</div>
 		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-3 col-sm-3">角色：</label>
-			<div class="formControls col-xs-9 col-sm-9">
-				<select id="adminrole_id" class="select" size="1" name="demo1">
-					{volist name='adminroles' id='role'}
-					<option title="{$role.remark}" value="{$role.id}">{$role.rolename}</option>
-					{/volist}
-				</select>
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-3 col-sm-3">设置密码  ：</label>
-			<div class="formControls col-xs-9 col-sm-9">
-				<input type="password" class="input-text" placeholder="输入密码" id="password" name="articletitle">
-			</div>
-		</div>
-		<div class="row cl">
-			<label class="form-label col-xs-3 col-sm-3">确认密码  ：</label>
-			<div class="formControls col-xs-9 col-sm-9">
-				<input type="password" class="input-text" placeholder="确认密码" id="password_confirm" name="articletitle">
-			</div>
-		</div>
-			
+		
+		
+		
 		<div class="row cl">
 			<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-50">
 				<button id="category_save" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
@@ -94,19 +75,17 @@ $('#closeIframe').click(function(){
     
 });
 
-//保存管理员
+//保存分类的修改
 $('#category_save').click(function(){
-			layer.confirm('确认保存？',{icon:3,title:'提示'},function(index){
+			layer.confirm('确认修改？该操作不可逆！',{icon:3,title:'提示'},function(index){
 				layer.close(index);
 				$.ajax({
-					url:"{:url('admin/auth/addAdminuser')}",
+					url:"{:url('admin/blog/updateCategory')}",
 					type:'post',
 					data:{
-						newusername:$('#username').val(),
-						email:$('#email').val(),
-						adminrole_id:$('#adminrole_id').val(),
-						password:$('#password').val(),
-						password_confirm:$('#password_confirm').val(),
+						category_id:{$category.id},
+						category_title:$('#category_title').val(),
+						category_content:$('#category_content').val(),
 					},
 					success:function(res){
 						if(res.code==0){

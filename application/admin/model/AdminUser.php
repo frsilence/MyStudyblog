@@ -146,13 +146,14 @@ class AdminUser extends Model
      */
     public function register($adminuser_info)
     {
-        $role_id = $adminuser_info['role_id'];
+        $role_id = $adminuser_info['adminrole_id'];
     	//开启数据模型事务
     	$this->startTrans();
     	try{
     		$adminuser = $this->save(['username'=>$adminuser_info['newusername'],'email'=>$adminuser_info['email'],'password'=>$adminuser_info['password']]);
             $adminuser_id = $this->id;
-            $adminuser = $this->where('id',$adminuser_id)->field('id,username,email')->find();
+            //添加角色-用户关系
+            $this->adminroles()->save($role_id);
             $this->commit();
     		return ['code'=>0,'msg'=>'管理员账号添加成功','adminuser'=>$adminuser];
     	} catch (\Exception $e){

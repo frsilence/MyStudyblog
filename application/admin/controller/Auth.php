@@ -43,7 +43,9 @@ class Auth extends Adminbasic
      */
     public function getaddAdminuser()
     {
-        return $this->fetch('adminuser_manageadd');
+        //设角色列表
+        $role_list = model('AdminRole')->getAdminRoles();
+        return $this->fetch('adminuser_manageadd',['adminroles'=>$role_list]);
     }
     /**
      * 管理界面/管理设置/角色设置
@@ -51,6 +53,23 @@ class Auth extends Adminbasic
     public function AdminroleManage()
     {
         return $this->fetch('adminrole_manage');
+    }
+    /**
+     * 管理界面/管理设置/添加角色
+     */
+    public function getaddAdminrole()
+    {
+        return $this->fetch('adminrole_manageadd');
+    }
+    /**
+     * 管理界面/管理设置/编辑角色
+     */
+    public function geteditAdminrole($id)
+    {
+        $category = model('blog/ArticleCategory')->where('id',$id)->find();
+        if(empty($category)) return '未找到该文章分类，请刷新该页面再试！';
+        return $this->fetch('adminrole_manageedit',['category'=>$category]);
+        return $this->fetch('adminrole_manageedit');
     }
 
     /**
@@ -88,7 +107,7 @@ class Auth extends Adminbasic
         $result = $this->validate($posts,'app\admin\validate\Blog.adminuser_add');
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         //注册用户
-        $role = model('AdminRole')->where(['id'=>$post['id'],'status'=>0])->find();
+        $role = model('AdminRole')->where(['id'=>$posts['adminrole_id'],'status'=>0])->find();
         if(empty($role)) return json(['code'=>1,'msg'=>'所指定的角色无法使用']);
         $member_register = model('AdminUser')->register($posts);
         if($member_register['code'] == 1) return json(['code'=>$member_register['code'],'msg'=>$member_register['msg'],'adminuser'=>$member_register['adminuser']]);
@@ -111,19 +130,77 @@ class Auth extends Adminbasic
         $post_info['adminuser_createtimemin'] !='' ? $adminuser_createtimemin = $post_info['adminuser_createtimemin'] : $adminuser_createtimemin = '2018-01-01';
         $post_info['adminuser_createtimemax'] !='' ? $adminuser_createtimemax = $post_info['adminuser_createtimemax'] : $adminuser_createtimemax = date("Y-m-d",strtotime("1 day"));;
         if($post_info['adminuser_searchname'] !=''){
-            $article_categorys = model('AdminUser')->where('category_title','LIKE',"%{$post_info['adminuser_searchname']}%")->whereTime('create_time','between',[$adminuser_createtimemin,$adminuser_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+            $adminuser_list = model('AdminUser')->where('category_title','LIKE',"%{$post_info['adminuser_searchname']}%")->whereTime('create_time','between',[$adminuser_createtimemin,$adminuser_createtimemax])->field('id,username,email,status,create_time,update_time')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }else{
-            $article_categorys = model('AdminUser')->whereTime('create_time','between',[$adminuser_createtimemin,$adminuser_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+            $adminuser_list = model('AdminUser')->whereTime('create_time','between',[$adminuser_createtimemin,$adminuser_createtimemax])->field('id,username,email,status,create_time,update_time')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        }
+        foreach ($adminuser_list as $key => $value) {
+            $roles = $value->adminroles;
+            $userroles = [];
+            foreach ($roles as $key1 => $value1) {
+                $userroles[] = $value1->rolename;
+            }
+            $value['role'] = $userroles; 
+           }; 
+        $data = [
+            'code' =>0,
+            'message' => "success",
+            'count' => $adminuser_list->toArray()['total'],
+            'data' => $adminuser_list->toArray()['data'],
+        ];
+        return json($data);
+    }
+
+    /**
+     * 获取角色列表
+     */
+    public function getAdminroleList(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->get();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.adminrole_search');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        $post_info['adminrole_createtimemin'] !='' ? $adminrole_createtimemin = $post_info['adminrole_createtimemin'] : $adminrole_createtimemin = '2018-01-01';
+        $post_info['adminrole_createtimemax'] !='' ? $adminrole_createtimemax = $post_info['adminrole_createtimemax'] : $adminrole_createtimemax = date("Y-m-d",strtotime("1 day"));;
+        if($post_info['adminrole_searchname'] !=''){
+            $role_list = model('AdminRole')->where('rolename','LIKE',"%{$post_info['adminrole_searchname']}%")->whereTime('create_time','between',[$adminrole_createtimemin,$adminrole_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        }else{
+            $role_list = model('AdminRole')->whereTime('create_time','between',[$adminrole_createtimemin,$adminrole_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }
         //return json($article_categorys);   
         $data = [
             'code' =>0,
             'message' => "success",
-            'count' => $article_categorys->toArray()['total'],
-            'data' => $article_categorys->toArray()['data'],
+            'count' => $role_list->toArray()['total'],
+            'data' => $role_list->toArray()['data'],
         ];
         return json($data);
+    
     }
+
+    /**
+     * 切换角色状态
+     * @param  $adminrole_id  角色id
+     * @param  $adminrole_status 角色状态
+     */
+    public function adminrolestatuschange(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->post();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.adminrole_statuschange');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        $role = model('AdminRole')->where(['id'=>$post_info['adminrole_id']])->find();
+        if(empty($role)){
+            return json(['code'=>1,'msg'=>'角色不存在']);
+        }else{
+            $change = $role->adminrolestatuschange($post_info['adminrole_status']);
+            return json($change);
+            
+        };
+    }
+
+
 
     /**
      * 保存新建的资源
