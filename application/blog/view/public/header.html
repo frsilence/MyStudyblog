@@ -46,6 +46,8 @@
 					<li id="Huinav_5"> <a href="/cases/index.shtml">Website</a> </li>
 					<li id="Huinav_6"> <a href="{:url('blog/article/addArticlePage')}" class="Hui-iconfont">&#xe717; Add Article</a> </li>
 					<li id="Huinav_5"> <a href="{:url('blog/article/getSearchArticle')}" class="Hui-iconfont">&#xe665; Search</a> </li>
+					<li id="Huinav_5"> <a href="{:url('admin/index/index')}" class="Hui-iconfont">&#xe61d; Admin</a> </li>
+
 					{if session('?member')}
 					<li class="dropDown dropDown_hover hidden-xs" style="float: right;"><a class="dropDown_A Hui-iconfont">&#xe705; {$Think.session.member['username']}&#xe6d5;</a>
 						<ul class="dropDown-menu menu radius box-shadow">
