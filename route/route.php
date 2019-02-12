@@ -117,6 +117,7 @@ Route::group('master/',function(){
 		Route::get('blog/categorymanage','admin/blog/getBlogCategory');
 		Route::get('blog/categorymanage/categoryedit/id/:id','admin/blog/getBlogCategoryEdit');
 		Route::get('blog/categorymanage/addcategory','admin/blog/addBlogCategory');
+		Route::get('blog/ariticlemanage','admin/blog/getBlogArticle');
 		Route::get('system/adminuser','admin/auth/AdminuserManage');
 		Route::get('system/addadminuser','admin/auth/getaddAdminuser');
 		Route::get('system/adminrole','admin/auth/AdminroleManage');
@@ -142,6 +143,9 @@ Route::group('api/admin/',function(){
 	Route::post('blog/category/update','admin/blog/updateCategory');
 	Route::post('blog/category/add','admin/blog/addCategory');
 	Route::delete('blog/category/delete','admin/blog/deleteCategory');
+	Route::get('blog/article/articlelist','admin/blog/getArticleList');
+	Route::post('blog/article/statuschange','admin/blog/articlestatuschange');
+	Route::delete('blog/article/delete','admin/blog/deleteArticle');
 	Route::post('adminuser/user/add','admin/auth/addAdminuser');
 	Route::get('adminuser/user/list','admin/auth/getAdminuserList');
 	Route::get('adminuser/role/list','admin/auth/getAdminroleList');

@@ -50,6 +50,14 @@ class Blog extends Adminbasic
     }
 
     /**
+     * 管理界面/Blog管理/文章管理 页面
+     */
+    public function getBlogArticle()
+    {
+        return $this->fetch('article_manage');
+    }
+
+    /**
      * 获取Blog统计信息
      *
      * @return \think\Response
@@ -128,8 +136,8 @@ class Blog extends Adminbasic
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         $post_info['category_createtimemin'] !='' ? $category_createtimemin = $post_info['category_createtimemin'] : $category_createtimemin = '2018-01-01';
         $post_info['category_createtimemax'] !='' ? $category_createtimemax = $post_info['category_createtimemax'] : $category_createtimemax = date("Y-m-d",strtotime("1 day"));;
-        if($post_info['categort_searchtitle'] !=''){
-            $adminusers = model('blog/ArticleCategory')->where('category_title','LIKE',"%{$post_info['categort_searchtitle']}%")->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
+        if($post_info['category_searchtitle'] !=''){
+            $adminusers = model('blog/ArticleCategory')->where('category_title','LIKE',"%{$post_info['category_searchtitle']}%")->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }else{
             $adminusers = model('blog/ArticleCategory')->whereTime('create_time','between',[$category_createtimemin,$category_createtimemax])->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()]);
         }
@@ -238,6 +246,85 @@ class Blog extends Adminbasic
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         //执行
         $delete =  model('blog/ArticleCategory')->deleteBlogCategory($post_info['categoryid_list']);
+        if($delete['code']==0){
+            return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+        }else{
+            return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+        }
+    }
+
+    /**
+     *获取文章列表
+     */
+    public function getArticleList(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->get();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.article_search');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        $post_info['article_createtimemin'] !='' ? $article_createtimemin = $post_info['article_createtimemin'] : $article_createtimemin = '2018-01-01';
+        $post_info['article_createtimemax'] !='' ? $article_createtimemax = $post_info['article_createtimemax'] : $article_createtimemax = date("Y-m-d",strtotime("1 day"));;
+        if($post_info['article_searchtitle'] !=''){
+            $article_list = model('blog/Article')->where('title','LIKE',"%{$post_info['article_searchtitle']}%")->where(['is_delete'=>0])->whereTime('create_time','between',[$article_createtimemin,$article_createtimemax])->field('id,member_id,category_id,member_id,title,status,create_time,update_time')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
+                $item['article_user'] = $item->member['username'];
+                $item['article_category'] = $item->category['category_title'];
+            });
+        }else{
+            $article_list = model('blog/Article')->where(['is_delete'=>0])->whereTime('create_time','between',[$article_createtimemin,$article_createtimemax])->field('id,member_id,category_id,title,status,create_time,update_time')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
+                $item['article_user'] = $item->member['username'];
+                $item['article_category'] = $item->category['category_title'];
+            });
+        }
+        //return json($article_list);   
+        $data = [
+            'code' =>0,
+            'message' => "success",
+            'count' => $article_list->toArray()['total'],
+            'data' => $article_list->toArray()['data'],
+        ];
+        return json($data);
+    }
+
+    /**
+     * 修改文章的启用状态
+     */
+    public function articlestatuschange(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->post();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.article_statuschange');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        $article = model('blog/Article')->where(['id'=>$post_info['article_id']])->find();
+        if(empty($article)){
+            return json(['code'=>1,'msg'=>'文章不存在']);
+        }else{
+            //判断文章状态是否已改变
+            if($article->status != $post_info['article_status']) return json(['code'=>2,'msg'=>'状态已经修改，请刷新页面再试']);
+            //未改变
+            $article->status == 1 ? list($msg,$status) = ['启用成功',0] : list($msg,$status) = ['禁用成功',1];
+            $result = model('blog/Article')->where(['id'=>$post_info['article_id']])->update(['status'=>$status]);
+            if($result>=1){
+                //日志记录
+                return json(['code'=>0,'msg'=>$msg,'status'=>$status]);
+            }
+            return json(['code'=>1,'msg'=>'状态修改失败']);    
+        };
+        
+    }
+
+    /**
+     * 删除文章
+     * @param   $articleid_list 文章分类ID数组
+     */
+    public function deleteArticle(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->delete();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.article_delete');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result]);
+        //执行
+        $delete =  model('blog/Article')->deleteBlogArticle($post_info['articleid_list']);
         if($delete['code']==0){
             return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
         }else{

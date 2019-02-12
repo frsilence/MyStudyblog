@@ -43,7 +43,7 @@ class Adminbasic extends Controller
     public function checkLoginOver($member)
     {
         //管理员用户每一小时必须重新登录
-        $LoginDuartion = 3600;
+        $LoginDuartion = 36000;
         if(isset($member['login_time']) && !empty($LoginDuartion)){
             Log::record(time()-$member['login_time']);
             if(time()-$member['login_time'] >= $LoginDuartion){

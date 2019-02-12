@@ -5,6 +5,7 @@ namespace app\blog\model;
 use think\Model;
 use think\Db;
 use think\facade\Request;
+use app\blog\model\ArticleComment;
 
 /**
  * 文章数据表模型
@@ -409,6 +410,38 @@ class Article extends Model
         }
         
         return $clickarticlelist;
+    }
+
+    /**
+     * 删除文章
+     * @param array $articleid_list 被删除文章的id集合（数组）
+     */
+    public function deleteBlogArticle($articleid_list)
+    {
+        $this->startTrans();
+        try{
+            foreach ($articleid_list as $key => $value) {
+                //删除文章
+                $article = $this->where('id',$value)->find();
+                $article->is_delete = 1;
+                $article->save();
+                //删除该文章下的评论
+                $article_comment = new ArticleComment();
+                $article_comments = $article_comment->where(['article_id'=>$value])->select();
+                foreach ($article_comments as $key => $value) {
+                    $value->is_delete = 1;
+                    $value->save();
+                }
+                //删除该文章的标签
+                //暂时不删
+                
+            }
+            $this->commit();
+            return ['code'=>0,'msg'=>'删除文章成功'];
+        }catch(\Exception $e){
+            $this->rollback();
+            return ['code'=>1,'msg'=>'删除文章失败'];
+        }
     }
 
 
