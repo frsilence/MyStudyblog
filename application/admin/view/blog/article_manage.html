@@ -33,14 +33,42 @@
 	<a class="btn btn-success radius r ml-15" style="line-height:1.6em;margin-top:3px" href="javascript:location.replace(location.href);" title="刷新" ><i class="Hui-iconfont">&#xe68f;</i>刷新页面</a><button onclick="removeIframe()" class="btn btn-primary radius r" style="line-height:1.6em;margin-top:3px">关闭选项卡</button>
 </nav>
 <div class="page-container">
-	<div class="text-c">
-		
-	  	日期范围：
-		<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
-		-
-		<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
-		<input type="text" name="" id="article_searchtitle" placeholder=" 文章标题" style="width:250px" class="input-text">
-		<button name="" id="article_search" class="btn btn-success" type="submit"><i class="Hui-iconfont">&#xe665;</i> 搜文章</button>
+	<div class="row">
+		<div class="col-lg-3 col-md-4">
+			日期范围：
+			<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
+			-
+			<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
+		</div>
+		<div class="col-lg-3 col-md-4" style="display: inline;">
+			<span class="select-box">
+				<select id="article_category" class="select" size="1">
+					<option value="0">选择文章分类</option>
+					{volist name="article_category" id="category"}
+						<option value="{$category.id}">{$category.category_title}</option>
+					{/volist}
+				</select>
+			</span>
+			
+		</div>
+		<div class="col-lg-3 col-md-4">
+			文章标题：
+			<input type="text" name="" id="article_searchtitle" placeholder=" 文章标题" style="width:250px" class="input-text">
+			
+		</div>
+	</div>
+	<div class="row mt-10">
+		<div class="col-lg-3 col-md-4">
+			文章作者：
+			<input type="text" name="" id="article_user" placeholder="文章作者" style="width: 250px;" class="input-text" />
+		</div>
+		<div class="col-lg-3 col-md-4">
+			
+		</div>
+		<div class="col-lg-3 col-md-4">
+			条件搜索：
+			<button name="" id="article_search" class="btn btn-success" type="submit" style="width: 250px;" ><i class="Hui-iconfont">&#xe665;</i> 搜文章</button>
+		</div>
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"><button id="hiddarticletable_refreshed" class="layui-btn layui-btn-sm" style="display:none">数据刷新</button> </div>
 	<div class="mt-20">
@@ -95,7 +123,9 @@
 			where:{
 				article_createtimemin:$('#logmin').val(),
 				article_createtimemax:$('#logmax').val(),
+				article_category:$('#article_category').val(),
 				article_searchtitle:$('#article_searchtitle').val(),
+				article_user:$('#article_user').val(),
 			},
 			toolbar:'#toolbarDemo',
 			page:true,
@@ -210,7 +240,7 @@
 				where:{
 					article_createtimemin:$('#logmin').val(),
 					article_createtimemax:$('#logmax').val(),
-					categort_searchtitle:$('#article_searchtitle').val(),
+					article_searchtitle:$('#article_searchtitle').val(),
 				},
 				page:{
 					curr:1

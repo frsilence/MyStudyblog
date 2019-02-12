@@ -54,7 +54,8 @@ class Blog extends Adminbasic
      */
     public function getBlogArticle()
     {
-        return $this->fetch('article_manage');
+        $categorys = model('blog/ArticleCategory')->getCategoryList();
+        return $this->fetch('article_manage',['article_category'=>$categorys]);
     }
 
     /**

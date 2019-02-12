@@ -17,7 +17,7 @@ class ArticleCategory extends Model
      */
     public function getCategoryList()
     {
-    	$categorys = $this->field('id','title','create_at')->wher(['status'=>0])->order('create_at','asc')->select();
+    	$categorys = $this->field('id,category_title,create_time')->where(['status'=>0])->order('create_time','asc')->select();
     	return $categorys;
     }
     /**
