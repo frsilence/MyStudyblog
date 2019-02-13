@@ -117,7 +117,8 @@ Route::group('master/',function(){
 		Route::get('blog/categorymanage','admin/blog/getBlogCategory');
 		Route::get('blog/categorymanage/categoryedit/id/:id','admin/blog/getBlogCategoryEdit');
 		Route::get('blog/categorymanage/addcategory','admin/blog/addBlogCategory');
-		Route::get('blog/ariticlemanage','admin/blog/getBlogArticle');
+		Route::get('blog/articlemanage','admin/blog/getBlogArticle');
+		Route::get('blog/articlemanage/editarticle/id/:id','admin/blog/getBlogArticleEdit');
 		Route::get('system/adminuser','admin/auth/AdminuserManage');
 		Route::get('system/addadminuser','admin/auth/getaddAdminuser');
 		Route::get('system/adminrole','admin/auth/AdminroleManage');

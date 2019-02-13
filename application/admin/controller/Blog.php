@@ -57,7 +57,24 @@ class Blog extends Adminbasic
         $categorys = model('blog/ArticleCategory')->getCategoryList();
         return $this->fetch('article_manage',['article_category'=>$categorys]);
     }
-
+    
+    /**
+     * 管理界面/Blog管理/分类管理/分类编辑页面
+     * @param $id 分类id
+     */
+    public function getBlogArticleEdit($id)
+    {
+        $article = model('blog/Article')->where('id',$id)->find();
+        if(empty($article)) return '未找到该文章，请刷新该页面再试！';
+        $categorys = model('blog/ArticleCategory')->getCategoryList();
+        $article_tags = $article->tags;
+        $tags = '';
+        foreach($article_tags as $key=>$item){
+            $tags = $tags.$item->name.';';
+        }
+        //return json($tags);
+        return $this->fetch('article_manageedit',['article'=>$article,'article_category'=>$categorys,'tags'=>$tags]);
+    }
     /**
      * 获取Blog统计信息
      *
@@ -265,17 +282,19 @@ class Blog extends Adminbasic
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         $post_info['article_createtimemin'] !='' ? $article_createtimemin = $post_info['article_createtimemin'] : $article_createtimemin = '2018-01-01';
         $post_info['article_createtimemax'] !='' ? $article_createtimemax = $post_info['article_createtimemax'] : $article_createtimemax = date("Y-m-d",strtotime("1 day"));;
-        if($post_info['article_searchtitle'] !=''){
-            $article_list = model('blog/Article')->where('title','LIKE',"%{$post_info['article_searchtitle']}%")->where(['is_delete'=>0])->whereTime('create_time','between',[$article_createtimemin,$article_createtimemax])->field('id,member_id,category_id,member_id,title,status,create_time,update_time')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
-                $item['article_user'] = $item->member['username'];
-                $item['article_category'] = $item->category['category_title'];
-            });
-        }else{
-            $article_list = model('blog/Article')->where(['is_delete'=>0])->whereTime('create_time','between',[$article_createtimemin,$article_createtimemax])->field('id,member_id,category_id,title,status,create_time,update_time')->order('id','asc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
-                $item['article_user'] = $item->member['username'];
-                $item['article_category'] = $item->category['category_title'];
-            });
+        $search_term = [['is_delete','=','0']];
+        if($post_info['article_searchtitle']!='') $search_term[]=['title','LIKE',"%{$post_info['article_searchtitle']}%"];
+        if($post_info['article_searchcategory']!=0) $search_term[]=['category_id','=',$post_info['article_category']];
+        if($post_info['article_user']!=''){
+            $user = model('blog/AppMember')->where(['username'=>$post_info['article_user']])->find();
+            if(!empty($user)) $search_term[]=['member_id','=',$user->id];
         }
+        if($post_info['article_searchstatus']!='') $search_term[]=['status','=',$post_info['article_searchstatus']];
+        $article_list = model('blog/Article')->where('title','LIKE',"%{$post_info['article_searchtitle']}%")->where($search_term)->whereTime('create_time','between',[$article_createtimemin,$article_createtimemax])->field('id,member_id,category_id,member_id,title,status,create_time,update_time')->order('create_time','desc')->paginate(request()->param('limit'),false,['var_page' => 'page','query'=>request()->param()])->each(function($item,$key){
+            $item['article_user'] = $item->member['username'];
+            $item['article_category'] = $item->category['category_title'];
+            $item['article_url'] = url('blog/article/readArticle',['id'=>$item->id]);
+        });
         //return json($article_list);   
         $data = [
             'code' =>0,

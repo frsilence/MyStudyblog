@@ -34,13 +34,13 @@
 </nav>
 <div class="page-container">
 	<div class="row">
-		<div class="col-lg-3 col-md-4">
+		<div class="col-lg-4 col-md-4">
 			日期范围：
 			<input type="text" onfocus="WdatePicker({minDate:$('#timeStart').val()})" id="logmin" class="input-text Wdate" style="width:120px;">
 			-
 			<input type="text" onfocus="WdatePicker({maxDate:$('#timeStart').val()})" id="logmax" class="input-text Wdate" style="width:120px;">
 		</div>
-		<div class="col-lg-3 col-md-4" style="display: inline;">
+		<div class="col-lg-4 col-md-4" style="display: inline;">
 			<span class="select-box">
 				<select id="article_category" class="select" size="1">
 					<option value="0">选择文章分类</option>
@@ -51,24 +51,32 @@
 			</span>
 			
 		</div>
-		<div class="col-lg-3 col-md-4">
+		<div class="col-lg-4 col-md-4">
 			文章标题：
 			<input type="text" name="" id="article_searchtitle" placeholder=" 文章标题" style="width:250px" class="input-text">
 			
 		</div>
 	</div>
 	<div class="row mt-10">
-		<div class="col-lg-3 col-md-4">
+		<div class="col-lg-4 col-md-4">
 			文章作者：
 			<input type="text" name="" id="article_user" placeholder="文章作者" style="width: 250px;" class="input-text" />
 		</div>
-		<div class="col-lg-3 col-md-4">
-			
+		<div class="col-lg-4 col-md-4">
+			<span class="select-box">
+				<select id="article_status" class="select" size="1">
+					<option value="">全部状态文章</option>
+					<option value="0">已启用文章</option>
+					<option value="1">已禁用文章</option>
+				</select>
+			</span>
 		</div>
-		<div class="col-lg-3 col-md-4">
+		<div class="col-lg-4 col-md-4">
 			条件搜索：
-			<button name="" id="article_search" class="btn btn-success" type="submit" style="width: 250px;" ><i class="Hui-iconfont">&#xe665;</i> 搜文章</button>
+			<button name="" id="article_search" class="btn btn-danger" type="submit" style="width: 125px;" ><i class="Hui-iconfont">&#xe665;</i> 搜文章</button>
+			<button class="btn btn-success" type="submit" style="width: 125px;" onclick="ClearAllSearchText()">清空条件</button>
 		</div>
+		
 	</div>
 	<div class="cl pd-5 bg-1 bk-gray mt-20"><button id="hiddarticletable_refreshed" class="layui-btn layui-btn-sm" style="display:none">数据刷新</button> </div>
 	<div class="mt-20">
@@ -94,9 +102,14 @@
         <input type="checkbox" id="status_{{d.id}}" name="{{d.id}}" value="{{d.status}}" lay-skin="switch" lay-text="启用|禁用" lay-filter="modifyStatus" {{ d.status== 0 ? 'checked' : '' }}>
     </script>
 <!--表单模板绑定--结束-->
+<!--表格文章标题绑定--开始-->
+<script type="text/html" id="show_articletitle">
+	<a title="点击查看文章：{{d.title}}" href="{{d.article_url}}" target="_blank">{{d.title}}</a>
+</script>
+<!--表格文章标题绑定--结束-->
 <!--表单操作栏--开始-->
     <script type="text/html" id="currentTableBar">
-        <a class="layui-btn layui-btn-xs" onclick="article_edit('编辑',{{d.id}})" data-width="500px" data-height="300px">编辑</a>
+        <a class="layui-btn layui-btn-xs" onclick="article_edit('编辑文章',{{d.id}})" data-width="500px" data-height="300px">编辑</a>
         <a class="layui-btn layui-btn-xs layui-btn-danger" onclick="article_delete(this,{{d.id}})">删除</a>
 
     </script>
@@ -123,9 +136,10 @@
 			where:{
 				article_createtimemin:$('#logmin').val(),
 				article_createtimemax:$('#logmax').val(),
-				article_category:$('#article_category').val(),
+				article_searchcategory:$('#article_category').val(),
 				article_searchtitle:$('#article_searchtitle').val(),
 				article_user:$('#article_user').val(),
+				article_searchstatus:$('#article_status').val(),
 			},
 			toolbar:'#toolbarDemo',
 			page:true,
@@ -135,7 +149,7 @@
 			cols:[[
 				{type: "checkbox", width: 50, fixed: "left"},
 				{field:'id',title:'ID',width:40,sort:true},
-				{field:'title',title:'名称',width:350,sort:true},
+				{field:'title',title:'名称',width:350,templet:'#show_articletitle',sort:true},
 				{field:'article_category',title:'分类',sort:true},
 				{field:'article_user',title:'作者',sort:true},
 				{field:'status',title:'状态',templet:'#articleStatus'},
@@ -240,7 +254,10 @@
 				where:{
 					article_createtimemin:$('#logmin').val(),
 					article_createtimemax:$('#logmax').val(),
+					article_searchcategory:$('#article_category').val(),
 					article_searchtitle:$('#article_searchtitle').val(),
+					article_user:$('#article_user').val(),
+					article_searchstatus:$('#article_status').val(),
 				},
 				page:{
 					curr:1
@@ -258,21 +275,25 @@
 				where:{
 					article_createtimemin:$('#logmin').val(),
 					article_createtimemax:$('#logmax').val(),
+					article_searchcategory:$('#article_category').val(),
 					article_searchtitle:$('#article_searchtitle').val(),
+					article_user:$('#article_user').val(),
+					article_searchstatus:$('#article_status').val(),
 				}
 			});
 		}
 		//刷新所有数据
 		function articlerefreshedall(article_table){
 			//清空搜索条件
-			$('#logmin').val(''),
-			$('#logmax').val(''),
-			$('#article_searchtitle').val(''),
+			ClearAllSearchText();
 			article_table.reload({
 				where:{
-					article_createtimemin:'',
-					article_createtimemax:'',
-					article_searchtitle:'',
+					article_createtimemin:$('#logmin').val(),
+					article_createtimemax:$('#logmax').val(),
+					article_searchcategory:$('#article_category').val(),
+					article_searchtitle:$('#article_searchtitle').val(),
+					article_user:$('#article_user').val(),
+					article_searchstatus:$('#article_status').val(),
 				},
 				page:{
 					curr:1
@@ -312,9 +333,9 @@ function article_edit(title,id){
 		type: 2,
 		fixed: false,
 		maxmin :true,
-		area:['100%','70%'],
+		area:['100%','90%'],
 		title: title,
-		content: "/master/index/blog/articlemanage/articleedit/id/"+id,
+		content: "/master/index/blog/articlemanage/editarticle/id/"+id,
 		cancel: function(index,layero){ 
 		  	layer.confirm('放弃此次编辑?', {icon: 3, title:'提示'}, function(myindex){ 
 		  		layer.close(myindex);
@@ -352,7 +373,7 @@ function article_deleteall(checkStatus)
  * 删除文章文章
  */
 function delete_article(id_list){
-	layer.confirm('确认要删除吗？该操作将删除该文章信息并将该文章下的所有文章禁用！！！',function(index){
+	layer.confirm('确认要删除吗？该操作将删除该文章！！！',function(index){
 		$.ajax({
 			type: 'delete',
 			url: "{:url('admin/blog/deletearticle')}",
@@ -378,50 +399,17 @@ function delete_article(id_list){
 	});
 }
 
-/*资讯-审核*/
-function article_shenhe(obj,id){
-	layer.confirm('审核文章？', {
-		btn: ['通过','不通过','取消'],
-		shade: false,
-		closeBtn: 0
-	},
-	function(){
-		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_start(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-		$(obj).remove();
-		layer.msg('已发布', {icon:6,time:1000});
-	},
-	function(){
-		$(obj).parents("tr").find(".td-manage").prepend('<a class="c-primary" onClick="article_shenqing(this,id)" href="javascript:;" title="申请上线">申请上线</a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-danger radius">未通过</span>');
-		$(obj).remove();
-    	layer.msg('未通过', {icon:5,time:1000});
-	});
-}
-/*资讯-下架*/
-function article_stop(obj,id){
-	layer.confirm('确认要下架吗？',function(index){
-		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_start(this,id)" href="javascript:;" title="发布"><i class="Hui-iconfont">&#xe603;</i></a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-defaunt radius">已下架</span>');
-		$(obj).remove();
-		layer.msg('已下架!',{icon: 5,time:1000});
-	});
-}
 
-/*资讯-发布*/
-function article_start(obj,id){
-	layer.confirm('确认要发布吗？',function(index){
-		$(obj).parents("tr").find(".td-manage").prepend('<a style="text-decoration:none" onClick="article_stop(this,id)" href="javascript:;" title="下架"><i class="Hui-iconfont">&#xe6de;</i></a>');
-		$(obj).parents("tr").find(".td-status").html('<span class="label label-success radius">已发布</span>');
-		$(obj).remove();
-		layer.msg('已发布!',{icon: 6,time:1000});
-	});
-}
-/*资讯-申请上线*/
-function article_shenqing(obj,id){
-	$(obj).parents("tr").find(".td-status").html('<span class="label label-default radius">待审核</span>');
-	$(obj).parents("tr").find(".td-manage").html("");
-	layer.msg('已提交申请，耐心等待审核!', {icon: 1,time:2000});
+/**
+ * 清空搜索条件
+ */
+function ClearAllSearchText(){
+	$('#logmin').val('');
+	$('#logmax').val('');
+	$('#article_searchtitle').val('');
+	$('#article_category').val('');
+	$('#article_user').val('');
+	$('#article_status').val('');
 }
 
 </script>
