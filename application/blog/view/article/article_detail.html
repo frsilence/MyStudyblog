@@ -325,7 +325,7 @@
 	//获取相关文章
 	function getRelatedArticle(){
 		$.ajax({
-			type:"post",
+			type:"get",
 			url:"{:url('blog/article/getRelatedArticle',['id'=>$article.id])}",
 			async:false,
 			success:function(data){
@@ -367,7 +367,7 @@
 			}
 		}) 
 	}
-	//获取点赞排序列表
+	//获取阅读量排序列表
 	function getClickArticleList(){
 		$.ajax({
 			type:"post",

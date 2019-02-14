@@ -59,8 +59,8 @@ class Blog extends Adminbasic
     }
     
     /**
-     * 管理界面/Blog管理/分类管理/分类编辑页面
-     * @param $id 分类id
+     * 管理界面/Blog管理/文章管理/文章新增页面
+     * @param $id 文章id
      */
     public function getBlogArticleEdit($id)
     {
@@ -75,6 +75,16 @@ class Blog extends Adminbasic
         //return json($tags);
         return $this->fetch('article_manageedit',['article'=>$article,'article_category'=>$categorys,'tags'=>$tags]);
     }
+    
+    /**
+     * 管理界面/Blog管理/文章管理/新增文章页面
+     */
+    public function getBlogArticleAdd()
+    {
+        $categorys = model('blog/ArticleCategory')->getCategoryList();
+        return $this->fetch('article_manageadd',['article_category'=>$categorys]);
+    }
+
     /**
      * 获取Blog统计信息
      *
@@ -345,10 +355,38 @@ class Blog extends Adminbasic
         if(true !== $result) return json(['code'=>1,'msg'=>$result]);
         //执行
         $delete =  model('blog/Article')->deleteBlogArticle($post_info['articleid_list']);
-        if($delete['code']==0){
-            return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+        return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+    }
+
+    /**
+     * 更新文章
+     */
+    public function updateArticle(Request $request)
+    {
+        //验证输入参数
+        $post_info = $request->delete();
+        $result = $this->validate($post_info,'app\admin\validate\Blog.article_update');
+        $update_article = model('blog/Article')->updateArticle($post_info);
+        return json(['code'=>$update_article['code'],'msg'=>$update_article['msg']]);
+    }
+
+    /**
+     * 保存新建的文章
+     *
+     * @param  \think\Request  $request
+     * @return \think\Response
+     */
+    public function addArticle(Request $request)
+    {
+        //验证请求字段
+        $article_info = $request->post();
+        $result = $this->validate($article_info,'app\admin\validate\Blog.article_add');
+        if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
+        $save_article = model('blog/Article')->addArticleByAdmin($article_info);
+        if($save_article == 0){
+            return json(['code'=>1,'msg'=>'保存错误，请稍后尝试']);
         }else{
-            return json(['code'=>$delete['code'],'msg'=>$delete['msg']]);
+            return json(['code'=>0,'msg'=>'保存成功','article_id'=>$save_article]);
         }
     }
 

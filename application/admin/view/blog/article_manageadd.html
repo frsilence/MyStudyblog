@@ -25,7 +25,7 @@
 <![endif]-->
 <!--/meta 作为公共模版分离出去-->
 
-<title>修改文章 - 文章管理 - 后台管理</title>
+<title>新增文章 - 文章管理 - 后台管理</title>
 <meta name="keywords" content="H-ui.admin v3.1,H-ui网站后台模版,后台模版下载,后台管理系统模版,HTML后台模版下载">
 <meta name="description" content="H-ui.admin v3.1，是一款由国人开发的轻量级扁平化网站后台模板，完全免费开源的网站后台管理系统模版，适合中小型CMS后台系统。">
 </head>
@@ -36,7 +36,7 @@
 			<div class="row cl">
 				<label class="form-label col-xs-2 col-sm-3 col-lg-2 col-md-2" for="article_title">文章标题</label>
 				<div class="formControls col-xs-10 col-sm-9 col-lg-10 col-lg-10">
-					<input id="article_title" class="input-text" value="{$article.title}" />
+					<input id="article_title" class="input-text"/>
 				</div>
 			</div>
 			<div class="row cl">
@@ -45,11 +45,7 @@
 					<span class="select-box">
 								<select id="article_category" class="select" size="1">
 									{volist name="article_category" id="category"}
-										{if $article.category_id==$category.id}
-										<option value="{$category.id}" selected="">{$category.category_title}</option>
-										{else /}
 										<option value="{$category.id}">{$category.category_title}</option>
-										{/if}
 									{/volist}
 								</select>
 							</span>
@@ -58,7 +54,7 @@
 			<div class="row cl">
 				<label class="form-label col-xs-2 col-sm-3 col-lg-2 col-md-2" for="article_tag">文章标签</label>
 				<div class="formControls col-xs-10 col-sm-9 col-lg-10 col-lg-10">
-					<input id="article_tag" class="input-text" placeholder="标签之间以英文分号;分割" value="{$tags}"/>
+					<input id="article_tag" class="input-text" placeholder="标签之间以英文分号;分割"/>
 				</div>
 			</div>
 			<div class="cl mt-25">
@@ -68,7 +64,7 @@
 					</div>
 					<div class="row cl">
 						<div class="col-xs-8 col-sm-9 col-xs-offset-4 col-sm-offset-2 mt-50">
-							<button id="article_save" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交修改</button>
+							<button id="article_save" class="btn btn-secondary radius" type="button"><i class="Hui-iconfont">&#xe632;</i> 提交保存</button>
 							<button id="closeIframe" class="btn btn-default radius" type="button">&nbsp;&nbsp;取消&nbsp;&nbsp;</button>
 						</div>
 					</div>
@@ -147,17 +143,14 @@ $('#closeIframe').click(function(){
         layer.msg(info)
     }
     editor.create();
-    editor.txt.html('{$article.content|raw}');
-
     //保存文章的修改
 $('#article_save').click(function(){
-			layer.confirm('确认修改？该操作不可逆！',{icon:3,title:'提示'},function(index){
+			layer.confirm('确认保存？',{icon:3,title:'提示'},function(index){
 				layer.close(index);
 				$.ajax({
-					url:"{:url('admin/blog/updateArticle')}",
+					url:"{:url('admin/blog/addArticle')}",
 					type:'post',
 					data:{
-						article_updateid:{$article.id},
 						article_title:$('#article_title').val(),
 						article_content:editor.txt.html(),
 						article_tag:$('#article_tag').val(),

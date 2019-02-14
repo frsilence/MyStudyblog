@@ -128,7 +128,7 @@ class Article extends Appbasic
         $result = $this->validate($article_info,'app\blog\validate\Article.addarticle');
         if(true !== $result) return json(['code'=>1,'msg'=>$result,'token'=>$request->token()]);
         $save_article = model('Article')->addArticle($article_info);
-        if($save_article == 1){
+        if($save_article == 0){
             return json(['code'=>1,'msg'=>'保存错误，请稍后尝试','token'=>$request->token()]);
         }else{
             return json(['code'=>0,'msg'=>'保存成功','article_id'=>$save_article,'token'=>$request->token()]);

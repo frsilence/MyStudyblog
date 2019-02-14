@@ -69,6 +69,57 @@ class Article extends Model
 
         }
     }
+     /**
+     * 管理员保存文章标签
+     * @param  int $article_id 文章ID
+     * @param  array $article_info 含有文章标签的信息 
+     */
+    public function saveBlogTagByAdmin($article_id,$article_tags)
+    {
+        if(isset($article_tags) && !empty($article_tags)){
+            $tag_list = explode(';',$article_tags);
+            $blog_tag = [];
+            foreach ($tag_list as $key => $value) {
+                $tag_id = model('blog/BlogTag')->where('name',$value)->value('id');
+                if(empty($tag_id)){
+                    $tag = model('blog/BlogTag')->create(['name'=>$value]);
+                    $tag_id = $tag->id;
+                }
+                $blog_tag[] = ['article_id'=>$article_id,'tag_id'=>$tag_id];
+            }
+            model('blog/ArticleTag')->saveAll($blog_tag);
+
+        }
+    }
+
+    /**
+     * 管理员更新文章标签
+     * @param  int $article_id 文章ID
+     * @param  array $article_info 含有文章标签的信息 
+     */
+    public function updateBlogTag($article_id,$article_tags)
+    {
+        if(isset($article_tags) && !empty($article_tags)){
+            $tag_list = explode(';',$article_tags);
+            $blog_tag = [];
+            foreach ($tag_list as $key => $value) {
+                if($value!=''){
+                    $tag_id = model('blog/BlogTag')->where('name',$value)->value('id');
+                    if(empty($tag_id)){
+                        $tag = model('blog/BlogTag')->create(['name'=>$value]);
+                        $tag_id = $tag->id;
+                    }
+                    $blog_tag[] = ['article_id'=>$article_id,'tag_id'=>$tag_id];
+                }
+                
+            }
+            //删除该文章全部标签
+            model('blog/ArticleTag')->where('article_id',$article_id)->delete();
+            //保存最新标签
+            model('blog/ArticleTag')->saveAll($blog_tag);
+
+        }
+    }
 
     /**
      * 增加文章
@@ -92,11 +143,40 @@ class Article extends Model
     		$this->commit();
     	} catch(\Exception $e){
     		$this->rollback();
-    		return 1;
+    		return 0;
     	}
     	return $article_id = $article_id;
 
     }
+
+    /**
+     * 管理员增加文章
+     * @param  array $article_info 文章信息
+     * @return  int article_id
+     */
+    public function addArticleByAdmin($article_info)
+    {
+    	$this->startTrans();
+    	try{
+    		$article=$this->save([
+                    'member_id' => 1,
+                    'category_id' => $article_info['article_category'],
+                    'update_userid' => 1,
+                    'title' => $article_info['article_title'],
+                    'content' => $article_info['article_content'],
+                ]);
+    		$article_id = $this->id;
+            //保存标签
+            $this->saveBlogTagByAdmin($article_id,$article_info['article_tag']);
+    		$this->commit();
+    	} catch(\Exception $e){
+    		$this->rollback();
+    		return 0;
+    	}
+    	return $article_id = $article_id;
+
+    }
+
 
     /**
      * 删除文章
@@ -124,26 +204,28 @@ class Article extends Model
 
     /**
      * 修改文章
-     * @param int $article_id 文章ID
-     * @param arary $update 修改内容
+     * @param arary $update 文章更新信息（包含文章id）
      * return boolenan
      */
-    public function updateArticle($article_id,$update)
+    public function updateArticle($update)
     {
-        $article=$this->where(['id'=>$article_id,'status'=>0,'is_delete'=>0])->find();
+        $article=$this->where(['id'=>$update['article_updateid'],'is_delete'=>0])->find();
         if(empty($article)){
-            return false;
+            return ['code'=>1,'msg'=>'被更新文章不存在，请稍后重试'];
         }else{
             $this->startTrans();
             try{
-                $article->update($update);
-                $this->saveBlogTag($article_id,$update);
+                $article->title=$update['article_title'];
+                $article->category_id = $update['article_category'];
+                $article->content = $update['article_content'];
+                $article->save();
+                $this->updateBlogTag($update['article_updateid'],$update['article_tag']);
                 $this->commit();
-                return true;
+                return ['code'=>0,'msg'=>'文章更新成功'];
             }catch(\Exception $e){
                 $this->rollback();
-                return false;
-            }           
+                return ['code'=>1,'msg'=>'未知错误，文章更新失败'];
+            }          
         }
     }
 
